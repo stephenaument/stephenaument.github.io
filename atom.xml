@@ -4,11 +4,11 @@
   <title><![CDATA[Stephen Aument]]></title>
   <link href="http://stephenaument.github.io/atom.xml" rel="self"/>
   <link href="http://stephenaument.github.io/"/>
-  <updated>2014-03-06T21:02:45-06:00</updated>
+  <updated>2014-03-07T14:22:25-06:00</updated>
   <id>http://stephenaument.github.io/</id>
   <author>
     <name><![CDATA[Stephen Aument]]></name>
-    
+    <email><![CDATA[saument@gmail.com]]></email>
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
@@ -87,7 +87,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[The Null Object Pattern and Method_missing in Ruby]]></title>
+    <title type="html"><![CDATA[The Null Object Pattern and method_missing in Ruby]]></title>
     <link href="http://stephenaument.github.io/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby/"/>
     <updated>2014-03-05T23:01:09-06:00</updated>
     <id>http://stephenaument.github.io/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby</id>
