@@ -4,7 +4,7 @@
   <title><![CDATA[Stephen Aument]]></title>
   <link href="http://stephenaument.github.io/atom.xml" rel="self"/>
   <link href="http://stephenaument.github.io/"/>
-  <updated>2014-03-05T23:39:07-06:00</updated>
+  <updated>2014-03-06T21:02:45-06:00</updated>
   <id>http://stephenaument.github.io/</id>
   <author>
     <name><![CDATA[Stephen Aument]]></name>
@@ -12,6 +12,79 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby Hash#fetch and Javascript]]></title>
+    <link href="http://stephenaument.github.io/blog/2014/03/06/ruby-hash-dot-fetch-and-javascript/"/>
+    <updated>2014-03-06T19:21:15-06:00</updated>
+    <id>http://stephenaument.github.io/blog/2014/03/06/ruby-hash-dot-fetch-and-javascript</id>
+    <content type="html"><![CDATA[<p>In a <a href="http://stephenaument.github.io/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby/">previous post</a> I mentioned a case in which I had a Haml template in a Rails app with Javascript in it. The template was rendering Ruby values into what would become a JSON object (Javascript Hash) in the browser. In that particular case, a method call on a Null Object was returning nil and breaking the Javascript.</p>
+
+<p>Well, today I encountered another variation of this problem. In this case, I had a Ruby Hash feeding values into the JSON object. It looked like this:</p>
+
+<div><script src='https://gist.github.com/9403295.js'></script>
+<noscript><pre><code>var options = {                                                                                                                                                                                                                                                                           
+  &quot;gender&quot;: &quot;#{stored_search_params[&#39;gender&#39;]}&quot;,                                                                                                                                                                                                                                          
+  &quot;memberGender&quot;: &quot;#{current_user.short_gender}&quot;,                                                                                                                                                                                                                                         
+  &quot;age&quot;: &quot;#{current_user.age}&quot;,                                                                                                                                                                                                                                                           
+  &quot;aexcel&quot;: &quot;#{stored_search_params[&#39;aex&#39;]}&quot;,                                                                                                                                                                                                                                             
+  &quot;language&quot;: &quot;#{stored_search_params[&#39;language&#39;]}&quot;,                                                                                                                                                                                                                                      
+  &quot;displayLanguage&quot;: &quot;#{stored_search_params[&#39;displayLanguage&#39;]}&quot;,                                                                                                                                                                                                                        
+  &quot;location&quot;: &quot;#{last_location_searched}&quot;,                                                                                                                                                                                                                                                
+  &quot;radius&quot;: &quot;#{stored_search_params[&#39;radius&#39;] || default_search_radius}&quot;,                                                                                                                                                                                                                 
+  &quot;query&quot;: &quot;#{stored_search_params[&#39;query&#39;]}&quot;,                                                                                                                                                                                                                                            
+  &quot;accepting_new_patients&quot;: &quot;#{stored_search_params[&#39;accepting_new_patients&#39;]}&quot;,                                                                                                                                                                                                          
+  &quot;procedure_id&quot;: &quot;#{stored_search_params[&#39;procedure_id&#39;]}&quot;,                                                                                                                                                                                                                              
+  &quot;specialty_id&quot;: &quot;#{stored_search_params[&#39;specialty_id&#39;]}&quot;,                                                                                                                                                                                                                              
+  &quot;event_properties&quot;: #{stored_search_params.fetch(&#39;event_properties&#39;, {})}                                                                                                                                                                                                               
+};      </code></pre></noscript></div>
+
+
+<p>Two of these fields on the ruby hash are empty: <code>language</code> and <code>properties</code>. Notice that this isn&rsquo;t a problem for most of these fields, but for one it is:</p>
+
+<div><script src='https://gist.github.com/9404094.js'></script>
+<noscript><pre><code>var options = {
+  &quot;gender&quot;: &quot;M&quot;,
+  &quot;age&quot;: &quot;27&quot;,
+  &quot;language&quot;: &quot;en-US&quot;,
+  &quot;query&quot;: &quot;specials&quot;,
+  &quot;properties&quot;: 
+};</code></pre></noscript></div>
+
+
+<p>See that? The first four fields feed into double quotes as strings. If they are empty, they are empty. It may cause an issue somewhere down the line, but the Javascript itself is valid.</p>
+
+<p>The <code>properties</code> field, on the other hand is expecting a JSON object. That missing bit will cause Javascript to blow up once this loads in the browser.</p>
+
+<p>What&rsquo;s the solution here? In this case, I turned to <code>Hash#fetch</code> rather than the <code>[]</code> accessor. What&rsquo;s the difference? There are two main differences between the bracket accessor and the <code>fetch</code> method. First, <code>my_hash[:some_missing_key]</code> will return <code>nil</code> if the key is not found in the hash. If <code>my_hash.fetch(:some_missing_key)</code> can&rsquo;t find a key, it will raise a <code>KeyError</code> exception.</p>
+
+<p>That&rsquo;s not really what we are looking for, which brings me to the second difference. <code>Hash#fetch</code> takes an optional second argument which specifies a default value. So if we call <code>my_hash.fetch(:some_missing_key, 'tacos')</code> and the key is not found in the hash, it will return <code>'tacos'</code> instead of <code>nil</code>. That&rsquo;s exactly what I needed. I returned an empty JSON object <code>{}</code> as the default.</p>
+
+<div><script src='https://gist.github.com/9404014.js'></script>
+<noscript><pre><code>var options = {                                                                                                                                                                                                                                                                           
+  &quot;gender&quot;: &quot;#{search_params[&#39;gender&#39;]}&quot;,                                                                                                                                                                                                                                          
+  &quot;age&quot;: &quot;#{current_user.age}&quot;,                                                                                                                                                                                                                                                           
+  &quot;language&quot;: &quot;#{search_params[&#39;language&#39;]}&quot;,                                                                                                                                                                                                                                      
+  &quot;query&quot;: &quot;#{search_params[&#39;query&#39;]}&quot;,                                                                                                                                                                                                                                            
+  &quot;properties&quot;: #{search_params.fetch(&#39;properties&#39;, {})}                                                                                                                                                                                                               
+};</code></pre></noscript></div>
+
+
+<p>This degraded nicely in the cases in which I had no <code>properties</code> hash in my <code>search_params</code> hash.</p>
+
+<div><script src='https://gist.github.com/9404101.js'></script>
+<noscript><pre><code>var options = {
+  &quot;gender&quot;: &quot;M&quot;,
+  &quot;age&quot;: &quot;27&quot;,
+  &quot;language&quot;: &quot;en-US&quot;,
+  &quot;query&quot;: &quot;specials&quot;,
+  &quot;properties&quot;: {}
+};</code></pre></noscript></div>
+
+
+<p>No more broken Javascript.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[The Null Object Pattern and Method_missing in Ruby]]></title>
