@@ -4,7 +4,7 @@
   <title><![CDATA[Stephen Aument]]></title>
   <link href="http://stephenaument.github.io/atom.xml" rel="self"/>
   <link href="http://stephenaument.github.io/"/>
-  <updated>2014-03-10T22:54:15-05:00</updated>
+  <updated>2014-03-10T22:57:26-05:00</updated>
   <id>http://stephenaument.github.io/</id>
   <author>
     <name><![CDATA[Stephen Aument]]></name>
@@ -16,18 +16,9 @@
   <entry>
     <title type="html"><![CDATA[Null Object Part 2]]></title>
     <link href="http://stephenaument.github.io/blog/2014/03/11/null-object-part-2/"/>
-    <updated>2014-03-11T00:00:00-05:00</updated>
+    <updated>2014-03-11T01:00:00-05:00</updated>
     <id>http://stephenaument.github.io/blog/2014/03/11/null-object-part-2</id>
-    <content type="html"><![CDATA[<hr />
-
-<p>layout: post
-title: &ldquo;Null Object Part 2&rdquo;
-date: 2014-03-11 14:57:10 -0600
-comments: true</p>
-
-<h2>categories: </h2>
-
-<p>In a <a href="http://stephenaument.github.io/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby/">previous post</a> I
+    <content type="html"><![CDATA[<p>In a <a href="http://stephenaument.github.io/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby/">previous post</a> I
 described using <code>method_missing</code> in a Null Object to stand in for another
 object and respond smartly to the original object&rsquo;s interface. At the end of
 that post I suggested that you could go further than we did in creating a more
