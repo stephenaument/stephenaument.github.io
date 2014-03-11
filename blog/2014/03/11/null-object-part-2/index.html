@@ -1,0 +1,303 @@
+<hr />
+
+<p>layout: post
+title: &ldquo;Null Object Part 2&rdquo;
+date: 2014-03-11 14:57:10 -0600
+comments: true</p>
+
+<h2>categories: </h2>
+
+<p>In a <a href="/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby/">previous post</a> I
+described using <code>method_missing</code> in a Null Object to stand in for another
+object and respond smartly to the original object&rsquo;s interface. At the end of
+that post I suggested that you could go further than we did in creating a more
+abstract object. Well, we got that chance.</p>
+
+<p>In this post I will show you how we created a <code>NilObject</code> that can both stand
+on its own and be extended with added functionality in a subclass. Our
+<code>NilObject</code> needs to be smart about the interface of the class that it&rsquo;s
+faking, so we&rsquo;ll have to take that into account. Finally, we decided to
+implement a smart <code>respond_to?</code> method to round out the functionality of our
+<code>NilObject</code>.</p>
+
+<p>Here&rsquo;s the form that our NilDuck took at the end of the previous post:</p>
+
+<div><script src='https://gist.github.com/9422568.js?file=nil_duck_previous.rb'></script>
+<noscript><pre><code>class NilDuck &lt; NilObject
+  def name
+    &#39;Demo Duck&#39;
+  end
+
+
+  def status
+    &#39;sleeping&#39;
+  end
+
+
+  def color
+    &#39;gray&#39;
+  end
+
+
+  def migratory?
+    true
+  end
+end</code></pre></noscript></div>
+
+
+<p>A few days after making those changes, we ran into another custom Null Object
+in our app, the <code>NilGoose</code>. Our <code>NilGoose</code> ran into the
+same problem that <code>NilDuck</code> originally did. A new method was added to the
+<code>Goose</code> class that wasn&rsquo;t reflected in <code>NilGoose</code> and a bug appeared.</p>
+
+<p>What to do? Well, we try not to run ahead of ourselves or our tests, so the
+first thing we did was create a test that expected the missing method, watched
+it fail, and copied the <code>method_missing</code> definition from <code>NilDuck</code>, renaming as
+we needed to.</p>
+
+<div><script src='https://gist.github.com/9422568.js?file=nil_goose_initial.rb'></script>
+<noscript><pre><code>class NilDuck &lt; NilObject
+  def name
+    &#39;Demo Duck&#39;
+  end
+
+
+  def status
+    &#39;sleeping&#39;
+  end
+
+
+  def color
+    &#39;gray&#39;
+  end
+
+
+  def migratory?
+    true
+  end
+end</code></pre></noscript></div>
+
+
+<p>This made our test happy. But the duplicated code made us sad. We like
+<a href="http://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY</a> code around here. We
+knew it was time to factor out our common code into a single spot.</p>
+
+<p>We thought about putting it in a Module that could be included into other
+special null objects, but decided instead to make it a full-fledged <code>NilObject</code>
+class that we could use standalone as well as a superclass for our <code>NilDuck</code>
+and <code>NilGoose</code>.</p>
+
+<div><script src='https://gist.github.com/9422568.js?file=nil_object_1.rb'></script>
+<noscript><pre><code>class NilDuck &lt; NilObject
+  def name
+    &#39;Demo Duck&#39;
+  end
+
+
+  def status
+    &#39;sleeping&#39;
+  end
+
+
+  def color
+    &#39;gray&#39;
+  end
+
+
+  def migratory?
+    true
+  end
+end</code></pre></noscript></div>
+
+
+<p>If you recall in our <code>method_missing</code> implementation, we had to new up an
+instance of our <code>Duck</code> class to determine whether it responds to the method we
+are testing. Since we want to reuse this method in the generic <code>NilObject</code>, we
+won&rsquo;t know which class to check. Our first pass at a solution requires the
+class to be passed into the <code>NilObject</code> constructor, which would look like
+<code>faker = NilObject.new(Duck)</code>.</p>
+
+<p>In our <code>initialize</code> method we save the class passed in into an instance
+variable, <code>@klass</code>, which <code>method_missing</code> then uses to new up an instance to
+check. Now we can fake any class we want with our <code>NilObject</code>, and it will
+handle exactly those methods the subject responds to and no others. (Note: If
+you&rsquo;re weirded out by passing a class around like that, remember that
+everything in Ruby is an object, including classes)</p>
+
+<p>Now we can make <code>NilDuck</code> inherit from <code>NilObject</code>:</p>
+
+<div><script src='https://gist.github.com/9422568.js?file=nil_duck_final.rb'></script>
+<noscript><pre><code>class NilDuck &lt; NilObject
+  def name
+    &#39;Demo Duck&#39;
+  end
+
+
+  def status
+    &#39;sleeping&#39;
+  end
+
+
+  def color
+    &#39;gray&#39;
+  end
+
+
+  def migratory?
+    true
+  end
+end</code></pre></noscript></div>
+
+
+<p>and the same for <code>NilGoose</code>:</p>
+
+<div><script src='https://gist.github.com/9422568.js?file=nil_goose_final.rb'></script>
+<noscript><pre><code>class NilDuck &lt; NilObject
+  def name
+    &#39;Demo Duck&#39;
+  end
+
+
+  def status
+    &#39;sleeping&#39;
+  end
+
+
+  def color
+    &#39;gray&#39;
+  end
+
+
+  def migratory?
+    true
+  end
+end</code></pre></noscript></div>
+
+
+<p>This is all very cool, but if I leave the code like this I&rsquo;m going to have to
+run around and find every place in the app in which I create an instance of
+<code>NilDuck</code> or <code>NilGoose</code> and add the new argument. Hopefully it&rsquo;s not very many
+places, but this is not something I want to do. Let&rsquo;s go ahead and add
+initialize methods to our <code>NilDuck</code> and <code>NilGoose</code> classes to take care of
+that:</p>
+
+<div><script src='https://gist.github.com/9422568.js?file=nil_duck_intermediate.rb'></script>
+<noscript><pre><code>class NilDuck &lt; NilObject
+  def name
+    &#39;Demo Duck&#39;
+  end
+
+  def status
+    &#39;sleeping&#39;
+  end
+
+  def color
+    &#39;gray&#39;
+  end
+
+  def migratory?
+    true
+  end
+end</code></pre></noscript></div>
+
+
+<p>and</p>
+
+<div><script src='https://gist.github.com/9422568.js?file=nil_goose_intermediate.rb'></script>
+<noscript><pre><code>class NilDuck &lt; NilObject
+  def name
+    &#39;Demo Duck&#39;
+  end
+
+  def status
+    &#39;sleeping&#39;
+  end
+
+  def color
+    &#39;gray&#39;
+  end
+
+  def migratory?
+    true
+  end
+end</code></pre></noscript></div>
+
+
+<p>That works, and it keeps us from having to spread changes around the codebase,
+but it does add to the duplication a bit. That initialize method needs to be
+added to every new subclass in order to get the shorter <code>NilSomething.new</code>
+syntax. We could live with this, or we could find a way to bake that smarts
+into <code>NilObject</code> itself. But how?</p>
+
+<p>My pair for the week, <a href="https://twitter.com/timtyrrell">@timtyrell</a> came up with
+the idea of keying off of the classname of the <code>NilObject</code> subclass. And that&rsquo;s
+exactly what we did, we made the class parameter optional and keyed off of the
+classname.</p>
+
+<div><script src='https://gist.github.com/9422568.js?file=nil_object_2.rb'></script>
+<noscript><pre><code>class NilDuck &lt; NilObject
+  def name
+    &#39;Demo Duck&#39;
+  end
+
+
+  def status
+    &#39;sleeping&#39;
+  end
+
+
+  def color
+    &#39;gray&#39;
+  end
+
+
+  def migratory?
+    true
+  end
+end</code></pre></noscript></div>
+
+
+<p>The <code>real_class_name</code> method (naming is hard; this should probably be
+<code>subject_class_name</code> or something) takes the name of the class, <code>NilDuck</code> or
+<code>NilGoose</code> and takes the substring that skips the first 3 letters (the length
+of &lsquo;Nil&rsquo;) to the end. It then turns it into a constant so it can be
+instantiated.</p>
+
+<p>As an added bonus we decided to implement <code>respond_to?</code> so it behaves exactly
+like the subject class would behave.</p>
+
+<div><script src='https://gist.github.com/9422568.js?file=nil_object_3.rb'></script>
+<noscript><pre><code>class NilDuck &lt; NilObject
+  def name
+    &#39;Demo Duck&#39;
+  end
+
+
+  def status
+    &#39;sleeping&#39;
+  end
+
+
+  def color
+    &#39;gray&#39;
+  end
+
+
+  def migratory?
+    true
+  end
+end</code></pre></noscript></div>
+
+
+<p>So there you have it. We now have a <code>NilObject</code> that can stand in for any other
+object like so: <code>NilObject.new(MyOtherClass)</code> and it will respond to exactly
+the same interface as <code>MyOtherClass</code> and answer <code>respond_to?</code> just like an
+instance of <code>MyOtherClass</code> would. If we need to override some of the methods of
+<code>MyOtherClass</code> to return other than <code>nil</code> or <code>false</code> we can create a new
+<code>NilMyOtherClass</code> as a subclass of <code>NilObject</code> and override what we need to.</p>
+
+<p>I&rsquo;ll leave you with a thought exercise. What would happen if you instantiated a
+<code>NilObject</code> without passing a class to the constructor: <code>nil_object =
+NilObject.new</code>? What would you get? As a bonus, how would you make the code
+inside the <code>real_class_name</code> method more intention revealing than what we wrote?
+Leave a comment if you know the answers.</p>

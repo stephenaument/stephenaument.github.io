@@ -9,7 +9,10 @@
 	<meta name="author" content="Stephen Aument">
 
 	
-	<meta name="description" content="Mar 6th, 2014 Comments Ruby Hash#fetch and Javascript In a previous post I mentioned a case in which I had a Haml template in a Rails app with &hellip;">
+	<meta name="description" content="Comments Null Object Part 2 layout: post
+title: &ldquo;Null Object Part 2&rdquo;
+date: 2014-03-11 14:57:10 -0600
+comments: true categories: In a &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -118,6 +121,341 @@ h2.subtitle {
   
 
 
+<time datetime="2014-03-11T00:00:00-05:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+</div>
+		
+			<span class="comments"><a href="/blog/2014/03/11/null-object-part-2/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2014/03/11/null-object-part-2/" itemprop="url">Null Object Part 2</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<hr />
+
+<p>layout: post
+title: &ldquo;Null Object Part 2&rdquo;
+date: 2014-03-11 14:57:10 -0600
+comments: true</p>
+
+<h2>categories: </h2>
+
+<p>In a <a href="/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby/">previous post</a> I
+described using <code>method_missing</code> in a Null Object to stand in for another
+object and respond smartly to the original object&rsquo;s interface. At the end of
+that post I suggested that you could go further than we did in creating a more
+abstract object. Well, we got that chance.</p>
+
+<p>In this post I will show you how we created a <code>NilObject</code> that can both stand
+on its own and be extended with added functionality in a subclass. Our
+<code>NilObject</code> needs to be smart about the interface of the class that it&rsquo;s
+faking, so we&rsquo;ll have to take that into account. Finally, we decided to
+implement a smart <code>respond_to?</code> method to round out the functionality of our
+<code>NilObject</code>.</p>
+
+<p>Here&rsquo;s the form that our NilDuck took at the end of the previous post:</p>
+
+<div><script src='https://gist.github.com/9422568.js?file=nil_duck_previous.rb'></script>
+<noscript><pre><code>class NilDuck &lt; NilObject
+  def name
+    &#39;Demo Duck&#39;
+  end
+
+
+  def status
+    &#39;sleeping&#39;
+  end
+
+
+  def color
+    &#39;gray&#39;
+  end
+
+
+  def migratory?
+    true
+  end
+end</code></pre></noscript></div>
+
+
+<p>A few days after making those changes, we ran into another custom Null Object
+in our app, the <code>NilGoose</code>. Our <code>NilGoose</code> ran into the
+same problem that <code>NilDuck</code> originally did. A new method was added to the
+<code>Goose</code> class that wasn&rsquo;t reflected in <code>NilGoose</code> and a bug appeared.</p>
+
+<p>What to do? Well, we try not to run ahead of ourselves or our tests, so the
+first thing we did was create a test that expected the missing method, watched
+it fail, and copied the <code>method_missing</code> definition from <code>NilDuck</code>, renaming as
+we needed to.</p>
+
+<div><script src='https://gist.github.com/9422568.js?file=nil_goose_initial.rb'></script>
+<noscript><pre><code>class NilDuck &lt; NilObject
+  def name
+    &#39;Demo Duck&#39;
+  end
+
+
+  def status
+    &#39;sleeping&#39;
+  end
+
+
+  def color
+    &#39;gray&#39;
+  end
+
+
+  def migratory?
+    true
+  end
+end</code></pre></noscript></div>
+
+
+<p>This made our test happy. But the duplicated code made us sad. We like
+<a href="http://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY</a> code around here. We
+knew it was time to factor out our common code into a single spot.</p>
+
+<p>We thought about putting it in a Module that could be included into other
+special null objects, but decided instead to make it a full-fledged <code>NilObject</code>
+class that we could use standalone as well as a superclass for our <code>NilDuck</code>
+and <code>NilGoose</code>.</p>
+
+<div><script src='https://gist.github.com/9422568.js?file=nil_object_1.rb'></script>
+<noscript><pre><code>class NilDuck &lt; NilObject
+  def name
+    &#39;Demo Duck&#39;
+  end
+
+
+  def status
+    &#39;sleeping&#39;
+  end
+
+
+  def color
+    &#39;gray&#39;
+  end
+
+
+  def migratory?
+    true
+  end
+end</code></pre></noscript></div>
+
+
+<p>If you recall in our <code>method_missing</code> implementation, we had to new up an
+instance of our <code>Duck</code> class to determine whether it responds to the method we
+are testing. Since we want to reuse this method in the generic <code>NilObject</code>, we
+won&rsquo;t know which class to check. Our first pass at a solution requires the
+class to be passed into the <code>NilObject</code> constructor, which would look like
+<code>faker = NilObject.new(Duck)</code>.</p>
+
+<p>In our <code>initialize</code> method we save the class passed in into an instance
+variable, <code>@klass</code>, which <code>method_missing</code> then uses to new up an instance to
+check. Now we can fake any class we want with our <code>NilObject</code>, and it will
+handle exactly those methods the subject responds to and no others. (Note: If
+you&rsquo;re weirded out by passing a class around like that, remember that
+everything in Ruby is an object, including classes)</p>
+
+<p>Now we can make <code>NilDuck</code> inherit from <code>NilObject</code>:</p>
+
+<div><script src='https://gist.github.com/9422568.js?file=nil_duck_final.rb'></script>
+<noscript><pre><code>class NilDuck &lt; NilObject
+  def name
+    &#39;Demo Duck&#39;
+  end
+
+
+  def status
+    &#39;sleeping&#39;
+  end
+
+
+  def color
+    &#39;gray&#39;
+  end
+
+
+  def migratory?
+    true
+  end
+end</code></pre></noscript></div>
+
+
+<p>and the same for <code>NilGoose</code>:</p>
+
+<div><script src='https://gist.github.com/9422568.js?file=nil_goose_final.rb'></script>
+<noscript><pre><code>class NilDuck &lt; NilObject
+  def name
+    &#39;Demo Duck&#39;
+  end
+
+
+  def status
+    &#39;sleeping&#39;
+  end
+
+
+  def color
+    &#39;gray&#39;
+  end
+
+
+  def migratory?
+    true
+  end
+end</code></pre></noscript></div>
+
+
+<p>This is all very cool, but if I leave the code like this I&rsquo;m going to have to
+run around and find every place in the app in which I create an instance of
+<code>NilDuck</code> or <code>NilGoose</code> and add the new argument. Hopefully it&rsquo;s not very many
+places, but this is not something I want to do. Let&rsquo;s go ahead and add
+initialize methods to our <code>NilDuck</code> and <code>NilGoose</code> classes to take care of
+that:</p>
+
+<div><script src='https://gist.github.com/9422568.js?file=nil_duck_intermediate.rb'></script>
+<noscript><pre><code>class NilDuck &lt; NilObject
+  def name
+    &#39;Demo Duck&#39;
+  end
+
+  def status
+    &#39;sleeping&#39;
+  end
+
+  def color
+    &#39;gray&#39;
+  end
+
+  def migratory?
+    true
+  end
+end</code></pre></noscript></div>
+
+
+<p>and</p>
+
+<div><script src='https://gist.github.com/9422568.js?file=nil_goose_intermediate.rb'></script>
+<noscript><pre><code>class NilDuck &lt; NilObject
+  def name
+    &#39;Demo Duck&#39;
+  end
+
+  def status
+    &#39;sleeping&#39;
+  end
+
+  def color
+    &#39;gray&#39;
+  end
+
+  def migratory?
+    true
+  end
+end</code></pre></noscript></div>
+
+
+<p>That works, and it keeps us from having to spread changes around the codebase,
+but it does add to the duplication a bit. That initialize method needs to be
+added to every new subclass in order to get the shorter <code>NilSomething.new</code>
+syntax. We could live with this, or we could find a way to bake that smarts
+into <code>NilObject</code> itself. But how?</p>
+
+<p>My pair for the week, <a href="https://twitter.com/timtyrrell">@timtyrell</a> came up with
+the idea of keying off of the classname of the <code>NilObject</code> subclass. And that&rsquo;s
+exactly what we did, we made the class parameter optional and keyed off of the
+classname.</p>
+
+<div><script src='https://gist.github.com/9422568.js?file=nil_object_2.rb'></script>
+<noscript><pre><code>class NilDuck &lt; NilObject
+  def name
+    &#39;Demo Duck&#39;
+  end
+
+
+  def status
+    &#39;sleeping&#39;
+  end
+
+
+  def color
+    &#39;gray&#39;
+  end
+
+
+  def migratory?
+    true
+  end
+end</code></pre></noscript></div>
+
+
+<p>The <code>real_class_name</code> method (naming is hard; this should probably be
+<code>subject_class_name</code> or something) takes the name of the class, <code>NilDuck</code> or
+<code>NilGoose</code> and takes the substring that skips the first 3 letters (the length
+of &lsquo;Nil&rsquo;) to the end. It then turns it into a constant so it can be
+instantiated.</p>
+
+<p>As an added bonus we decided to implement <code>respond_to?</code> so it behaves exactly
+like the subject class would behave.</p>
+
+<div><script src='https://gist.github.com/9422568.js?file=nil_object_3.rb'></script>
+<noscript><pre><code>class NilDuck &lt; NilObject
+  def name
+    &#39;Demo Duck&#39;
+  end
+
+
+  def status
+    &#39;sleeping&#39;
+  end
+
+
+  def color
+    &#39;gray&#39;
+  end
+
+
+  def migratory?
+    true
+  end
+end</code></pre></noscript></div>
+
+
+<p>So there you have it. We now have a <code>NilObject</code> that can stand in for any other
+object like so: <code>NilObject.new(MyOtherClass)</code> and it will respond to exactly
+the same interface as <code>MyOtherClass</code> and answer <code>respond_to?</code> just like an
+instance of <code>MyOtherClass</code> would. If we need to override some of the methods of
+<code>MyOtherClass</code> to return other than <code>nil</code> or <code>false</code> we can create a new
+<code>NilMyOtherClass</code> as a subclass of <code>NilObject</code> and override what we need to.</p>
+
+<p>I&rsquo;ll leave you with a thought exercise. What would happen if you instantiated a
+<code>NilObject</code> without passing a class to the constructor: <code>nil_object =
+NilObject.new</code>? What would you get? As a bonus, how would you make the code
+inside the <code>real_class_name</code> method more intention revealing than what we wrote?
+Leave a comment if you know the answers.</p>
+
+		
+		
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
 <time datetime="2014-03-06T19:21:15-06:00" data-updated="true" itemprop="datePublished">Mar 6<span>th</span>, 2014</time></div>
 		<div class="tags">
 
@@ -128,9 +466,15 @@ h2.subtitle {
 	</div>
 	<h1 class="title" itemprop="name"><a href="/blog/2014/03/06/ruby-hash-dot-fetch-and-javascript/" itemprop="url">Ruby Hash#fetch and Javascript</a></h1>
 	<div class="entry-content" itemprop="articleBody">
-		<p>In a <a href="/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby/">previous post</a> I mentioned a case in which I had a Haml template in a Rails app with Javascript in it. The template was rendering Ruby values into what would become a JSON object (Javascript Hash) in the browser. In that particular case, a method call on a Null Object was returning nil and breaking the Javascript.</p>
+		<p>In a <a href="/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby/">previous
+post</a> I
+mentioned a case in which I had a Haml template in a Rails app with Javascript
+in it. The template was rendering Ruby values into what would become a JSON
+object (Javascript Hash) in the browser. In that particular case, a method call
+on a Null Object was returning nil and breaking the Javascript.</p>
 
-<p>Well, today I encountered another variation of this problem. In this case, I had a Ruby Hash feeding values into the JSON object. It looked like this:</p>
+<p>Well, today I encountered another variation of this problem. In this case, I
+had a Ruby Hash feeding values into the JSON object. It looked like this:</p>
 
 <div><script src='https://gist.github.com/9403295.js'></script>
 <noscript><pre><code>var options = {                                                                                                                                                                                                                                                                           
@@ -150,7 +494,8 @@ h2.subtitle {
 };      </code></pre></noscript></div>
 
 
-<p>Two of these fields on the ruby hash are empty: <code>language</code> and <code>properties</code>. Notice that this isn&rsquo;t a problem for most of these fields, but for one it is:</p>
+<p>Two of these fields on the ruby hash are empty: <code>language</code> and <code>properties</code>.
+Notice that this isn&rsquo;t a problem for most of these fields, but for one it is:</p>
 
 <div><script src='https://gist.github.com/9404094.js'></script>
 <noscript><pre><code>var options = {
@@ -162,13 +507,26 @@ h2.subtitle {
 };</code></pre></noscript></div>
 
 
-<p>See that? The first four fields feed into double quotes as strings. If they are empty, they are empty. It may cause an issue somewhere down the line, but the Javascript itself is valid.</p>
+<p>See that? The first four fields feed into double quotes as strings. If they are
+empty, they are empty. It may cause an issue somewhere down the line, but the
+Javascript itself is valid.</p>
 
-<p>The <code>properties</code> field, on the other hand is expecting a JSON object. That missing bit will cause Javascript to blow up once this loads in the browser.</p>
+<p>The <code>properties</code> field, on the other hand is expecting a JSON object. That
+missing bit will cause Javascript to blow up once this loads in the browser.</p>
 
-<p>What&rsquo;s the solution here? In this case, I turned to <code>Hash#fetch</code> rather than the <code>[]</code> accessor. What&rsquo;s the difference? There are two main differences between the bracket accessor and the <code>fetch</code> method. First, <code>my_hash[:some_missing_key]</code> will return <code>nil</code> if the key is not found in the hash. If <code>my_hash.fetch(:some_missing_key)</code> can&rsquo;t find a key, it will raise a <code>KeyError</code> exception.</p>
+<p>What&rsquo;s the solution here? In this case, I turned to <code>Hash#fetch</code> rather than
+the <code>[]</code> accessor. What&rsquo;s the difference? There are two main differences
+between the bracket accessor and the <code>fetch</code> method. First,
+<code>my_hash[:some_missing_key]</code> will return <code>nil</code> if the key is not found in the
+hash. If <code>my_hash.fetch(:some_missing_key)</code> can&rsquo;t find a key, it will raise a
+<code>KeyError</code> exception.</p>
 
-<p>That&rsquo;s not really what we are looking for, which brings me to the second difference. <code>Hash#fetch</code> takes an optional second argument which specifies a default value. So if we call <code>my_hash.fetch(:some_missing_key, 'tacos')</code> and the key is not found in the hash, it will return <code>'tacos'</code> instead of <code>nil</code>. That&rsquo;s exactly what I needed. I returned an empty JSON object <code>{}</code> as the default.</p>
+<p>That&rsquo;s not really what we are looking for, which brings me to the second
+difference. <code>Hash#fetch</code> takes an optional second argument which specifies a
+default value. So if we call <code>my_hash.fetch(:some_missing_key, 'tacos')</code> and
+the key is not found in the hash, it will return <code>'tacos'</code> instead of <code>nil</code>.
+That&rsquo;s exactly what I needed. I returned an empty JSON object <code>{}</code> as the
+default.</p>
 
 <div><script src='https://gist.github.com/9404014.js'></script>
 <noscript><pre><code>var options = {                                                                                                                                                                                                                                                                           
@@ -180,7 +538,8 @@ h2.subtitle {
 };</code></pre></noscript></div>
 
 
-<p>This degraded nicely in the cases in which I had no <code>properties</code> hash in my <code>search_params</code> hash.</p>
+<p>This degraded nicely in the cases in which I had no <code>properties</code> hash in my
+<code>search_params</code> hash.</p>
 
 <div><script src='https://gist.github.com/9404101.js'></script>
 <noscript><pre><code>var options = {
@@ -225,11 +584,22 @@ h2.subtitle {
 	</div>
 	<h1 class="title" itemprop="name"><a href="/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby/" itemprop="url">The Null Object Pattern and Method_missing in Ruby</a></h1>
 	<div class="entry-content" itemprop="articleBody">
-		<p>I encountered an interesting problem this week that allowed me to dig into the Null Object pattern, Ruby duck typing, and Ruby&rsquo;s method_missing.</p>
+		<p>I encountered an interesting problem this week that allowed me to dig into the
+Null Object pattern, Ruby duck typing, and Ruby&rsquo;s method_missing.</p>
 
-<p>In our app we have a <code>Duck</code> class (name changed to protect the innocent). Most of our users have a <code>Duck</code> associated with their account, but some don&rsquo;t. In our application, we have certain situations which expect a Duck, even if the user doesn&rsquo;t have one. If we don&rsquo;t have a Duck, but our app expects one and passes it a message like <code>quack,</code> we will receive an ugly <code>NoMethodError: undefined method 'quack' for nil:NilClass</code> error.</p>
+<p>In our app we have a <code>Duck</code> class (name changed to protect the innocent). Most
+of our users have a <code>Duck</code> associated with their account, but some don&rsquo;t. In
+our application, we have certain situations which expect a Duck, even if the
+user doesn&rsquo;t have one. If we don&rsquo;t have a Duck, but our app expects one and
+passes it a message like <code>quack,</code> we will receive an ugly <code>NoMethodError:
+undefined method 'quack' for nil:NilClass</code> error.</p>
 
-<p>How can we solve this without spreading smelly nil checks around our system? It turns out there is an existing design pattern for just this situation, the Null Object pattern. In the Null Object pattern, we create a stand in object for our <code>Duck</code> that can respond to the same interface, but without returning any values. We avoid ugly <code>NoMethodError</code>s without having to check for the objects existence everywhere.</p>
+<p>How can we solve this without spreading smelly nil checks around our system? It
+turns out there is an existing design pattern for just this situation, the Null
+Object pattern. In the Null Object pattern, we create a stand in object for our
+<code>Duck</code> that can respond to the same interface, but without returning any
+values. We avoid ugly <code>NoMethodError</code>s without having to check for the objects
+existence everywhere.</p>
 
 <p>Here is our Duck:</p>
 
@@ -246,7 +616,8 @@ h2.subtitle {
 end</code></pre></noscript></div>
 
 
-<p>This is a Ruby on Rails ActiveRecord model, so there is more to it than we see here. Here is the database migration file:</p>
+<p>This is a Ruby on Rails ActiveRecord model, so there is more to it than we see
+here. Here is the database migration file:</p>
 
 <div><script src='https://gist.github.com/9426713.js?file=create_ducks_migration1.rb'></script>
 <noscript><pre><code>class CreateDucks &lt; ActiveRecord::Migration
@@ -261,9 +632,14 @@ end</code></pre></noscript></div>
 end</code></pre></noscript></div>
 
 
-<p>For each of these fields, ActiveRecord will create getter and setter methods in the background. But for the <code>migratory</code> boolean field, we will get the bonus <code>migratory?</code> predicate method.</p>
+<p>For each of these fields, ActiveRecord will create getter and setter methods in
+the background. But for the <code>migratory</code> boolean field, we will get the bonus
+<code>migratory?</code> predicate method.</p>
 
-<p>In our case, it turned out that we need our <code>NilDuck</code> to return <em>some</em> values, but most things should just return <code>nil</code>. The simplest way for us to implement our <code>NilDuck</code>, and the state in which I found my <code>NilDuck</code> code this week looks something like the following:</p>
+<p>In our case, it turned out that we need our <code>NilDuck</code> to return <em>some</em> values,
+but most things should just return <code>nil</code>. The simplest way for us to implement
+our <code>NilDuck</code>, and the state in which I found my <code>NilDuck</code> code this week looks
+something like the following:</p>
 
 <div><script src='https://gist.github.com/9426713.js?file=nil_duck1.rb'></script>
 <noscript><pre><code>class CreateDucks &lt; ActiveRecord::Migration
@@ -278,11 +654,31 @@ end</code></pre></noscript></div>
 end</code></pre></noscript></div>
 
 
-<p>Here we have provided the attribute setters our fake object needs with the <code>attr_writer</code> call. We then proceed to override each getter as needed. There are a few special cases in which a value other than nil is desired, but the default return value for our <code>NilDuck</code> is <code>nil</code>. In the cases in which we don&rsquo;t have an actual <code>Duck</code> and need to use a demo <code>Duck</code>, we can pass in an instance of our <code>NilDuck</code> and everything will work as expected.</p>
+<p>Here we have provided the attribute setters our fake object needs with the
+<code>attr_writer</code> call. We then proceed to override each getter as needed. There
+are a few special cases in which a value other than nil is desired, but the
+default return value for our <code>NilDuck</code> is <code>nil</code>. In the cases in which we don&rsquo;t
+have an actual <code>Duck</code> and need to use a demo <code>Duck</code>, we can pass in an instance
+of our <code>NilDuck</code> and everything will work as expected.</p>
 
-<blockquote><p>Note: since Ruby is not a strongly typed language, we don&rsquo;t have to subclass our <code>Duck</code> here or implement a formal common interface as we would in a strongly-typed language like Java. In Rubyland, types are determined by the public interface of the object in question. So if our <code>NilDuck</code>, or any other object for that matter, implements the methods our client object calls in <code>Duck</code>, we can substitute it. This is often called &ldquo;duck typing,&rdquo; since if an object quacks like a duck, and acts like a duck, we can usually consider it a duck. We <em>do</em> implement a common interface, but the interface that we implement is conceptual, represented by the messages to which we expect our duck to respond. It&rsquo;s not baked into the language as a formal construct.</p></blockquote>
+<blockquote><p>Note: since Ruby is not a strongly typed language, we don&rsquo;t have to subclass
+our <code>Duck</code> here or implement a formal common interface as we would in a
+strongly-typed language like Java. In Rubyland, types are determined by the
+public interface of the object in question. So if our <code>NilDuck</code>, or any other
+object for that matter, implements the methods our client object calls in
+<code>Duck</code>, we can substitute it. This is often called &ldquo;duck typing,&rdquo; since if an
+object quacks like a duck, and acts like a duck, we can usually consider it a
+duck. We <em>do</em> implement a common interface, but the interface that we
+implement is conceptual, represented by the messages to which we expect our
+duck to respond. It&rsquo;s not baked into the language as a formal construct.</p></blockquote>
 
-<p>So what&rsquo;s wrong with this code? Nothing at face value. Maybe it could be refactored into something less verbose, but it&rsquo;s functional and fairly straightforward. In the beginning it served our app quite well. But I came to this code last week because of a bug uncovered by a change in another area of the app. It turned out that my <code>NilDuck</code> code had gotten stale and not kept up with changes to the <code>Duck</code> class. Methods had been added to <code>Duck</code>, but not to <code>NilDuck</code>. Now <code>Duck</code> looks like this:</p>
+<p>So what&rsquo;s wrong with this code? Nothing at face value. Maybe it could be
+refactored into something less verbose, but it&rsquo;s functional and fairly
+straightforward. In the beginning it served our app quite well. But I came to
+this code last week because of a bug uncovered by a change in another area of
+the app. It turned out that my <code>NilDuck</code> code had gotten stale and not kept up
+with changes to the <code>Duck</code> class. Methods had been added to <code>Duck</code>, but not to
+<code>NilDuck</code>. Now <code>Duck</code> looks like this:</p>
 
 <div><script src='https://gist.github.com/9426713.js?file=duck2.rb'></script>
 <noscript><pre><code>class CreateDucks &lt; ActiveRecord::Migration
@@ -312,11 +708,27 @@ end</code></pre></noscript></div>
 end</code></pre></noscript></div>
 
 
-<p>We don&rsquo;t have equivalent <code>secondary_color</code> and  <code>multi_colored?</code> methods and our NilDuck started causing errors. Since none of these new methods requirs special values, I could have just added equivalent getters in NilDuck that returned <code>nil</code>. But since I&rsquo;m a lazy programmer, I asked myself how I could avoid editing this class in the future. I turned to Ruby&rsquo;s <code>method_missing</code>!</p>
+<p>We don&rsquo;t have equivalent <code>secondary_color</code> and  <code>multi_colored?</code> methods and
+our NilDuck started causing errors. Since none of these new methods requirs
+special values, I could have just added equivalent getters in NilDuck that
+returned <code>nil</code>. But since I&rsquo;m a lazy programmer, I asked myself how I could
+avoid editing this class in the future. I turned to Ruby&rsquo;s <code>method_missing</code>!</p>
 
-<p>In order to understand what my pair and I did here, you need to understand a little about the way Ruby looks up a method, or message, passed to an object. When you call a method on a Ruby object, Ruby first looks to see if the method has been defined on the object instance itself (or more precisely on it&rsquo;s <a href="http://en.wikipedia.org/wiki/Metaclass">eigenclass</a>), if it doesn&rsquo;t find it it will then look in any included modules in reverse include order, then in the instance methods of the class, and finally in the instance methods of the <code>Object</code> class, the ultimate ancestor of every object in Ruby. If Ruby still can&rsquo;t find the method, it starts the search over at our instance, this time trying to call <code>method_missing</code>. If it can&rsquo;t find a definition for <code>method_missing</code> somewhere in our inheritance chain, only then will it throw a <code>NoMethodError</code>.</p>
+<p>In order to understand what my pair and I did here, you need to understand a
+little about the way Ruby looks up a method, or message, passed to an object.
+When you call a method on a Ruby object, Ruby first looks to see if the method
+has been defined on the object instance itself (or more precisely on it&rsquo;s
+<a href="http://en.wikipedia.org/wiki/Metaclass">eigenclass</a>), if it doesn&rsquo;t find it it
+will then look in any included modules in reverse include order, then in the
+instance methods of the class, and finally in the instance methods of the
+<code>Object</code> class, the ultimate ancestor of every object in Ruby. If Ruby still
+can&rsquo;t find the method, it starts the search over at our instance, this time
+trying to call <code>method_missing</code>. If it can&rsquo;t find a definition for
+<code>method_missing</code> somewhere in our inheritance chain, only then will it throw a
+<code>NoMethodError</code>.</p>
 
-<p>The <code>method_missing</code> callback gives us the hook we need to handle our, well, missing methods. Let&rsquo;s refactor our <code>NilDuck</code> to use <code>method_missing</code>:</p>
+<p>The <code>method_missing</code> callback gives us the hook we need to handle our, well,
+missing methods. Let&rsquo;s refactor our <code>NilDuck</code> to use <code>method_missing</code>:</p>
 
 <div><script src='https://gist.github.com/9426713.js?file=nil_duck2.rb'></script>
 <noscript><pre><code>class CreateDucks &lt; ActiveRecord::Migration
@@ -331,9 +743,20 @@ end</code></pre></noscript></div>
 end</code></pre></noscript></div>
 
 
-<p>See what we did there? We want <code>NilDuck</code> to have the same interface as <code>Duck</code>, so in our <code>method_missing</code> implementation, we first checked to see whether <code>Duck</code> responds to the method our client code attempted to call. If it does, we return <code>nil</code>, otherwise we pass the buck to super. Our <code>NilDuck</code> will now respond to everything that <code>Duck</code> responds to and throw a <code>NoMethodError</code> for anything that it doesn&rsquo;t respond to. As a bonus, we got to eliminate a lot of code here.</p>
+<p>See what we did there? We want <code>NilDuck</code> to have the same interface as <code>Duck</code>,
+so in our <code>method_missing</code> implementation, we first checked to see whether
+<code>Duck</code> responds to the method our client code attempted to call. If it does, we
+return <code>nil</code>, otherwise we pass the buck to super. Our <code>NilDuck</code> will now
+respond to everything that <code>Duck</code> responds to and throw a <code>NoMethodError</code> for
+anything that it doesn&rsquo;t respond to. As a bonus, we got to eliminate a lot of
+code here.</p>
 
-<p>But what about predicate methods? Well, in Ruby, <code>nil</code> is falsey, so this code will work correctly in an <code>if/unless/!</code> situation, but what about a situation in which you might need <code>migratory?</code> to explicitly give you <code>false</code> instead of <code>nil</code>? What if you are going to pass that <code>true</code> or <code>false</code> along to someone else as a string? What if you need to feed it into javascript from an erb or haml template?</p>
+<p>But what about predicate methods? Well, in Ruby, <code>nil</code> is falsey, so this code
+will work correctly in an <code>if/unless/!</code> situation, but what about a situation
+in which you might need <code>migratory?</code> to explicitly give you <code>false</code> instead of
+<code>nil</code>? What if you are going to pass that <code>true</code> or <code>false</code> along to someone
+else as a string? What if you need to feed it into javascript from an erb or
+haml template?</p>
 
 <div><script src='https://gist.github.com/9426713.js?file=javascript.js.rb'></script>
 <noscript><pre><code>class CreateDucks &lt; ActiveRecord::Migration
@@ -348,7 +771,10 @@ end</code></pre></noscript></div>
 end</code></pre></noscript></div>
 
 
-<p>If this <code>duck</code> is our <code>NilDuck</code>, <code>duck.multi_colored?</code> will return <code>nil</code>. When the template is rendered and the string is interpolated, <code>nil</code>&rsquo;s <code>to_s</code> method will be invoked, which will return an empty string instead of <code>'false'</code>. This will result in a javascript error in the browser:</p>
+<p>If this <code>duck</code> is our <code>NilDuck</code>, <code>duck.multi_colored?</code> will return <code>nil</code>. When
+the template is rendered and the string is interpolated, <code>nil</code>&rsquo;s <code>to_s</code> method
+will be invoked, which will return an empty string instead of <code>'false'</code>. This
+will result in a javascript error in the browser:</p>
 
 <div><script src='https://gist.github.com/9426713.js?file=javascript1.js'></script>
 <noscript><pre><code>class CreateDucks &lt; ActiveRecord::Migration
@@ -363,7 +789,12 @@ end</code></pre></noscript></div>
 end</code></pre></noscript></div>
 
 
-<p>Whoops! That&rsquo;s not what we wanted at all! We want <code>'true'</code> or <code>'false'</code> to be rendered. How can we handle that? Well, we can fall back and explicitly create a <code>multi_colored?</code> method in our <code>NilDuck</code> that returns <code>false</code>, but we can do better than that. Let&rsquo;s stay lazy so we don&rsquo;t have to fix this again! Since it turns out that we don&rsquo;t really want our predicate methods to return just a falsey value, but <code>false</code> itself. Let&rsquo;s account for that:</p>
+<p>Whoops! That&rsquo;s not what we wanted at all! We want <code>'true'</code> or <code>'false'</code> to be
+rendered. How can we handle that? Well, we can fall back and explicitly create
+a <code>multi_colored?</code> method in our <code>NilDuck</code> that returns <code>false</code>, but we can do
+better than that. Let&rsquo;s stay lazy so we don&rsquo;t have to fix this again! Since it
+turns out that we don&rsquo;t really want our predicate methods to return just a
+falsey value, but <code>false</code> itself. Let&rsquo;s account for that:</p>
 
 <div><script src='https://gist.github.com/9426713.js?file=nil_duck3.rb'></script>
 <noscript><pre><code>class CreateDucks &lt; ActiveRecord::Migration
@@ -378,7 +809,9 @@ end</code></pre></noscript></div>
 end</code></pre></noscript></div>
 
 
-<p>Now if <code>Duck</code> responds to our method and our method ends with &lsquo;?&rsquo;, <code>NilDuck</code> will return <code>false</code>, if it doesn&rsquo;t end with &lsquo;?&rsquo; it will return <code>nil</code>. Our template will now render the javascript we expected:</p>
+<p>Now if <code>Duck</code> responds to our method and our method ends with &lsquo;?&rsquo;, <code>NilDuck</code>
+will return <code>false</code>, if it doesn&rsquo;t end with &lsquo;?&rsquo; it will return <code>nil</code>. Our
+template will now render the javascript we expected:</p>
 
 <div><script src='https://gist.github.com/9426713.js?file=javascript2.js'></script>
 <noscript><pre><code>class CreateDucks &lt; ActiveRecord::Migration
@@ -393,7 +826,10 @@ end</code></pre></noscript></div>
 end</code></pre></noscript></div>
 
 
-<p>You could certainly take this further and abstract out a generic <code>NilObject</code> for your app, but this serves our needs quite well. For further reading on the Null Object pattern: [<a href="http://devblog.avdi.org/2011/05/30/null-objects-and-falsiness/">http://devblog.avdi.org/2011/05/30/null-objects-and-falsiness/</a>]</p>
+<p>You could certainly take this further and abstract out a generic <code>NilObject</code>
+for your app, but this serves our needs quite well. For further reading on the
+Null Object pattern:
+[<a href="http://devblog.avdi.org/2011/05/30/null-objects-and-falsiness/">http://devblog.avdi.org/2011/05/30/null-objects-and-falsiness/</a>]</p>
 
 		
 		

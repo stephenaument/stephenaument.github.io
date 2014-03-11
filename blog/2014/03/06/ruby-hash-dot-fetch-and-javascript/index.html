@@ -9,7 +9,10 @@
 	<meta name="author" content="Stephen Aument">
 
 	
-	<meta name="description" content="Ruby Hash#fetch and Javascript In a previous post I mentioned a case in which I had a Haml template in a Rails app with Javascript in it. The &hellip;">
+	<meta name="description" content="Ruby Hash#fetch and Javascript In a previous
+post I
+mentioned a case in which I had a Haml template in a Rails app with Javascript
+in it. The &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -102,9 +105,15 @@ h2.subtitle {
 			<div class="mid-col-container">
 				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 	<h1 class="title" itemprop="name">Ruby Hash#fetch and Javascript</h1>
-	<div class="entry-content" itemprop="articleBody"><p>In a <a href="/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby/">previous post</a> I mentioned a case in which I had a Haml template in a Rails app with Javascript in it. The template was rendering Ruby values into what would become a JSON object (Javascript Hash) in the browser. In that particular case, a method call on a Null Object was returning nil and breaking the Javascript.</p>
+	<div class="entry-content" itemprop="articleBody"><p>In a <a href="/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby/">previous
+post</a> I
+mentioned a case in which I had a Haml template in a Rails app with Javascript
+in it. The template was rendering Ruby values into what would become a JSON
+object (Javascript Hash) in the browser. In that particular case, a method call
+on a Null Object was returning nil and breaking the Javascript.</p>
 
-<p>Well, today I encountered another variation of this problem. In this case, I had a Ruby Hash feeding values into the JSON object. It looked like this:</p>
+<p>Well, today I encountered another variation of this problem. In this case, I
+had a Ruby Hash feeding values into the JSON object. It looked like this:</p>
 
 <div><script src='https://gist.github.com/9403295.js'></script>
 <noscript><pre><code>var options = {                                                                                                                                                                                                                                                                           
@@ -124,7 +133,8 @@ h2.subtitle {
 };      </code></pre></noscript></div>
 
 
-<p>Two of these fields on the ruby hash are empty: <code>language</code> and <code>properties</code>. Notice that this isn&rsquo;t a problem for most of these fields, but for one it is:</p>
+<p>Two of these fields on the ruby hash are empty: <code>language</code> and <code>properties</code>.
+Notice that this isn&rsquo;t a problem for most of these fields, but for one it is:</p>
 
 <div><script src='https://gist.github.com/9404094.js'></script>
 <noscript><pre><code>var options = {
@@ -136,13 +146,26 @@ h2.subtitle {
 };</code></pre></noscript></div>
 
 
-<p>See that? The first four fields feed into double quotes as strings. If they are empty, they are empty. It may cause an issue somewhere down the line, but the Javascript itself is valid.</p>
+<p>See that? The first four fields feed into double quotes as strings. If they are
+empty, they are empty. It may cause an issue somewhere down the line, but the
+Javascript itself is valid.</p>
 
-<p>The <code>properties</code> field, on the other hand is expecting a JSON object. That missing bit will cause Javascript to blow up once this loads in the browser.</p>
+<p>The <code>properties</code> field, on the other hand is expecting a JSON object. That
+missing bit will cause Javascript to blow up once this loads in the browser.</p>
 
-<p>What&rsquo;s the solution here? In this case, I turned to <code>Hash#fetch</code> rather than the <code>[]</code> accessor. What&rsquo;s the difference? There are two main differences between the bracket accessor and the <code>fetch</code> method. First, <code>my_hash[:some_missing_key]</code> will return <code>nil</code> if the key is not found in the hash. If <code>my_hash.fetch(:some_missing_key)</code> can&rsquo;t find a key, it will raise a <code>KeyError</code> exception.</p>
+<p>What&rsquo;s the solution here? In this case, I turned to <code>Hash#fetch</code> rather than
+the <code>[]</code> accessor. What&rsquo;s the difference? There are two main differences
+between the bracket accessor and the <code>fetch</code> method. First,
+<code>my_hash[:some_missing_key]</code> will return <code>nil</code> if the key is not found in the
+hash. If <code>my_hash.fetch(:some_missing_key)</code> can&rsquo;t find a key, it will raise a
+<code>KeyError</code> exception.</p>
 
-<p>That&rsquo;s not really what we are looking for, which brings me to the second difference. <code>Hash#fetch</code> takes an optional second argument which specifies a default value. So if we call <code>my_hash.fetch(:some_missing_key, 'tacos')</code> and the key is not found in the hash, it will return <code>'tacos'</code> instead of <code>nil</code>. That&rsquo;s exactly what I needed. I returned an empty JSON object <code>{}</code> as the default.</p>
+<p>That&rsquo;s not really what we are looking for, which brings me to the second
+difference. <code>Hash#fetch</code> takes an optional second argument which specifies a
+default value. So if we call <code>my_hash.fetch(:some_missing_key, 'tacos')</code> and
+the key is not found in the hash, it will return <code>'tacos'</code> instead of <code>nil</code>.
+That&rsquo;s exactly what I needed. I returned an empty JSON object <code>{}</code> as the
+default.</p>
 
 <div><script src='https://gist.github.com/9404014.js'></script>
 <noscript><pre><code>var options = {                                                                                                                                                                                                                                                                           
@@ -154,7 +177,8 @@ h2.subtitle {
 };</code></pre></noscript></div>
 
 
-<p>This degraded nicely in the cases in which I had no <code>properties</code> hash in my <code>search_params</code> hash.</p>
+<p>This degraded nicely in the cases in which I had no <code>properties</code> hash in my
+<code>search_params</code> hash.</p>
 
 <div><script src='https://gist.github.com/9404101.js'></script>
 <noscript><pre><code>var options = {
