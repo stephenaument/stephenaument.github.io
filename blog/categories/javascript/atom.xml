@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Javascript | Stephen Aument]]></title>
+  <link href="http://stephenaument.github.io/blog/categories/javascript/atom.xml" rel="self"/>
+  <link href="http://stephenaument.github.io/"/>
+  <updated>2014-03-13T23:14:29-05:00</updated>
+  <id>http://stephenaument.github.io/</id>
+  <author>
+    <name><![CDATA[Stephen Aument]]></name>
+    <email><![CDATA[saument@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Backbone Collection Testing Gotcha]]></title>
+    <link href="http://stephenaument.github.io/blog/2014/03/12/backbone-collection-testing-gotcha/"/>
+    <updated>2014-03-12T16:46:04-05:00</updated>
+    <id>http://stephenaument.github.io/blog/2014/03/12/backbone-collection-testing-gotcha</id>
+    <content type="html"><![CDATA[<p>Be careful of this gotcha when testing a <a href="http://backbonejs.org/">Backbone.js</a>
+collection. I don&rsquo;t have much experience with Backbone, so this is probably
+obvious to more experienced users, but hopefully this will help somebody else,
+or at least myself in the future.</p>
+
+<p>Today I needed to test the behavior of a Collection with a certain number of
+Models in it. I didn&rsquo;t care about the content of the models, just that they
+contained a certain field. So, my pair and I came up with this setup to run
+in our <a href="http://jasmine.github.io/">Jasmine</a> specs:</p>
+
+<p><div><script src='https://gist.github.com/9541718.js?file=initial_spec.js.coffee'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+</p>
+
+<p>We created an array of dummy models and passed them into our Collection. This
+is one way you can create and populate a Collection. You pass in your array of
+models and they become the models in the Collection.</p>
+
+<blockquote><p>If that <code>providerArray = (provider for [1..18])</code> syntax freaks you out, don&rsquo;t
+worry. It&rsquo;s just a bit of fancy CoffeeScript and all you need to understand
+for now is that it creates an 18 item array with each element being
+<code>provider</code>.</p></blockquote>
+
+<p>Makes sense, right? Well, our test failed and when we started debugging in the
+browser, here&rsquo;s what we saw:</p>
+
+<p><div><script src='https://gist.github.com/9541718.js?file=initial_result.js'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+</p>
+
+<p>What??? <code>length: 1, models: Array[1]</code>? When we looked into the models array it
+contained a single item from the array we passed in.</p>
+
+<p>Next we tried setting the models array after the fact:</p>
+
+<p><div><script src='https://gist.github.com/9541718.js?file=intermediate_spec.js.coffee'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+</p>
+
+<p>The models array seems right now, but the collection length was still one:</p>
+
+<p><div><script src='https://gist.github.com/9541718.js?file=intermediate_result.js'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+</p>
+
+<p>This was just as baffling. By this time we had called in <a href="@timtyrrell">Tim
+Tyrell</a> to tell us what we were doing wrong. Tim had the foresight
+to read, not just the docs for the Backbone Collection <code>initializer</code> method, but
+also the documentation for the <code>add</code> method, which had this to say (emphasis
+added):</p>
+
+<blockquote><p><em>If you&rsquo;re adding models to the collection that are already in the collection,
+they&rsquo;ll be ignored</em>, unless you pass {merge: true}, in which case their
+attributes will be merged into the corresponding models, firing any
+appropriate &ldquo;change&rdquo; events.</p></blockquote>
+
+<p>Interesting! When add is called, it ignores any objects that are already
+present in the models array. Since we are using the same model instance in each
+position of our array, only the first one is being stored. The rest are being
+dumped.</p>
+
+<p>A quick check of the <a href="https://github.com/jashkenas/backbone/blob/master/backbone.js#L785-L799">Backbone source
+code</a>
+confirms that the initialize method is calling <code>reset</code> with the array you pass
+in, which iterates over the array and calls <code>add</code> for each.</p>
+
+<p><div><script src='https://gist.github.com/9541718.js?file=backbone_reset.js'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+</p>
+
+<p>So, my pair, Curtis Ekstrom decided to try creating a new object for each
+element of the array with the same data to see if that would work.</p>
+
+<p><div><script src='https://gist.github.com/9541718.js?file=final_spec.js.coffee'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+</p>
+
+<p>And so it did. At first I thought that Backbone was performing a simple object
+identity check (===) vs an equality check (==). That would make sense of the
+behavior we saw, but when I read the <code>add</code> documentation again, I saw that
+passing <code>{merge: true}</code> along with the model or model array would result in the
+attributes passed in being merged into the existing objects. It must be doing
+something else entirely.</p>
+
+<p>Another peek into the <a href="https://github.com/jashkenas/backbone/blob/master/backbone.js#L718-L728">source
+code</a>
+confirms. <code>add</code> calls <code>set</code>, which contains the relevant:</p>
+
+<p><div><script src='https://gist.github.com/9541718.js?file=backbone_set.js'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+</p>
+
+<p>That first line <code>if (existing = this.get(id)) {</code> is the key. It looks for an
+existing model in the <code>_byId</code> object hash, with the same <code>id</code>, <code>cid</code> or that is the
+object itself. If it finds it, and <code>merge</code> is not <code>true</code> it rejects the model.</p>
+
+<p>TL;DR &ndash; Make sure each Model in the array you pass to the Collection
+initializer is a distinct instance, even if the data is otherwise identincal.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby Hash#fetch and Javascript]]></title>
+    <link href="http://stephenaument.github.io/blog/2014/03/06/ruby-hash-dot-fetch-and-javascript/"/>
+    <updated>2014-03-06T19:21:15-06:00</updated>
+    <id>http://stephenaument.github.io/blog/2014/03/06/ruby-hash-dot-fetch-and-javascript</id>
+    <content type="html"><![CDATA[<p>In a <a href="/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby/">previous
+post</a> I
+mentioned a case in which I had a Haml template in a Rails app with Javascript
+in it. The template was rendering Ruby values into what would become a JSON
+object (Javascript Hash) in the browser. In that particular case, a method call
+on a Null Object was returning nil and breaking the Javascript.</p>
+
+<p>Well, today I encountered another variation of this problem. In this case, I
+had a Ruby Hash feeding values into the JSON object. It looked like this:</p>
+
+<p><div><script src='https://gist.github.com/9403295.js'></script>
+<noscript><pre><code>var options = {                                                                                                                                                                                                                                                                           
+  &quot;gender&quot;: &quot;#{stored_search_params[&#39;gender&#39;]}&quot;,                                                                                                                                                                                                                                          
+  &quot;memberGender&quot;: &quot;#{current_user.short_gender}&quot;,                                                                                                                                                                                                                                         
+  &quot;age&quot;: &quot;#{current_user.age}&quot;,                                                                                                                                                                                                                                                           
+  &quot;aexcel&quot;: &quot;#{stored_search_params[&#39;aex&#39;]}&quot;,                                                                                                                                                                                                                                             
+  &quot;language&quot;: &quot;#{stored_search_params[&#39;language&#39;]}&quot;,                                                                                                                                                                                                                                      
+  &quot;displayLanguage&quot;: &quot;#{stored_search_params[&#39;displayLanguage&#39;]}&quot;,                                                                                                                                                                                                                        
+  &quot;location&quot;: &quot;#{last_location_searched}&quot;,                                                                                                                                                                                                                                                
+  &quot;radius&quot;: &quot;#{stored_search_params[&#39;radius&#39;] || default_search_radius}&quot;,                                                                                                                                                                                                                 
+  &quot;query&quot;: &quot;#{stored_search_params[&#39;query&#39;]}&quot;,                                                                                                                                                                                                                                            
+  &quot;accepting_new_patients&quot;: &quot;#{stored_search_params[&#39;accepting_new_patients&#39;]}&quot;,                                                                                                                                                                                                          
+  &quot;procedure_id&quot;: &quot;#{stored_search_params[&#39;procedure_id&#39;]}&quot;,                                                                                                                                                                                                                              
+  &quot;specialty_id&quot;: &quot;#{stored_search_params[&#39;specialty_id&#39;]}&quot;,                                                                                                                                                                                                                              
+  &quot;event_properties&quot;: #{stored_search_params.fetch(&#39;event_properties&#39;, {})}                                                                                                                                                                                                               
+};      </code></pre></noscript></div>
+</p>
+
+<p>Two of these fields on the ruby hash are empty: <code>language</code> and <code>properties</code>.
+Notice that this isn&rsquo;t a problem for most of these fields, but for one it is:</p>
+
+<p><div><script src='https://gist.github.com/9404094.js'></script>
+<noscript><pre><code>var options = {
+  &quot;gender&quot;: &quot;M&quot;,
+  &quot;age&quot;: &quot;27&quot;,
+  &quot;language&quot;: &quot;en-US&quot;,
+  &quot;query&quot;: &quot;specials&quot;,
+  &quot;properties&quot;: 
+};</code></pre></noscript></div>
+</p>
+
+<p>See that? The first four fields feed into double quotes as strings. If they are
+empty, they are empty. It may cause an issue somewhere down the line, but the
+Javascript itself is valid.</p>
+
+<p>The <code>properties</code> field, on the other hand is expecting a JSON object. That
+missing bit will cause Javascript to blow up once this loads in the browser.</p>
+
+<p>What&rsquo;s the solution here? In this case, I turned to <code>Hash#fetch</code> rather than
+the <code>[]</code> accessor. What&rsquo;s the difference? There are two main differences
+between the bracket accessor and the <code>fetch</code> method. First,
+<code>my_hash[:some_missing_key]</code> will return <code>nil</code> if the key is not found in the
+hash. If <code>my_hash.fetch(:some_missing_key)</code> can&rsquo;t find a key, it will raise a
+<code>KeyError</code> exception.</p>
+
+<p>That&rsquo;s not really what we are looking for, which brings me to the second
+difference. <code>Hash#fetch</code> takes an optional second argument which specifies a
+default value. So if we call <code>my_hash.fetch(:some_missing_key, 'tacos')</code> and
+the key is not found in the hash, it will return <code>'tacos'</code> instead of <code>nil</code>.
+That&rsquo;s exactly what I needed. I returned an empty JSON object <code>{}</code> as the
+default.</p>
+
+<p><div><script src='https://gist.github.com/9404014.js'></script>
+<noscript><pre><code>var options = {                                                                                                                                                                                                                                                                           
+  &quot;gender&quot;: &quot;#{search_params[&#39;gender&#39;]}&quot;,                                                                                                                                                                                                                                          
+  &quot;age&quot;: &quot;#{current_user.age}&quot;,                                                                                                                                                                                                                                                           
+  &quot;language&quot;: &quot;#{search_params[&#39;language&#39;]}&quot;,                                                                                                                                                                                                                                      
+  &quot;query&quot;: &quot;#{search_params[&#39;query&#39;]}&quot;,                                                                                                                                                                                                                                            
+  &quot;properties&quot;: #{search_params.fetch(&#39;properties&#39;, {})}                                                                                                                                                                                                               
+};</code></pre></noscript></div>
+</p>
+
+<p>This degraded nicely in the cases in which I had no <code>properties</code> hash in my
+<code>search_params</code> hash.</p>
+
+<p><div><script src='https://gist.github.com/9404101.js'></script>
+<noscript><pre><code>var options = {
+  &quot;gender&quot;: &quot;M&quot;,
+  &quot;age&quot;: &quot;27&quot;,
+  &quot;language&quot;: &quot;en-US&quot;,
+  &quot;query&quot;: &quot;specials&quot;,
+  &quot;properties&quot;: {}
+};</code></pre></noscript></div>
+</p>
+
+<p>No more broken Javascript.</p>
+]]></content>
+  </entry>
+  
+</feed>

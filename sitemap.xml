@@ -4,29 +4,35 @@
         <loc>
             http://stephenaument.github.io/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby/
         </loc>
-        <lastmod>2014-03-10T22:30:01-05:00</lastmod>
+        <lastmod>2014-03-13T21:43:47-05:00</lastmod>
     </url>
     <url>
         <loc>
             http://stephenaument.github.io/blog/2014/03/06/ruby-hash-dot-fetch-and-javascript/
         </loc>
-        <lastmod>2014-03-10T22:30:01-05:00</lastmod>
+        <lastmod>2014-03-13T21:49:56-05:00</lastmod>
     </url>
     <url>
         <loc>http://stephenaument.github.io/blog/2014/03/11/null-object-part-2/</loc>
-        <lastmod>2014-03-11T08:22:18-05:00</lastmod>
+        <lastmod>2014-03-13T21:50:15-05:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://stephenaument.github.io/blog/2014/03/12/backbone-collection-testing-gotcha/
+        </loc>
+        <lastmod>2014-03-13T23:01:28-05:00</lastmod>
     </url>
     <url>
         <loc>http://stephenaument.github.io/blog/archives/</loc>
-        <lastmod>2014-03-11T08:22:18-05:00</lastmod>
+        <lastmod>2014-03-13T23:01:28-05:00</lastmod>
     </url>
     <url>
         <loc>http://stephenaument.github.io/blog/categories/</loc>
-        <lastmod>2014-03-10T22:30:01-05:00</lastmod>
+        <lastmod>2014-03-13T21:40:04-05:00</lastmod>
     </url>
     <url>
         <loc>http://stephenaument.github.io/</loc>
-        <lastmod>2014-03-11T08:22:18-05:00</lastmod>
+        <lastmod>2014-03-13T23:01:28-05:00</lastmod>
     </url>
     <url>
         <loc>http://stephenaument.github.io/robots.txt</loc>

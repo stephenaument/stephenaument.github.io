@@ -1,133 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
 
-<!DOCTYPE HTML>
-
-<html>
-
-<head>
-	<meta charset="utf-8">
-	<title>The Null Object Pattern and method_missing in Ruby - Stephen Aument</title>
-	<meta name="author" content="Stephen Aument">
-
-	
-	<meta name="description" content="Mar 5th, 2014 Design Patterns, Metaprogramming Comments The Null Object Pattern and Method_missing in Ruby I encountered an interesting problem this &hellip;">
-	
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link href="/atom.xml" rel="alternate" title="Stephen Aument" type="application/atom+xml">
-	
-	<link rel="canonical" href="http://stephenaument.github.io/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby/">
-	<link href="/favicon.png" rel="shortcut icon">
-	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<link href="/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-	<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-	
-  
-
-</head>
-
-
-<body>
-	<div class="container">
-		<div class="left-col">
-			<div class="intrude-less">
-			<header id="header" class="inner"><div class="profilepic">
-	
-	<img src="http://www.gravatar.com/avatar/c41cd4784eb5610cb99afc1a7c51124d?s=160" alt="Profile Picture" style="width: 160px;" />
-	
-</div>
-<style>
-h2.subtitle {
-  font-size: 1em;
-  font-style: italic;
-}
-
-.initial {
-  font-size: 1.2em;
-}
-</style>
-
-<h1><span class='initial'>S</span>tephen <span class='initial'>A</span>ument</h1>
-<h2 class='subtitle'>Professional Dilettante</h2>
-
-<nav id="main-nav"><ul class="main">
-    <li><a href="/">Blog</a></li>
-    <li><a href="http://about.me/stephenaument">About</a></li>
-    <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-<nav id="sub-nav">
-	<div class="social">
-		
-			<a class="email" href="mailto:saument@gmail.com" title="Email">Email</a>
-		
-		
-		
-		
-			<a class="twitter" href="http://twitter.com/saument" title="Twitter">Twitter</a>
-		
-		
-			<a class="github" href="https://github.com/stephenaument" title="GitHub">GitHub</a>
-		
-		
-		
-		
-			<a class="linkedin" href="http://www.linkedin.com/in/stephenaument" title="LinkedIn">LinkedIn</a>
-		
-		
-		
-		
-		
-		
-		
-    	
-    	
-			<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-		
-	</div>
-</nav>
-</header>				
-			</div>
-		</div>	
-		<div class="mid-col">
-			
-				
-			
-			<div class="mid-col-container">
-				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
+  <title><![CDATA[Category: Metaprogramming | Stephen Aument]]></title>
+  <link href="http://stephenaument.github.io/blog/categories/metaprogramming/atom.xml" rel="self"/>
+  <link href="http://stephenaument.github.io/"/>
+  <updated>2014-03-13T23:14:29-05:00</updated>
+  <id>http://stephenaument.github.io/</id>
+  <author>
+    <name><![CDATA[Stephen Aument]]></name>
+    <email><![CDATA[saument@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
 
   
-
-
-<time datetime="2014-03-05T23:01:09-06:00" data-updated="true" itemprop="datePublished">Mar 5<span>th</span>, 2014</time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/design-patterns/'>Design Patterns</a>, <a class='category' href='/blog/categories/metaprogramming/'>Metaprogramming</a>
-
-
-</div>
-		
-			<span class="comments"><a href="#disqus_thread">Comments</a></span>
-		
-	</div>
-	<h1 class="title" itemprop="name">The Null Object Pattern and Method_missing in Ruby</h1>
-	<div class="entry-content" itemprop="articleBody"><p>I encountered an interesting problem this week that allowed me to dig into the
+  <entry>
+    <title type="html"><![CDATA[The Null Object Pattern and method_missing in Ruby]]></title>
+    <link href="http://stephenaument.github.io/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby/"/>
+    <updated>2014-03-05T23:01:09-06:00</updated>
+    <id>http://stephenaument.github.io/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby</id>
+    <content type="html"><![CDATA[<p>I encountered an interesting problem this week that allowed me to dig into the
 Null Object pattern, Ruby duck typing, and Ruby&rsquo;s method_missing.</p>
 
 <p>In our app we have a <code>Duck</code> class (name changed to protect the innocent). Most
@@ -146,7 +37,7 @@ existence everywhere.</p>
 
 <p>Here is our Duck:</p>
 
-<div><script src='https://gist.github.com/9426713.js?file=duck1.rb'></script>
+<p><div><script src='https://gist.github.com/9426713.js?file=duck1.rb'></script>
 <noscript><pre><code>class CreateDucks &lt; ActiveRecord::Migration
   def change
     t.string name
@@ -157,12 +48,12 @@ existence everywhere.</p>
     t.migratory boolean
   end
 end</code></pre></noscript></div>
-
+</p>
 
 <p>This is a Ruby on Rails ActiveRecord model, so there is more to it than we see
 here. Here is the database migration file:</p>
 
-<div><script src='https://gist.github.com/9426713.js?file=create_ducks_migration1.rb'></script>
+<p><div><script src='https://gist.github.com/9426713.js?file=create_ducks_migration1.rb'></script>
 <noscript><pre><code>class CreateDucks &lt; ActiveRecord::Migration
   def change
     t.string name
@@ -173,7 +64,7 @@ here. Here is the database migration file:</p>
     t.migratory boolean
   end
 end</code></pre></noscript></div>
-
+</p>
 
 <p>For each of these fields, ActiveRecord will create getter and setter methods in
 the background. But for the <code>migratory</code> boolean field, we will get the bonus
@@ -184,7 +75,7 @@ but most things should just return <code>nil</code>. The simplest way for us to 
 our <code>NilDuck</code>, and the state in which I found my <code>NilDuck</code> code this week looks
 something like the following:</p>
 
-<div><script src='https://gist.github.com/9426713.js?file=nil_duck1.rb'></script>
+<p><div><script src='https://gist.github.com/9426713.js?file=nil_duck1.rb'></script>
 <noscript><pre><code>class CreateDucks &lt; ActiveRecord::Migration
   def change
     t.string name
@@ -195,7 +86,7 @@ something like the following:</p>
     t.migratory boolean
   end
 end</code></pre></noscript></div>
-
+</p>
 
 <p>Here we have provided the attribute setters our fake object needs with the
 <code>attr_writer</code> call. We then proceed to override each getter as needed. There
@@ -223,7 +114,7 @@ the app. It turned out that my <code>NilDuck</code> code had gotten stale and no
 with changes to the <code>Duck</code> class. Methods had been added to <code>Duck</code>, but not to
 <code>NilDuck</code>. Now <code>Duck</code> looks like this:</p>
 
-<div><script src='https://gist.github.com/9426713.js?file=duck2.rb'></script>
+<p><div><script src='https://gist.github.com/9426713.js?file=duck2.rb'></script>
 <noscript><pre><code>class CreateDucks &lt; ActiveRecord::Migration
   def change
     t.string name
@@ -234,11 +125,11 @@ with changes to the <code>Duck</code> class. Methods had been added to <code>Duc
     t.migratory boolean
   end
 end</code></pre></noscript></div>
-
+</p>
 
 <p>And the migration:</p>
 
-<div><script src='https://gist.github.com/9426713.js?file=create_ducks_migration2.rb'></script>
+<p><div><script src='https://gist.github.com/9426713.js?file=create_ducks_migration2.rb'></script>
 <noscript><pre><code>class CreateDucks &lt; ActiveRecord::Migration
   def change
     t.string name
@@ -249,7 +140,7 @@ end</code></pre></noscript></div>
     t.migratory boolean
   end
 end</code></pre></noscript></div>
-
+</p>
 
 <p>We don&rsquo;t have equivalent <code>secondary_color</code> and  <code>multi_colored?</code> methods and
 our NilDuck started causing errors. Since none of these new methods requirs
@@ -273,7 +164,7 @@ trying to call <code>method_missing</code>. If it can&rsquo;t find a definition 
 <p>The <code>method_missing</code> callback gives us the hook we need to handle our, well,
 missing methods. Let&rsquo;s refactor our <code>NilDuck</code> to use <code>method_missing</code>:</p>
 
-<div><script src='https://gist.github.com/9426713.js?file=nil_duck2.rb'></script>
+<p><div><script src='https://gist.github.com/9426713.js?file=nil_duck2.rb'></script>
 <noscript><pre><code>class CreateDucks &lt; ActiveRecord::Migration
   def change
     t.string name
@@ -284,7 +175,7 @@ missing methods. Let&rsquo;s refactor our <code>NilDuck</code> to use <code>meth
     t.migratory boolean
   end
 end</code></pre></noscript></div>
-
+</p>
 
 <p>See what we did there? We want <code>NilDuck</code> to have the same interface as <code>Duck</code>,
 so in our <code>method_missing</code> implementation, we first checked to see whether
@@ -301,7 +192,7 @@ in which you might need <code>migratory?</code> to explicitly give you <code>fal
 else as a string? What if you need to feed it into javascript from an erb or
 haml template?</p>
 
-<div><script src='https://gist.github.com/9426713.js?file=javascript.js.rb'></script>
+<p><div><script src='https://gist.github.com/9426713.js?file=javascript.js.rb'></script>
 <noscript><pre><code>class CreateDucks &lt; ActiveRecord::Migration
   def change
     t.string name
@@ -312,14 +203,14 @@ haml template?</p>
     t.migratory boolean
   end
 end</code></pre></noscript></div>
-
+</p>
 
 <p>If this <code>duck</code> is our <code>NilDuck</code>, <code>duck.multi_colored?</code> will return <code>nil</code>. When
 the template is rendered and the string is interpolated, <code>nil</code>&rsquo;s <code>to_s</code> method
 will be invoked, which will return an empty string instead of <code>'false'</code>. This
 will result in a javascript error in the browser:</p>
 
-<div><script src='https://gist.github.com/9426713.js?file=javascript1.js'></script>
+<p><div><script src='https://gist.github.com/9426713.js?file=javascript1.js'></script>
 <noscript><pre><code>class CreateDucks &lt; ActiveRecord::Migration
   def change
     t.string name
@@ -330,7 +221,7 @@ will result in a javascript error in the browser:</p>
     t.migratory boolean
   end
 end</code></pre></noscript></div>
-
+</p>
 
 <p>Whoops! That&rsquo;s not what we wanted at all! We want <code>'true'</code> or <code>'false'</code> to be
 rendered. How can we handle that? Well, we can fall back and explicitly create
@@ -339,7 +230,7 @@ better than that. Let&rsquo;s stay lazy so we don&rsquo;t have to fix this again
 turns out that we don&rsquo;t really want our predicate methods to return just a
 falsey value, but <code>false</code> itself. Let&rsquo;s account for that:</p>
 
-<div><script src='https://gist.github.com/9426713.js?file=nil_duck3.rb'></script>
+<p><div><script src='https://gist.github.com/9426713.js?file=nil_duck3.rb'></script>
 <noscript><pre><code>class CreateDucks &lt; ActiveRecord::Migration
   def change
     t.string name
@@ -350,13 +241,13 @@ falsey value, but <code>false</code> itself. Let&rsquo;s account for that:</p>
     t.migratory boolean
   end
 end</code></pre></noscript></div>
-
+</p>
 
 <p>Now if <code>Duck</code> responds to our method and our method ends with &lsquo;?&rsquo;, <code>NilDuck</code>
 will return <code>false</code>, if it doesn&rsquo;t end with &lsquo;?&rsquo; it will return <code>nil</code>. Our
 template will now render the javascript we expected:</p>
 
-<div><script src='https://gist.github.com/9426713.js?file=javascript2.js'></script>
+<p><div><script src='https://gist.github.com/9426713.js?file=javascript2.js'></script>
 <noscript><pre><code>class CreateDucks &lt; ActiveRecord::Migration
   def change
     t.string name
@@ -367,64 +258,13 @@ template will now render the javascript we expected:</p>
     t.migratory boolean
   end
 end</code></pre></noscript></div>
-
+</p>
 
 <p>You could certainly take this further and abstract out a generic <code>NilObject</code>
 for your app, but this serves our needs quite well. For further reading on the
 Null Object pattern:
 [<a href="http://devblog.avdi.org/2011/05/30/null-objects-and-falsiness/">http://devblog.avdi.org/2011/05/30/null-objects-and-falsiness/</a>]</p>
-</div>
-
-</article>
-
-	<div class="share">
-	<div class="addthis_toolbox addthis_default_style ">
-	
-	<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
-	
-	
-	<a class="addthis_button_tweet"></a>
-	
-	
-	<a class="addthis_counter addthis_pill_style"></a>
-	</div>
-  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
-</div>
-
-
-
-<section id="comment">
-    <h1 class="title">Comments</h1>
-    <div id="disqus_thread" aria-live="polite">
-
-<script type="text/javascript">
-      var disqus_shortname = 'stephenaument';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://stephenaument.github.io/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby/';
-        var disqus_url = 'http://stephenaument.github.io/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby/';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
-
-</div>
-</section>
-
-</div>
-			</div>
-			<footer id="footer" class="inner">Copyright &copy; 2014
-
-    Stephen Aument
-
-
-Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a></footer>
-		</div>
-	</div>
-</body>
-</html>
+]]></content>
+  </entry>
+  
+</feed>

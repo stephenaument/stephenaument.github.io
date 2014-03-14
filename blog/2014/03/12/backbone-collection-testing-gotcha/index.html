@@ -1,0 +1,394 @@
+
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Backbone Collection Testing Gotcha - Stephen Aument</title>
+	<meta name="author" content="Stephen Aument">
+
+	
+	<meta name="description" content="Mar 12th, 2014 Backbone, Coffeescript, Debugging, Javascript Comments Backbone Collection Testing Gotcha Be careful of this gotcha when testing a &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Stephen Aument" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://stephenaument.github.io/blog/2014/03/12/backbone-collection-testing-gotcha/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">
+	
+	<img src="http://www.gravatar.com/avatar/c41cd4784eb5610cb99afc1a7c51124d?s=160" alt="Profile Picture" style="width: 160px;" />
+	
+</div>
+<style>
+h2.subtitle {
+  font-size: 1em;
+  font-style: italic;
+}
+
+.initial {
+  font-size: 1.2em;
+}
+</style>
+
+<h1><span class='initial'>S</span>tephen <span class='initial'>A</span>ument</h1>
+<h2 class='subtitle'>Professional Dilettante</h2>
+
+<nav id="main-nav"><ul class="main">
+    <li><a href="/">Blog</a></li>
+    <li><a href="http://about.me/stephenaument">About</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+			<a class="email" href="mailto:saument@gmail.com" title="Email">Email</a>
+		
+		
+		
+		
+			<a class="twitter" href="http://twitter.com/saument" title="Twitter">Twitter</a>
+		
+		
+			<a class="github" href="https://github.com/stephenaument" title="GitHub">GitHub</a>
+		
+		
+		
+		
+			<a class="linkedin" href="http://www.linkedin.com/in/stephenaument" title="LinkedIn">LinkedIn</a>
+		
+		
+		
+		
+		
+		
+		
+    	
+    	
+			<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-12T16:46:04-05:00" data-updated="true" itemprop="datePublished">Mar 12<span>th</span>, 2014</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/backbone/'>Backbone</a>, <a class='category' href='/blog/categories/coffeescript/'>Coffeescript</a>, <a class='category' href='/blog/categories/debugging/'>Debugging</a>, <a class='category' href='/blog/categories/javascript/'>Javascript</a>
+
+
+</div>
+		
+			<span class="comments"><a href="#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name">Backbone Collection Testing Gotcha</h1>
+	<div class="entry-content" itemprop="articleBody"><p>Be careful of this gotcha when testing a <a href="http://backbonejs.org/">Backbone.js</a>
+collection. I don&rsquo;t have much experience with Backbone, so this is probably
+obvious to more experienced users, but hopefully this will help somebody else,
+or at least myself in the future.</p>
+
+<p>Today I needed to test the behavior of a Collection with a certain number of
+Models in it. I didn&rsquo;t care about the content of the models, just that they
+contained a certain field. So, my pair and I came up with this setup to run
+in our <a href="http://jasmine.github.io/">Jasmine</a> specs:</p>
+
+<div><script src='https://gist.github.com/9541718.js?file=initial_spec.js.coffee'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+
+
+<p>We created an array of dummy models and passed them into our Collection. This
+is one way you can create and populate a Collection. You pass in your array of
+models and they become the models in the Collection.</p>
+
+<blockquote><p>If that <code>providerArray = (provider for [1..18])</code> syntax freaks you out, don&rsquo;t
+worry. It&rsquo;s just a bit of fancy CoffeeScript and all you need to understand
+for now is that it creates an 18 item array with each element being
+<code>provider</code>.</p></blockquote>
+
+<p>Makes sense, right? Well, our test failed and when we started debugging in the
+browser, here&rsquo;s what we saw:</p>
+
+<div><script src='https://gist.github.com/9541718.js?file=initial_result.js'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+
+
+<p>What??? <code>length: 1, models: Array[1]</code>? When we looked into the models array it
+contained a single item from the array we passed in.</p>
+
+<p>Next we tried setting the models array after the fact:</p>
+
+<div><script src='https://gist.github.com/9541718.js?file=intermediate_spec.js.coffee'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+
+
+<p>The models array seems right now, but the collection length was still one:</p>
+
+<div><script src='https://gist.github.com/9541718.js?file=intermediate_result.js'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+
+
+<p>This was just as baffling. By this time we had called in <a href="@timtyrrell">Tim
+Tyrell</a> to tell us what we were doing wrong. Tim had the foresight
+to read, not just the docs for the Backbone Collection <code>initializer</code> method, but
+also the documentation for the <code>add</code> method, which had this to say (emphasis
+added):</p>
+
+<blockquote><p><em>If you&rsquo;re adding models to the collection that are already in the collection,
+they&rsquo;ll be ignored</em>, unless you pass {merge: true}, in which case their
+attributes will be merged into the corresponding models, firing any
+appropriate &ldquo;change&rdquo; events.</p></blockquote>
+
+<p>Interesting! When add is called, it ignores any objects that are already
+present in the models array. Since we are using the same model instance in each
+position of our array, only the first one is being stored. The rest are being
+dumped.</p>
+
+<p>A quick check of the <a href="https://github.com/jashkenas/backbone/blob/master/backbone.js#L785-L799">Backbone source
+code</a>
+confirms that the initialize method is calling <code>reset</code> with the array you pass
+in, which iterates over the array and calls <code>add</code> for each.</p>
+
+<div><script src='https://gist.github.com/9541718.js?file=backbone_reset.js'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+
+
+<p>So, my pair, Curtis Ekstrom decided to try creating a new object for each
+element of the array with the same data to see if that would work.</p>
+
+<div><script src='https://gist.github.com/9541718.js?file=final_spec.js.coffee'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+
+
+<p>And so it did. At first I thought that Backbone was performing a simple object
+identity check (===) vs an equality check (==). That would make sense of the
+behavior we saw, but when I read the <code>add</code> documentation again, I saw that
+passing <code>{merge: true}</code> along with the model or model array would result in the
+attributes passed in being merged into the existing objects. It must be doing
+something else entirely.</p>
+
+<p>Another peek into the <a href="https://github.com/jashkenas/backbone/blob/master/backbone.js#L718-L728">source
+code</a>
+confirms. <code>add</code> calls <code>set</code>, which contains the relevant:</p>
+
+<div><script src='https://gist.github.com/9541718.js?file=backbone_set.js'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+
+
+<p>That first line <code>if (existing = this.get(id)) {</code> is the key. It looks for an
+existing model in the <code>_byId</code> object hash, with the same <code>id</code>, <code>cid</code> or that is the
+object itself. If it finds it, and <code>merge</code> is not <code>true</code> it rejects the model.</p>
+
+<p>TL;DR &ndash; Make sure each Model in the array you pass to the Collection
+initializer is a distinct instance, even if the data is otherwise identincal.</p>
+</div>
+
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite">
+
+<script type="text/javascript">
+      var disqus_shortname = 'stephenaument';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://stephenaument.github.io/blog/2014/03/12/backbone-collection-testing-gotcha/';
+        var disqus_url = 'http://stephenaument.github.io/blog/2014/03/12/backbone-collection-testing-gotcha/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+</div>
+</section>
+
+</div>
+			</div>
+			<footer id="footer" class="inner">Copyright &copy; 2014
+
+    Stephen Aument
+
+
+Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a></footer>
+		</div>
+	</div>
+</body>
+</html>

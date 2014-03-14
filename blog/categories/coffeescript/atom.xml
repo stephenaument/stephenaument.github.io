@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Coffeescript | Stephen Aument]]></title>
+  <link href="http://stephenaument.github.io/blog/categories/coffeescript/atom.xml" rel="self"/>
+  <link href="http://stephenaument.github.io/"/>
+  <updated>2014-03-13T23:14:29-05:00</updated>
+  <id>http://stephenaument.github.io/</id>
+  <author>
+    <name><![CDATA[Stephen Aument]]></name>
+    <email><![CDATA[saument@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Backbone Collection Testing Gotcha]]></title>
+    <link href="http://stephenaument.github.io/blog/2014/03/12/backbone-collection-testing-gotcha/"/>
+    <updated>2014-03-12T16:46:04-05:00</updated>
+    <id>http://stephenaument.github.io/blog/2014/03/12/backbone-collection-testing-gotcha</id>
+    <content type="html"><![CDATA[<p>Be careful of this gotcha when testing a <a href="http://backbonejs.org/">Backbone.js</a>
+collection. I don&rsquo;t have much experience with Backbone, so this is probably
+obvious to more experienced users, but hopefully this will help somebody else,
+or at least myself in the future.</p>
+
+<p>Today I needed to test the behavior of a Collection with a certain number of
+Models in it. I didn&rsquo;t care about the content of the models, just that they
+contained a certain field. So, my pair and I came up with this setup to run
+in our <a href="http://jasmine.github.io/">Jasmine</a> specs:</p>
+
+<p><div><script src='https://gist.github.com/9541718.js?file=initial_spec.js.coffee'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+</p>
+
+<p>We created an array of dummy models and passed them into our Collection. This
+is one way you can create and populate a Collection. You pass in your array of
+models and they become the models in the Collection.</p>
+
+<blockquote><p>If that <code>providerArray = (provider for [1..18])</code> syntax freaks you out, don&rsquo;t
+worry. It&rsquo;s just a bit of fancy CoffeeScript and all you need to understand
+for now is that it creates an 18 item array with each element being
+<code>provider</code>.</p></blockquote>
+
+<p>Makes sense, right? Well, our test failed and when we started debugging in the
+browser, here&rsquo;s what we saw:</p>
+
+<p><div><script src='https://gist.github.com/9541718.js?file=initial_result.js'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+</p>
+
+<p>What??? <code>length: 1, models: Array[1]</code>? When we looked into the models array it
+contained a single item from the array we passed in.</p>
+
+<p>Next we tried setting the models array after the fact:</p>
+
+<p><div><script src='https://gist.github.com/9541718.js?file=intermediate_spec.js.coffee'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+</p>
+
+<p>The models array seems right now, but the collection length was still one:</p>
+
+<p><div><script src='https://gist.github.com/9541718.js?file=intermediate_result.js'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+</p>
+
+<p>This was just as baffling. By this time we had called in <a href="@timtyrrell">Tim
+Tyrell</a> to tell us what we were doing wrong. Tim had the foresight
+to read, not just the docs for the Backbone Collection <code>initializer</code> method, but
+also the documentation for the <code>add</code> method, which had this to say (emphasis
+added):</p>
+
+<blockquote><p><em>If you&rsquo;re adding models to the collection that are already in the collection,
+they&rsquo;ll be ignored</em>, unless you pass {merge: true}, in which case their
+attributes will be merged into the corresponding models, firing any
+appropriate &ldquo;change&rdquo; events.</p></blockquote>
+
+<p>Interesting! When add is called, it ignores any objects that are already
+present in the models array. Since we are using the same model instance in each
+position of our array, only the first one is being stored. The rest are being
+dumped.</p>
+
+<p>A quick check of the <a href="https://github.com/jashkenas/backbone/blob/master/backbone.js#L785-L799">Backbone source
+code</a>
+confirms that the initialize method is calling <code>reset</code> with the array you pass
+in, which iterates over the array and calls <code>add</code> for each.</p>
+
+<p><div><script src='https://gist.github.com/9541718.js?file=backbone_reset.js'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+</p>
+
+<p>So, my pair, Curtis Ekstrom decided to try creating a new object for each
+element of the array with the same data to see if that would work.</p>
+
+<p><div><script src='https://gist.github.com/9541718.js?file=final_spec.js.coffee'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+</p>
+
+<p>And so it did. At first I thought that Backbone was performing a simple object
+identity check (===) vs an equality check (==). That would make sense of the
+behavior we saw, but when I read the <code>add</code> documentation again, I saw that
+passing <code>{merge: true}</code> along with the model or model array would result in the
+attributes passed in being merged into the existing objects. It must be doing
+something else entirely.</p>
+
+<p>Another peek into the <a href="https://github.com/jashkenas/backbone/blob/master/backbone.js#L718-L728">source
+code</a>
+confirms. <code>add</code> calls <code>set</code>, which contains the relevant:</p>
+
+<p><div><script src='https://gist.github.com/9541718.js?file=backbone_set.js'></script>
+<noscript><pre><code>// Excerpt starting at line 785
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, length = this.models.length; i &lt; length; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger(&#39;reset&#39;, this, options);
+      return models;
+    },</code></pre></noscript></div>
+</p>
+
+<p>That first line <code>if (existing = this.get(id)) {</code> is the key. It looks for an
+existing model in the <code>_byId</code> object hash, with the same <code>id</code>, <code>cid</code> or that is the
+object itself. If it finds it, and <code>merge</code> is not <code>true</code> it rejects the model.</p>
+
+<p>TL;DR &ndash; Make sure each Model in the array you pass to the Collection
+initializer is a distinct instance, even if the data is otherwise identincal.</p>
+]]></content>
+  </entry>
+  
+</feed>
