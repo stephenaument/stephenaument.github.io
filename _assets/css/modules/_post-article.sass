@@ -1,0 +1,244 @@
+article.post
+  position: relative
+  transition: padding 100ms cubic-bezier(0.565, 1.65, 0.765, 0.88)
+  width: 100%
+
+  @include grid-media($extra-narrow-screen)
+    overflow-y: hidden
+
+  header
+    height: 28.5rem
+    opacity: 1
+
+    .post_header_image
+      background: #333
+      display: block
+      height: 36rem
+      opacity: 0
+      overflow: hidden
+      position: absolute
+      top: 0
+      width: 100%
+      z-index: -200
+      transition-property: opacity, left, top, width
+      transition-duration: 1s, .1s, .1s, .1s
+      transition-timing-function: cubic-bezier(0.33, 0, 0.2, 1)
+      -transition-delay: 0
+
+      &.is-loaded
+        opacity: 1
+
+      img
+        border: 0
+        margin: 0
+        opacity: 1
+        top: 0
+        min-height: 28.5rem
+        min-width: 100%
+        max-width: unset
+        width: 2000px
+        height: auto
+        position: fixed
+        left: 50%
+        transform: translateX(-50%)
+
+    .title_block
+      padding-top: 11rem
+      text-align: center
+      width: 100%
+
+      h1
+        color: $white
+        font-size: $font-XL
+        letter-spacing: 2px
+        line-height: 3rem
+        font-weight: 300
+        margin: 0
+
+  ul.post_meta
+    list-style: none
+    display: inline-block
+    margin: 1.5rem 0 0
+    padding: 0
+
+    li
+      color: $white
+      float: left
+      margin: 0
+      padding: 0 0 0 10px
+      font-weight: 700
+      font-size: $font-XS
+      text-transform: uppercase
+      letter-spacing: 2px
+
+      &:after
+        content: ''
+        display: inline-block
+        width: 4px
+        height: 4px
+        overflow: hidden
+        margin-left: 4px
+        border-radius: 100%
+        margin-bottom: 2px
+        background-color: rgba(255,255,255,.6)
+
+      &:last-child:after
+        display: none
+
+      &:first-child
+        padding-left: 0
+
+      @include grid-media($extra-narrow-screen)
+        font-size: $font-XXS
+
+    li.tags
+      font-size: $font-XXS
+      padding-top: 0.15rem
+      vertical-align: middle
+
+  .post_content_container
+    background: $white
+    padding-top: 4rem
+    width: 100%
+
+  .post_content
+    color: $darkish-gray
+    font-family: $font-stack-hoefler-text
+    font-weight: 400
+    margin: auto
+    max-width: $content-extra-narrow
+
+    a
+      color: $darkish-gray
+
+    h1, h2, h3, h4, h5, h6
+      font-family: $title-secondary-font
+      margin-top: 1.5rem
+      margin-bottom: 0
+      line-height: 1.5rem
+      letter-spacing: -0.02em
+
+    img
+
+    p
+      letter-spacing: 0.03rem
+      line-height: 1.5rem
+      margin-top: 1.5rem
+      margin-bottom: 0
+
+    blockquote
+      line-height: 1.5
+      font-style: italic
+      padding-left: 25px
+      margin-left: -29px
+      border-left: solid 4px $dark-gray
+
+    blockquote.largeQuote
+      line-height: 1.4
+      text-align: center
+      font-size: 1.777rem
+      margin: 1.5rem -160px 0
+      padding-left: 0
+      border-left: 0
+
+  .post_footer
+    background: $white
+    padding: 4em 0
+    text-align: center
+
+    .photo_credit
+      color: $medium-gray
+      font-size: $font-XXS
+      font-weight: 100
+      letter-spacing: 0.02rem
+      margin-top: 1.5rem
+
+  footer
+    margin-top: 0
+    opacity: 0.9999999
+    padding: 0
+    position: relative
+
+    .post_featured_image
+      height: 16.5rem
+      overflow: hidden
+      position: absolute
+      z-index: -200
+
+      img
+        border: 0
+        margin: 0
+        opacity: 1
+        top: 0
+        min-width: 100%
+        max-width: unset
+        width: 2000px
+        height: auto
+        position: relative !important
+        left: 711px
+        transform: translateX(-50%)
+        transition-property: opacity, left, top, width
+        transition-duration: 1s, .1s, .1s, .1s
+        transition-timing-function: cubic-bezier(0.33, 0, 0.2, 1)
+        -transition-delay: 0
+
+    .section-gradient
+      &:before,
+      &:after
+        height: 16.5rem
+
+    .container
+      color: $white
+      padding-top: 4rem
+
+    h2,h4
+      font-weight: 300
+      letter-spacing: -0.02em
+
+    h2
+      font-size: $font-XL
+      line-height: 3rem
+
+    h4
+      font-size: $font-M
+      line-height: 2rem
+
+    a
+      color: $white
+      text-decoration: none
+
+
+.sidebar-checkbox
+  display: none
+
+.section-gradient
+  &:before,
+  &:after
+    content: ''
+    height: 28.5rem
+    width: 100%
+    top: 0
+    left: 0
+    position: absolute
+    z-index: -100
+    opacity: 0.6
+
+
+  &:before
+    background: linear-gradient(to bottom,rgba($dark-gray,.8),rgba($dark-gray,0) 100%)
+
+  &:after
+    background: rgba($dark-gray,.6)
+
+
+.section-gradient--darker
+  &:before,
+  &:after
+    opacity: 1
+
+
+.section-gradient--lighter
+  &:before,
+  &:after
+    opacity: 0.4
+

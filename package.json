@@ -1,0 +1,27 @@
+{
+  "name": "stephenaument.com",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stephenaument/stephenaument.github.io.git"
+  },
+  "keywords": [
+    "blog"
+  ],
+  "author": "Stephen Aument",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stephenaument/stephenaument.github.io/issues"
+  },
+  "homepage": "https://github.com/stephenaument/stephenaument.github.io#readme",
+  "dependencies": {
+    "normalize.css": "^8.0.0",
+    "npm": "^6.4.1"
+  }
+}

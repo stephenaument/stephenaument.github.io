@@ -1,0 +1,92 @@
+// Typography
+$base-font-family: "Roboto", "Franklin Gothic Medium", Tahoma, sans-serif;
+$heading-font-family: $base-font-family;
+$base-font-size: 22;
+$title-secondary-font: "PT Sans", sans-serif;
+
+// Line height
+$base-line-height: 1.5;
+$heading-line-height: 1.2;
+
+// Other Sizes
+$base-border-radius: 3px;
+$base-spacing: 1.5em;
+$small-spacing: $base-spacing / 2;
+$base-z-index: 0;
+$leading: $base-line-height * 1rem;
+$spacing-unit:     30px !default;
+
+// Colors
+$black: #000;
+$blue: #1565c0;
+$dark-gray: #333;
+$darkish-gray: rgba(0, 0, 0, 0.8);
+$medium-gray: #999;
+$light-gray: #ddd;
+$white: #fff;
+
+// Font Colors
+$base-font-color: $dark-gray;
+$action-color: $blue;
+
+// Font Sizes
+// Common font size based on 1.333 ratio - modularscale.com
+$font-XXS:           0.563rem;
+$font-XS:            0.75rem;
+$font-S:             1rem;
+$font-M:             1.333rem;
+$font-L:             1.777rem;
+$font-XL:            2.369rem;
+$font-XXL:           3.157rem;
+$font-XXXL:          4.209rem;
+$font-XXXXL:         5.61rem;
+
+// Border
+$base-border-color: $light-gray;
+$base-border: 1px solid $base-border-color;
+
+// Background Colors
+$viewport-background-color: #fff;
+
+// Focus
+$focus-outline-color: transparentize($action-color, 0.4);
+$focus-outline-width: 3px;
+$focus-outline: $focus-outline-width solid $focus-outline-color;
+$focus-outline-offset: 2px;
+
+// Animations
+$base-duration: 150ms;
+$base-timing: ease;
+
+// Content Widths
+$content-extra-narrow: 700px;
+$content-narrow: 750px;
+$content-medium: 970px;
+$content-wide: 1170px;
+
+// Screen Sizes
+$screen-sm-min: 768px !default;
+$screen-md-min: 992px !default;
+$screen-lg-min: 1200px !default;
+
+// So media queries don't overlap when required, provide a maximum
+$screen-xs-max: ($screen-sm-min - 1) !default;
+$screen-sm-max: ($screen-md-min - 1) !default;
+$screen-md-max: ($screen-lg-min - 1) !default;
+
+// Media Objects
+$extra-narrow-screen: (
+  media: "screen and (max-width: #{$screen-xs-max})"
+);
+
+$narrow-screen: (
+  media: "screen and (max-width: #{$screen-sm-max})"
+);
+
+$medium-screen: (
+  media: "screen and (max-width: #{$screen-md-max})"
+);
+
+$wide-screen: (
+  media: "screen and (min-width: #{$screen-lg-min})"
+);

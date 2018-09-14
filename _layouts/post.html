@@ -1,0 +1,88 @@
+---
+layout: default
+---
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post_header">
+    <div class="post_header_image">
+      {% if page.image.feature %}
+          <img class="" src="{{ page.image.feature | prepend: site.baseurl_featured_img }}" style="
+          {%- if page.image.topPosition -%}
+            top:{{ page.image.topPosition }};
+          {%- endif -%}
+          " alt="">
+      {% endif %}
+    </div>
+    <div class="section-gradient
+    {% if page.bgGradientOpacity == "darker" -%}
+      section-gradient--darker
+    {%- elsif page.bgGradientOpacity == "lighter" -%}
+      section-gradient--lighter
+    {%- endif -%}
+    "></div>
+
+    <div class="title_block">
+      <h1 class="post_title" itemprop="name headline">{{ page.title | escape }}</h1>
+      <ul class="post_meta">
+        <li class="date">
+          <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
+            {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+            {{ page.date | date: date_format }}
+          </time>
+        </li>
+        {%- if page.author -%}
+          <li class="author">
+            By {{ page.author.name }}
+          </li>
+        {%- endif -%}
+        <li class="tags">
+          {{ page.categories | join: '•' }}
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <div class="post_content_container">
+    <div class="post_content" itemprop="articleBody">
+      {{ content }}
+    </div>
+  </div>
+
+  <div class="post_footer">
+    {% include subscribe.html %}
+    {%- if site.disqus.shortname -%}
+      {%- include disqus_comments.html -%}
+    {%- endif -%}
+    <p class="photo_credit">{{ page.image.credit }}</p>
+  </div>
+
+  <footer>
+    {% if page.previous.url %}
+      <div class='post_featured_image'>
+        <img class="post-featuredImage"
+          {% if page.previous.image.feature %}
+            src="{{ page.previous.image.feature | prepend: site.baseurl_featured_img }}"
+          {% endif %}
+          {%- if page.image.topPosition -%}
+            style="top:{{ page.previous.image.topPosition }};"
+          {%- endif -%}
+          alt="">
+      </div>
+      <div class="section-gradient
+      {% if page.previous.bgGradientOpacity == "darker" %}
+        section-gradient--darker
+      {% elsif page.previous.bgGradientOpacity == "lighter" %}
+        section-gradient--lighter
+      {% endif %}
+      "></div>
+      <div class="container">
+        <h4>Next story:</h4>
+        <a class="prev" href="{{page.previous.url}}">
+          <h2>{{page.previous.title}}</h2>
+        </a>
+      </div>
+    {% endif %}
+  </footer>
+  <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
+</article>
+
+{% include modal.html %}

@@ -1,0 +1,69 @@
+pre
+  border-radius: 5px
+  margin: 22.5px 0
+  padding: 8px 12px
+  overflow-x: auto
+
+code
+  font-size: 12px
+  padding: 2px 4px
+
+code.highlight,code.highlighter-rouge
+  border-radius: 3px
+  color: $code-fg
+  background-color: $code-bg
+
+pre, code
+  font-family: "Hack", monospace
+  font-style: normal
+  font-feature-settings: "kern" off
+  font-kerning: none
+  font-variant: none
+  background-color: $code-bg
+
+figure.highlight, div.highlight
+  margin: 2.5em 0
+  position: relative
+
+  pre
+
+    code
+      color: $code-fg
+      counter-reset: code
+      display: block
+      line-height: 1.5
+
+      div
+        counter-increment: code
+
+        &:before
+          color: $code-light-gray
+          content: counter(code)
+          width: 24px
+          text-align: right
+          display: inline-block
+          margin-right: 12px
+          padding-right: 7.5px
+          border-right: solid 1px $medium-gray
+          user-select: none
+
+      &[data-lang]:before
+        background-color: $code-bg
+        position: absolute
+
+      &:before
+        content: attr(data-lang)
+        position: absolute
+        right: 34px
+        font-size: 11px
+        top: -10px
+        padding-left: 7.5px
+        padding-right: 7.5px
+        border: 1px solid #828282
+        border-top-left-radius: 5px
+        border-top-right-radius: 5px
+        border-bottom-left-radius: 5px
+        border-bottom-right-radius: 5px
+        min-width: 40px
+        text-align: center
+        color: #8fbc8f

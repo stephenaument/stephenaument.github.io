@@ -1,0 +1,72 @@
+footer
+  margin-top: 3em
+  padding: $leading 0 2*$leading
+  position: relative
+  font-size: $font-XS
+  text-align: center
+
+  a
+    color: $black
+
+  a:not(.social_account)
+    background-position: 0 16px
+
+  .container--content
+    max-width: $content-extra-narrow
+    margin: auto
+
+.social_account_list
+  @include clearfix()
+  list-style: none
+  margin: $leading auto
+  padding-left: 0
+  text-align: center
+  width: 50%
+
+  li
+    display: inline-block
+    margin: 0 1em
+
+
+.social_account
+  display: block
+  float: left
+  margin: 0
+  padding: 0 15px
+  width: 14.2%
+  height: 25px
+  text-decoration: none
+  background-repeat: no-repeat
+  background-position: center center
+  background-size: contain
+  opacity: 0.8
+
+  &:hover
+    opacity: 1
+
+
+.social_account--twitter
+  background-image: url(/assets/images/twitter--black.svg)
+
+.social_account--facebook
+  background-image: url(/assets/images/facebook--black.svg)
+
+.social_account--linkedin
+  background-image: url(/assets/images/linkedin--black.svg)
+
+.social_account--dribbble
+  background-image: url(/assets/images/dribbble--black.svg)
+
+.social_account--pinterest
+  background-image: url(/assets/images/pinterest--black.svg)
+
+.social_account--github
+  background-image: url(/assets/images/github--black.svg)
+
+.social_account--kiva
+  background-image: url(/assets/images/kiva--black.svg)
+
+.social_account--rss
+  background-image: url(/assets/images/rss--black.svg)
+
+
