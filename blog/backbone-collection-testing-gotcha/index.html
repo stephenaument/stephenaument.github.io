@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en"><!DOCTYPE html>
+<html lang="en">
+  <meta charset="utf-8">
+  <link type="text/plain" rel="author" href="/humans.txt" />
+  <meta name="ROBOTS" content="NOODP" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <meta name="description" content="Be careful of this gotcha when testing a Backbone.js collection."><link rel="canonical" href="/blog/backbone-collection-testing-gotcha/"><link rel="prev" href="/blog/null-object-part-2/" title="Null Object Part 2"><!-- Twitter card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@saument">
+  <meta name="twitter:creator" content="@saument">
+  <meta name="twitter:title" content="Backbone Collection Testing Gotcha">
+  <meta name="twitter:description" content="Be careful of this gotcha when testing a Backbone.js collection.">
+  <meta name="twitter:image" content="/assets/images/hero/anita-jankovic-730367-unsplash.jpg">
+  <meta name="twitter:url" content="/blog/backbone-collection-testing-gotcha/">
+
+  <!-- Open graph -->
+  <meta property="og:title" content="Backbone Collection Testing Gotcha">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="/blog/backbone-collection-testing-gotcha/">
+  <meta property="og:image" content="/assets/images/hero/anita-jankovic-730367-unsplash.jpg">
+  <meta property="og:description" content="Be careful of this gotcha when testing a Backbone.js collection.">
+  <meta property="og:site_name" content="">
+  <meta property="og:locale" content=""><meta property="article:modified_time" content="2014-03-12T16:46:04-05:00">
+    <meta property="article:published_time" content="2014-03-12T16:46:04-05:00">
+    <meta property="article:author" content="https://www.facebook.com/"><meta property="og:see_also" content="/blog/null-object-part-2/"><meta property="og:see_also" content="/blog/ruby-hash-dot-fetch-and-javascript/"><meta property="og:see_also" content="/blog/the-null-object-pattern-and-method-missing-in-ruby/"><meta property="article:section" content="javascript"><meta property="article:tag" content="code"><meta property="fb:admins" content="">
+  <meta property="fb:app_id" content="">
+
+  <title>Backbone Collection Testing Gotcha &middot; Stephen Aument</title><!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Backbone Collection Testing Gotcha | Stephen Aument</title>
+<meta name="generator" content="Jekyll v3.8.3" />
+<meta property="og:title" content="Backbone Collection Testing Gotcha" />
+<meta name="author" content="Step Aument" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Be careful of this gotcha when testing a Backbone.js collection." />
+<meta property="og:description" content="Be careful of this gotcha when testing a Backbone.js collection." />
+<link rel="canonical" href="/blog/backbone-collection-testing-gotcha/" />
+<meta property="og:url" content="/blog/backbone-collection-testing-gotcha/" />
+<meta property="og:site_name" content="Stephen Aument" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2014-03-12T16:46:04-05:00" />
+<script type="application/ld+json">
+{"url":"/blog/backbone-collection-testing-gotcha/","headline":"Backbone Collection Testing Gotcha","dateModified":"2014-03-12T16:46:04-05:00","datePublished":"2014-03-12T16:46:04-05:00","author":{"@type":"Person","name":"Step Aument"},"mainEntityOfPage":{"@type":"WebPage","@id":"/blog/backbone-collection-testing-gotcha/"},"description":"Be careful of this gotcha when testing a Backbone.js collection.","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/assets/main-c85631645e7e4a699c63a8bec1fd55889e9c4dcb5dfb04320a0b2cb15bf71d79.css">
+
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
+
+  <!-- modernizer -->
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+
+  <!--[if lt IE 9]>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <![endif]-->
+
+  <!--[if (gte IE 6)&(lte IE 8)]>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.3.0/respond.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/selectivizr/1.0.2/selectivizr-min.js"></script>
+  <![endif]-->
+
+  <script type="text/javascript" src="//code.jquery.com/jquery-1.12.4.min.js"></script><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Stephen Aument" /></head>
+<body class="_posts/2014-03-12-backbone-collection-testing-gotcha"><input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox"><nav role="navigation" class="sidebar sidebar--right">
+  <a href="" class="textLogo textLogo--white textLogo--sidebar"></a>
+  <ul class="sidebar-recentPosts">
+    
+      
+        <!-- exclude current post -->
+      
+    
+      
+      <li>
+        
+          <a href="/blog/null-object-part-2/" class="sidebar-recentPosts-image-wrapper">
+            <img src="/assets/images/hero/bath-duck-close-up-cute-592677.jpg" style="" alt="">
+          </a>
+        
+        <a href="/blog/null-object-part-2/">Null Object Part 2</a>
+        <div class="postMeta">11 Mar 2014</div>
+      </li>
+      
+    
+      
+      <li>
+        
+          <a href="/blog/ruby-hash-dot-fetch-and-javascript/" class="sidebar-recentPosts-image-wrapper">
+            <img src="/assets/images/hero/mitchell-orr-389605-unsplash.jpg" style="" alt="">
+          </a>
+        
+        <a href="/blog/ruby-hash-dot-fetch-and-javascript/">Ruby Hash#fetch and Javascript</a>
+        <div class="postMeta">06 Mar 2014</div>
+      </li>
+      
+    
+      
+      <li>
+        
+          <a href="/blog/the-null-object-pattern-and-method-missing-in-ruby/" class="sidebar-recentPosts-image-wrapper">
+            <img src="/assets/images/hero/braydon-anderson-105552-unsplash.jpg" style="" alt="">
+          </a>
+        
+        <a href="/blog/the-null-object-pattern-and-method-missing-in-ruby/">The Null Object Pattern and method_missing in Ruby</a>
+        <div class="postMeta">05 Mar 2014</div>
+      </li>
+      
+    
+  </ul>
+</nav>
+
+<nav class="menuWrapper">
+  <ul class="popover popover--menu">
+    <li class="menu-avatar">
+      <a href="/" class="brand_logo brand_logo--small
+      
+      "></a>
+    </li>
+  </ul>
+</nav>
+
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post_header">
+    <div class="post_header_image">
+      
+          <img class="" src="/assets/images/hero/anita-jankovic-730367-unsplash.jpg" style="top:-200px;" alt="">
+      
+    </div>
+    <div class="section-gradient
+    section-gradient--lighter"></div>
+
+    <div class="title_block">
+      <h1 class="post_title" itemprop="name headline">Backbone Collection Testing Gotcha</h1>
+      <ul class="post_meta">
+        <li class="date">
+          <time class="dt-published" datetime="2014-03-12T16:46:04-05:00" itemprop="datePublished">Mar 12, 2014
+          </time>
+        </li><li class="author">
+            By Step Aument
+          </li><li class="tags">
+          javascript•debugging
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <div class="post_content_container">
+    <div class="post_content" itemprop="articleBody">
+      <p>Be careful of this gotcha when testing a <a href="http://backbonejs.org/">Backbone.js</a>
+collection. I don’t have much experience with Backbone, so this is probably
+obvious to more experienced users, but hopefully this will help somebody else,
+or at least myself in the future.</p>
+
+<p>Today I needed to test the behavior of a Collection with a certain number of
+Models in it. I didn’t care about the content of the models, just that they
+contained a certain field. So, my pair and I came up with this setup to run
+in our <a href="http://jasmine.github.io/">Jasmine</a> specs:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><div class="line-1"><span class="nx">provider</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WellMatch</span><span class="p">.</span><span class="nx">Models</span><span class="p">.</span><span class="nx">Provider</span><span class="p">({</span><span class="na">display_name</span><span class="p">:</span> <span class="s1">'a'</span><span class="p">})</span></div><div class="line-2"><span class="nx">providerArray</span> <span class="o">=</span> <span class="p">(</span><span class="nx">provider</span> <span class="k">for</span> <span class="p">[</span><span class="mi">1</span><span class="p">..</span><span class="mi">18</span><span class="p">])</span></div><div class="line-3"><span class="nx">providers</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WellMatch</span><span class="p">.</span><span class="nx">Collections</span><span class="p">.</span><span class="nx">Providers</span><span class="p">(</span><span class="nx">providerArray</span><span class="p">)</span></div></code></pre></figure>
+
+<p>We created an array of dummy models and passed them into our Collection. This
+is one way you can create and populate a Collection. You pass in your array of
+models and they become the models in the Collection.</p>
+
+<blockquote>
+  <p>If that <code class="highlight language-javascript" data-lang="javascript"><span class="nx">providerArray</span> <span class="o">=</span> <span class="p">(</span><span class="nx">provider</span> <span class="k">for</span> <span class="p">[</span><span class="mi">1</span><span class="p">..</span><span class="mi">18</span><span class="p">])</span></code> syntax freaks you out, don’t
+worry. It’s just a bit of fancy CoffeeScript and all you need to understand
+for now is that it creates an 18 item array with each element being
+<code class="highlight language-javascript" data-lang="javascript"><span class="nx">provider</span></code>.</p>
+</blockquote>
+
+<p>Makes sense, right? Well, our test failed and when we started debugging in the
+browser, here’s what we saw:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><div class="line-1"><span class="nx">Providers</span> <span class="p">{</span><span class="nl">fullParams</span><span class="p">:</span> <span class="kd">function</span><span class="p">,</span> <span class="nx">length</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">models</span><span class="p">:</span> <span class="nb">Array</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">_byId</span><span class="p">:</span> <span class="nb">Object</span><span class="p">,</span> <span class="nx">_events</span><span class="p">:</span> <span class="nb">Object</span><span class="err">…</span><span class="p">}</span></div></code></pre></figure>
+
+<p>What??? <code class="highlight language-javascript" data-lang="javascript"><span class="nx">length</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">models</span><span class="p">:</span> <span class="nb">Array</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></code>? When we looked into the models array it
+contained a single item from the array we passed in.</p>
+
+<p>Next we tried setting the models array after the fact:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><div class="line-1"><span class="nx">provider</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WellMatch</span><span class="p">.</span><span class="nx">Models</span><span class="p">.</span><span class="nx">Provider</span><span class="p">({</span><span class="na">display_name</span><span class="p">:</span> <span class="s1">'a'</span><span class="p">})</span></div><div class="line-2"><span class="nx">providers</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WellMatch</span><span class="p">.</span><span class="nx">Collections</span><span class="p">.</span><span class="nx">Providers</span><span class="p">()</span></div><div class="line-3"><span class="nx">providers</span><span class="p">.</span><span class="nx">models</span> <span class="o">=</span> <span class="nx">providerArray</span></div></code></pre></figure>
+
+<p>The models array seems right now, but the collection length was still one:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><div class="line-1"><span class="nx">Providers</span> <span class="p">{</span><span class="nl">fullParams</span><span class="p">:</span> <span class="kd">function</span><span class="p">,</span> <span class="nx">length</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">models</span><span class="p">:</span> <span class="nb">Array</span><span class="p">[</span><span class="mi">18</span><span class="p">],</span> <span class="nx">_byId</span><span class="p">:</span> <span class="nb">Object</span><span class="p">,</span> <span class="nx">_events</span><span class="p">:</span> <span class="nb">Object</span><span class="err">…</span><span class="p">}</span></div></code></pre></figure>
+
+<p>This was just as baffling. By this time we had called in <a href="@timtyrrell">Tim
+Tyrell</a> to tell us what we were doing wrong. Tim had the foresight
+to read, not just the docs for the Backbone Collection <code class="highlight language-javascript" data-lang="javascript"><span class="nx">initializer</span></code> method, but
+also the documentation for the <code class="highlight language-javascript" data-lang="javascript"><span class="nx">add</span></code> method, which had this to say (emphasis
+added):</p>
+
+<blockquote>
+  <p><em>If you’re adding models to the collection that are already in the collection,
+they’ll be ignored</em>, unless you pass {merge: true}, in which case their
+attributes will be merged into the corresponding models, firing any
+appropriate “change” events.</p>
+</blockquote>
+
+<p>Interesting! When add is called, it ignores any objects that are already
+present in the models array. Since we are using the same model instance in each
+position of our array, only the first one is being stored. The rest are being
+dumped.</p>
+
+<p>A quick check of the <a href="https://github.com/jashkenas/backbone/blob/master/backbone.js#L785-L799">Backbone source
+code</a>
+confirms that the initialize method is calling <code class="highlight language-javascript" data-lang="javascript"><span class="nx">reset</span></code> with the array you pass
+in, which iterates over the array and calls <code class="highlight language-javascript" data-lang="javascript"><span class="nx">add</span></code> for each.</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><div class="line-1"><span class="cm">/* Excerpt starting at line 785 */</span></div><div class="line-2"></div><div class="line-3"><span class="c1">// When you have more items than you want to add or remove individually,</span></div><div class="line-4"><span class="c1">// you can reset the entire set with a new list of models, without firing</span></div><div class="line-5"><span class="c1">// any granular &lt;code class="highlight language-javascript" data-lang="javascript"&gt;&lt;span class="nx"&gt;add&lt;/span&gt;&lt;/code&gt; or &lt;code class="highlight language-javascript" data-lang="javascript"&gt;&lt;span class="nx"&gt;remove&lt;/span&gt;&lt;/code&gt; events. Fires &lt;code class="highlight language-javascript" data-lang="javascript"&gt;&lt;span class="nx"&gt;reset&lt;/span&gt;&lt;/code&gt; when finished.</span></div><div class="line-6"><span class="c1">// Useful for bulk operations and optimizations.</span></div><div class="line-7"><span class="nx">reset</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">models</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span></div><div class="line-8">  <span class="nx">options</span> <span class="o">||</span> <span class="p">(</span><span class="nx">options</span> <span class="o">=</span> <span class="p">{});</span></div><div class="line-9">  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">models</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span></div><div class="line-10">    <span class="k">this</span><span class="p">.</span><span class="nx">_removeReference</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">models</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">options</span><span class="p">);</span></div><div class="line-11">  <span class="p">}</span></div><div class="line-12">  <span class="nx">options</span><span class="p">.</span><span class="nx">previousModels</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">models</span><span class="p">;</span></div><div class="line-13">  <span class="k">this</span><span class="p">.</span><span class="nx">_reset</span><span class="p">();</span></div><div class="line-14">  <span class="nx">models</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">models</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span><span class="na">silent</span><span class="p">:</span> <span class="kc">true</span><span class="p">},</span> <span class="nx">options</span><span class="p">));</span></div><div class="line-15">  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">options</span><span class="p">.</span><span class="nx">silent</span><span class="p">)</span> <span class="k">this</span><span class="p">.</span><span class="nx">trigger</span><span class="p">(</span><span class="s1">'reset'</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span></div><div class="line-16">  <span class="k">return</span> <span class="nx">models</span><span class="p">;</span></div><div class="line-17"><span class="p">},</span></div></code></pre></figure>
+
+<p>So, my pair, Curtis Ekstrom decided to try creating a new object for each
+element of the array with the same data to see if that would work.</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><div class="line-1"><span class="nx">providerArray</span> <span class="o">=</span> <span class="p">(</span><span class="k">new</span> <span class="nx">WellMatch</span><span class="p">.</span><span class="nx">Models</span><span class="p">.</span><span class="nx">Provider</span><span class="p">(</span><span class="nx">display_name</span><span class="p">:</span> <span class="s1">'a'</span><span class="p">)</span> <span class="k">for</span> <span class="p">[</span><span class="mi">1</span><span class="p">..</span><span class="mi">18</span><span class="p">])</span></div><div class="line-2"><span class="nx">providers</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WellMatch</span><span class="p">.</span><span class="nx">Collections</span><span class="p">.</span><span class="nx">Providers</span><span class="p">(</span><span class="nx">providerArray</span><span class="p">)</span></div></code></pre></figure>
+
+<p>And so it did. At first I thought that Backbone was performing a simple object
+identity check (===) vs an equality check (==). That would make sense of the
+behavior we saw, but when I read the <code class="highlight language-javascript" data-lang="javascript"><span class="nx">add</span></code> documentation again, I saw that
+passing <code class="highlight language-javascript" data-lang="javascript"><span class="p">{</span><span class="nl">merge</span><span class="p">:</span> <span class="kc">true</span><span class="p">}</span></code> along with the model or model array would result in the
+attributes passed in being merged into the existing objects. It must be doing
+something else entirely.</p>
+
+<p>Another peek into the <a href="https://github.com/jashkenas/backbone/blob/master/backbone.js#L718-L728">source
+code</a>
+confirms. <code class="highlight language-javascript" data-lang="javascript"><span class="nx">add</span></code> calls <code class="highlight language-javascript" data-lang="javascript"><span class="kd">set</span></code>, which contains the relevant:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><div class="line-1"><span class="cm">/* Except starting at line 718 */</span></div><div class="line-2"></div><div class="line-3"><span class="c1">// If a duplicate is found, prevent it from being added and</span></div><div class="line-4"><span class="c1">// optionally merge it into the existing model.</span></div><div class="line-5"><span class="k">if</span> <span class="p">(</span><span class="nx">existing</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">id</span><span class="p">))</span> <span class="p">{</span></div><div class="line-6">  <span class="k">if</span> <span class="p">(</span><span class="nx">remove</span><span class="p">)</span> <span class="nx">modelMap</span><span class="p">[</span><span class="nx">existing</span><span class="p">.</span><span class="nx">cid</span><span class="p">]</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span></div><div class="line-7">  <span class="k">if</span> <span class="p">(</span><span class="nx">merge</span><span class="p">)</span> <span class="p">{</span></div><div class="line-8">    <span class="nx">attrs</span> <span class="o">=</span> <span class="nx">attrs</span> <span class="o">===</span> <span class="nx">model</span> <span class="p">?</span> <span class="nx">model</span><span class="p">.</span><span class="nx">attributes</span> <span class="p">:</span> <span class="nx">attrs</span><span class="p">;</span></div><div class="line-9">    <span class="k">if</span> <span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">parse</span><span class="p">)</span> <span class="nx">attrs</span> <span class="o">=</span> <span class="nx">existing</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">attrs</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span></div><div class="line-10">    <span class="nx">existing</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">attrs</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span></div><div class="line-11">    <span class="k">if</span> <span class="p">(</span><span class="nx">sortable</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">sort</span> <span class="o">&amp;&amp;</span> <span class="nx">existing</span><span class="p">.</span><span class="nx">hasChanged</span><span class="p">(</span><span class="nx">sortAttr</span><span class="p">))</span> <span class="nx">sort</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span></div><div class="line-12">  <span class="p">}</span></div><div class="line-13">  <span class="nx">models</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">existing</span><span class="p">;</span></div></code></pre></figure>
+
+<p>That first line <code class="highlight language-javascript" data-lang="javascript"><span class="k">if</span> <span class="p">(</span><span class="nx">existing</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">id</span><span class="p">))</span> <span class="p">{</span></code> is the key. It looks for an
+existing model in the <code class="highlight language-javascript" data-lang="javascript"><span class="nx">_byId</span></code> object hash, with the same <code class="highlight language-javascript" data-lang="javascript"><span class="nx">id</span></code>, <code class="highlight language-javascript" data-lang="javascript"><span class="nx">cid</span></code> or that is the
+object itself. If it finds it, and <code class="highlight language-javascript" data-lang="javascript"><span class="nx">merge</span></code> is not <code class="highlight language-javascript" data-lang="javascript"><span class="kc">true</span></code> it rejects the model.</p>
+
+<p>TL;DR - Make sure each Model in the array you pass to the Collection
+initializer is a distinct instance, even if the data is otherwise identincal.</p>
+
+    </div>
+  </div>
+
+  <div class="post_footer">
+    <section class="subscribe">
+  <div class="container"><script src="https://f.convertkit.com/ckjs/ck.5.js"></script>
+<form action="https://app.convertkit.com/forms/741867/subscriptions" class="seva-form formkit-form" method="post" data-sv-form="741867" data-uid="697093712f" data-format="inline" data-version="5" data-options="{&quot;settings&quot;:{&quot;after_subscribe&quot;:{&quot;action&quot;:&quot;message&quot;,&quot;success_message&quot;:&quot;Success! Now check your email to confirm your subscription.&quot;,&quot;redirect_url&quot;:&quot;&quot;},&quot;modal&quot;:{&quot;trigger&quot;:null,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:null,&quot;devices&quot;:null,&quot;show_once_every&quot;:null},&quot;recaptcha&quot;:{&quot;enabled&quot;:false},&quot;return_visitor&quot;:{&quot;action&quot;:&quot;show&quot;,&quot;custom_content&quot;:&quot;&quot;},&quot;slide_in&quot;:{&quot;display_in&quot;:null,&quot;trigger&quot;:null,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:null,&quot;devices&quot;:null,&quot;show_once_every&quot;:null}}}" min-width="800" style="background-color: rgb(255, 255, 255); border-radius: 4px;">
+  <div data-style="minimal">
+    <h1 class="formkit-header" data-element="header">Stay in touch</h1>
+    <div data-element="subheader" class="formkit-subheader" style="color: rgb(104, 104, 104); font-size: 18px;">
+      <p>Hi, I'm Step. I write about code, teams, workflow, and entrepreneurship. I also make things you might want to know about.</p>
+    </div>
+    <ul data-element="errors" data-group="alert"></ul>
+    <div data-element="fields" data-stacked="true" class="seva-fields formkit-fields">
+      <div class="formkit-field">
+        <input class="formkit-input" aria-label="First Name" name="fields[first_name]" placeholder="First Name" type="text" style="border-color: rgb(227, 227, 227); border-radius: 4px; color: rgb(0, 0, 0); font-weight: 400;">
+      </div>
+      <div class="formkit-field">
+        <input class="formkit-input" name="email_address" placeholder="Your email address" required="" type="email" style="border-color: rgb(227, 227, 227); border-radius: 4px; color: rgb(0, 0, 0); font-weight: 400;">
+      </div>
+      <button data-element="submit" class="formkit-submit" style="background-color: rgb(22, 119, 190); border-radius: 4px; color: rgb(255, 255, 255); font-weight: 400;">
+        <span>Get New Blog Posts By Email</span>
+      </button>
+    </div>
+    <div data-element="guarantee" class="formkit-guarantee" style="color: rgb(77, 77, 77); font-size: 13px; font-weight: 400;">
+      <p class="no_spam">I won't send you spam. Unsubscribe at any time.</p>
+    </div>
+    <a href="https://convertkit.com/?utm_source=dynamic&amp;utm_medium=referral&amp;utm_campaign=poweredby&amp;utm_content=form" class="formkit-powered-by" data-element="powered-by" target="_blank">Powered By ConvertKit</a>
+  </div>
+  <style>
+    .formkit-form[data-uid="697093712f"] *{font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;box-sizing:border-box;}.formkit-form[data-uid="697093712f"] legend{border:none;font-size:inherit;margin-bottom:10px;padding:0;position:relative;display:table;}.formkit-form[data-uid="697093712f"] fieldset{border:0;padding:0.01em 0 0 0;margin:0;min-width:0;}.formkit-form[data-uid="697093712f"] body:not(:-moz-handler-blocked) fieldset{display:table-cell;}.formkit-form[data-uid="697093712f"] p{color:inherit;font-size:inherit;font-weight:inherit;}.formkit-form[data-uid="697093712f"][data-format="modal"]{display:none;}.formkit-form[data-uid="697093712f"][data-format="slide in"]{display:none;}.formkit-form[data-uid="697093712f"] .formkit-input,.formkit-form[data-uid="697093712f"] .formkit-select,.formkit-form[data-uid="697093712f"] .formkit-checkboxes{width:100%;}.formkit-form[data-uid="697093712f"] .formkit-submit{border:0;border-radius:5px;color:#ffffff;cursor:pointer;display:inline-block;text-align:center;font-size:15px;font-weight:500;cursor:pointer;margin-bottom:15px;overflow:hidden;padding:0;vertical-align:middle;}.formkit-form[data-uid="697093712f"] .formkit-submit:hover,.formkit-form[data-uid="697093712f"] .formkit-submit:focus{outline:none;}.formkit-form[data-uid="697093712f"] .formkit-submit:hover > span,.formkit-form[data-uid="697093712f"] .formkit-submit:focus > span{background-color:rgba(0,0,0,0.1);}.formkit-form[data-uid="697093712f"] .formkit-submit > span{display:block;-webkit-transition:background-color 300ms ease-in-out;transition:background-color 300ms ease-in-out;padding:12px 24px;}.formkit-form[data-uid="697093712f"] input{font-size:15px;padding:12px;border:1px solid #e3e3e3;-webkit-flex:1 0 auto;-ms-flex:1 0 auto;flex:1 0 auto;line-height:1.4;margin-right:15px;-webkit-transition:border-color ease-out 300ms;transition:border-color ease-out 300ms;}.formkit-form[data-uid="697093712f"] input:focus{outline:none;border-color:#1677be;-webkit-transition:border-color ease 300ms;transition:border-color ease 300ms;}.formkit-form[data-uid="697093712f"] input::-webkit-input-placeholder{color:#848585;}.formkit-form[data-uid="697093712f"] input::-moz-placeholder{color:#848585;}.formkit-form[data-uid="697093712f"] input:-ms-input-placeholder{color:#848585;}.formkit-form[data-uid="697093712f"] input::placeholder{color:#848585;}.formkit-form[data-uid="697093712f"] [data-group="dropdown"]{position:relative;display:inline-block;width:100%;}.formkit-form[data-uid="697093712f"] [data-group="dropdown"]::before{content:"";top:calc(50% - 2.5px);right:10px;position:absolute;pointer-events:none;border-color:#333333 transparent transparent transparent;border-style:solid;border-width:6px 5px 0 5px;height:0;width:0;}.formkit-form[data-uid="697093712f"] [data-group="dropdown"] select{height:auto;width:100%;cursor:pointer;color:#333333;line-height:1.4;margin-bottom:0;padding:0 6px;-webkit-appearance:none;-moz-appearance:none;appearance:none;font-size:15px;padding:12px;padding-right:25px;border:1px solid #e3e3e3;background:#ffffff;}.formkit-form[data-uid="697093712f"] [data-group="dropdown"] select:focus{outline:none;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"]{text-align:left;margin-bottom:20px;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"]{margin-bottom:10px;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] *{cursor:pointer;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"]:last-of-type{margin-bottom:0;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] input[type="checkbox"]{display:none;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] input[type="checkbox"] + label::after{content:none;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] input[type="checkbox"]:checked + label::after{border-color:#ffffff;content:"";}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] input[type="checkbox"]:checked + label::before{background:#10bf7a;border-color:#10bf7a;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] label{position:relative;display:inline-block;padding-left:28px;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] label::before,.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] label::after{position:absolute;content:"";display:inline-block;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] label::before{height:16px;width:16px;border:1px solid #e3e3e3;background:#ffffff;left:0px;top:3px;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] label::after{height:4px;width:8px;border-left:2px solid #4d4d4d;border-bottom:2px solid #4d4d4d;-webkit-transform:rotate(-45deg);-ms-transform:rotate(-45deg);-webkit-transform:rotate(-45deg);-ms-transform:rotate(-45deg);transform:rotate(-45deg);left:4px;top:8px;}.formkit-form[data-uid="697093712f"] [data-group="alert"]{padding:12px;border:1px solid #e3e3e3;background:#f9fafb;-webkit-flex:1 0 auto;-ms-flex:1 0 auto;flex:1 0 auto;border-radius:5px;margin:25px auto;text-align:center;width:80%;}.formkit-form[data-uid="697093712f"] [data-group="alert"]:empty{display:none;}.formkit-form[data-uid="697093712f"] [data-group="alert"][data-element="success"]{background:#d3fbeb;border-color:#10bf7a;color:#0c905c;}.formkit-form[data-uid="697093712f"] [data-group="alert"][data-element="errors"]{background:#fde8e2;border-color:#f2643b;color:#ea4110;} .formkit-form[data-uid="697093712f"]{text-align:center;color:#686868;border:1px solid #e3e3e3;border-radius:8px;box-sizing:border-box;background-size:cover;background-repeat:no-repeat;background-position:center;max-width:800px;}.formkit-form[data-uid="697093712f"] [data-style="minimal"]{padding:25px;width:100%;}.formkit-form[data-uid="697093712f"] [data-element="header"]{margin-top:0;margin-bottom:27px;}.formkit-form[data-uid="697093712f"] [data-element="subheader"]{margin:18px 0;}.formkit-form[data-uid="697093712f"] [data-element="guarantee"]{font-size:13px;}.formkit-form[data-uid="697093712f"] [data-element="fields"]{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;margin:25px auto 0 auto;}.formkit-form[data-uid="697093712f"] [data-element="fields"] > *{margin:0 0 15px 0;-webkit-box-flex:1;-webkit-flex-grow:1;-ms-flex-positive:1;flex-grow:1;-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;-webkit-flex-basis:100%;-ms-flex-preferred-size:100%;flex-basis:100%;}.formkit-form[data-uid="697093712f"] [data-element="fields"][data-stacked="true"] > *{margin:0 0 15px 0;-webkit-flex-basis:100%;-ms-flex-preferred-size:100%;flex-basis:100%;}.formkit-form[data-uid="697093712f"] [data-element="fields"][data-stacked="true"] > *:last-child{margin:0;}.formkit-form[data-uid="697093712f"] [data-element="powered-by"]{color:#7d7d7d;display:block;font-size:12px;margin-bottom:0;margin-top:25px;}.formkit-form[data-uid="697093712f"] [data-element="powered-by"][data-active="false"]{opacity:0.5;}.formkit-form[data-uid="697093712f"][min-width~="500"] [data-style="minimal"],.formkit-form[data-uid="697093712f"][min-width~="600"] [data-style="minimal"],.formkit-form[data-uid="697093712f"][min-width~="700"] [data-style="minimal"],.formkit-form[data-uid="697093712f"][min-width~="800"] [data-style="minimal"]{padding:40px;}.formkit-form[data-uid="697093712f"][min-width~="500"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] > *,.formkit-form[data-uid="697093712f"][min-width~="600"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] > *,.formkit-form[data-uid="697093712f"][min-width~="700"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] > *,.formkit-form[data-uid="697093712f"][min-width~="800"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] > *{margin:0 15px 15px 0;-webkit-box-flex:none;-webkit-flex-grow:none;-ms-flex-positive:none;flex-grow:none;-webkit-flex-shrink:none;-ms-flex-negative:none;flex-shrink:none;-webkit-flex-basis:auto;-ms-flex-preferred-size:auto;flex-basis:auto;}.formkit-form[data-uid="697093712f"][min-width~="500"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] [data-element="submit"],.formkit-form[data-uid="697093712f"][min-width~="600"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] [data-element="submit"],.formkit-form[data-uid="697093712f"][min-width~="700"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] [data-element="submit"],.formkit-form[data-uid="697093712f"][min-width~="800"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] [data-element="submit"]{-webkit-box-flex:0;-webkit-flex-grow:0;-ms-flex-positive:0;flex-grow:0;margin-right:0;}
+</style>
+</form>
+</div>
+</section>
+<p class="photo_credit">Photo by Anita Jankovic on Unsplash</p>
+  </div>
+
+  <footer>
+    
+      <div class='post_featured_image'>
+        <img class="post-featuredImage"
+          
+            src="/assets/images/hero/bath-duck-close-up-cute-592677.jpg"
+          style="top:-420px;"alt="">
+      </div>
+      <div class="section-gradient
+      
+        section-gradient--lighter
+      
+      "></div>
+      <div class="container">
+        <h4>Next story:</h4>
+        <a class="prev" href="/blog/null-object-part-2/">
+          <h2>Null Object Part 2</h2>
+        </a>
+      </div>
+    
+  </footer>
+  <a class="u-url" href="/blog/backbone-collection-testing-gotcha/" hidden></a>
+</article>
+
+<div class="modal-toggle-group animate scaleIn">
+  <div class="modal-toggle-bubbleShadow"></div>
+  <div class="modal-toggle-bubble"></div>
+  <div class="modal-toggle-wrapper"></div>
+  <div class="modal-toggle-close-wrapper">
+    <div class="modal-toggle-close"></div>
+  </div>
+</div>
+
+<div class="fullscreenModal">
+  <div class="share_container">
+    <h2 class="h2--shareTitle">Share this story</h2>
+    <ul class="shareWrapper">
+      <li><a class="shareButton shareButton--twitter" href="https://twitter.com/intent/tweet?text=Backbone Collection Testing Gotcha by @saument&url=%2Fblog%2Fbackbone-collection-testing-gotcha%2F" target="_blank"></a></li>
+      <li><a class="shareButton shareButton--facebook" href="https://www.facebook.com/sharer/sharer.php?u=%2Fblog%2Fbackbone-collection-testing-gotcha%2F" target="_blank"></a></li>
+      <li><a class="shareButton shareButton--linkedin" href="https://www.linkedin.com/shareArticle
+?mini=true&url=%2Fblog%2Fbackbone-collection-testing-gotcha%2F&title=Backbone Collection Testing Gotcha"  target="_blank"></a></li>
+      <li><a class="shareButton shareButton--buffer" href="https://buffer.com/add?text=Backbone Collection Testing Gotcha by @saument&url=%2Fblog%2Fbackbone-collection-testing-gotcha%2F" target="_blank"></a></li>
+      <li><a class="shareButton shareButton--hackernews" href="http://news.ycombinator.com/submitlink?u=%2Fblog%2Fbackbone-collection-testing-gotcha%2F&t=Backbone Collection Testing Gotcha" target="_blank"></a></li>
+      <li><a class="shareButton shareButton--pocket" href="https://getpocket.com/save?url=%2Fblog%2Fbackbone-collection-testing-gotcha%2F&title=Backbone Collection Testing Gotcha" target="_blank"></a></li>
+    </ul>
+  </div>
+</div>
+
+
+      </div>
+    </main><label for="sidebar-checkbox" class="sidebar-toggle-wrapper">
+  <div class="sidebar-toggle"></div>
+</label>
+
+<!-- Javascript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/assets/javascript/imagesloaded.pkgd.min.js"></script><script src="/assets/main-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.js" type="text/javascript"></script><script>
+  $(document).ready(function(){
+
+    // Featured image loaded behavior
+    $('.post_header_image img').imagesLoaded()
+      .done( function( instance ) {
+        $('.post_header_image').addClass('is-loaded');
+      });
+
+    // Modal toggle behavior
+    $('.modal-toggle-wrapper').click(function() {
+    	$(this).toggleClass('active');
+      $('.modal-toggle-bubble').toggleClass('active');
+    	$('.modal-toggle-bubbleShadow').toggleClass('active');
+      $('.modal-toggle-close-wrapper').toggleClass('active');
+      $('.fullscreenModal').toggleClass('active');
+    });
+
+    // Prevent default anchor event and make a share popup
+    $.fn.sharePopup = function (e, intWidth, intHeight, blnResize) {
+
+      e.preventDefault();
+      intWidth = intWidth || '750';
+      intHeight = intHeight || '500';
+      strResize = (blnResize ? 'yes' : 'no');
+
+      //// Set title and open popup with focus on it
+      var strTitle = ((typeof this.attr('title') !== 'undefined') ? this.attr('title') : 'Social Share'),
+          strParam = 'width=' + intWidth + ',height=' + intHeight + ',resizable=' + strResize,
+          objWindow = window.open(this.attr('href'), strTitle, strParam).focus();
+    }
+
+    $('.shareButton').on("click", function(e) {
+      $(this).sharePopup(e);
+    });
+  });
+
+  // Show modal toggle after scrolling 300px
+  $(document).scroll(function() {
+    $('.modal-toggle-group').toggleClass('active', $(document).scrollTop() >= 300);
+  });
+</script>
+</body>
+
+</html>

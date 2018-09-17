@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en"><!DOCTYPE html>
+<html lang="en">
+  <meta charset="utf-8">
+  <link type="text/plain" rel="author" href="/humans.txt" />
+  <meta name="ROBOTS" content="NOODP" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <meta name="description" content="I encountered an interesting problem this week that allowed me to dig into theNull Object pattern, Ruby duck typing, and Ruby’s method_missing."><link rel="canonical" href="/blog/the-null-object-pattern-and-method-missing-in-ruby/"><link rel="next" href="/blog/ruby-hash-dot-fetch-and-javascript/" title="Ruby Hash#fetch and Javascript"><!-- Twitter card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@saument">
+  <meta name="twitter:creator" content="@saument">
+  <meta name="twitter:title" content="The Null Object Pattern and method_missing in Ruby">
+  <meta name="twitter:description" content="I encountered an interesting problem this week that allowed me to dig into theNull Object pattern, Ruby duck typing, and Ruby’s method_missing.">
+  <meta name="twitter:image" content="/assets/images/hero/braydon-anderson-105552-unsplash.jpg">
+  <meta name="twitter:url" content="/blog/the-null-object-pattern-and-method-missing-in-ruby/">
+
+  <!-- Open graph -->
+  <meta property="og:title" content="The Null Object Pattern and method_missing in Ruby">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="/blog/the-null-object-pattern-and-method-missing-in-ruby/">
+  <meta property="og:image" content="/assets/images/hero/braydon-anderson-105552-unsplash.jpg">
+  <meta property="og:description" content="I encountered an interesting problem this week that allowed me to dig into theNull Object pattern, Ruby duck typing, and Ruby’s method_missing.">
+  <meta property="og:site_name" content="">
+  <meta property="og:locale" content=""><meta property="article:modified_time" content="2014-03-05T23:01:09-06:00">
+    <meta property="article:published_time" content="2014-03-05T23:01:09-06:00">
+    <meta property="article:author" content="https://www.facebook.com/"><meta property="og:see_also" content="/blog/backbone-collection-testing-gotcha/"><meta property="og:see_also" content="/blog/null-object-part-2/"><meta property="og:see_also" content="/blog/ruby-hash-dot-fetch-and-javascript/"><meta property="article:section" content="Design Patterns"><meta property="fb:admins" content="">
+  <meta property="fb:app_id" content="">
+
+  <title>The Null Object Pattern and method_missing in Ruby &middot; Stephen Aument</title><!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>The Null Object Pattern and method_missing in Ruby | Stephen Aument</title>
+<meta name="generator" content="Jekyll v3.8.3" />
+<meta property="og:title" content="The Null Object Pattern and method_missing in Ruby" />
+<meta name="author" content="Step Aument" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="I encountered an interesting problem this week that allowed me to dig into the Null Object pattern, Ruby duck typing, and Ruby’s method_missing." />
+<meta property="og:description" content="I encountered an interesting problem this week that allowed me to dig into the Null Object pattern, Ruby duck typing, and Ruby’s method_missing." />
+<link rel="canonical" href="/blog/the-null-object-pattern-and-method-missing-in-ruby/" />
+<meta property="og:url" content="/blog/the-null-object-pattern-and-method-missing-in-ruby/" />
+<meta property="og:site_name" content="Stephen Aument" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2014-03-05T23:01:09-06:00" />
+<script type="application/ld+json">
+{"url":"/blog/the-null-object-pattern-and-method-missing-in-ruby/","headline":"The Null Object Pattern and method_missing in Ruby","dateModified":"2014-03-05T23:01:09-06:00","datePublished":"2014-03-05T23:01:09-06:00","author":{"@type":"Person","name":"Step Aument"},"mainEntityOfPage":{"@type":"WebPage","@id":"/blog/the-null-object-pattern-and-method-missing-in-ruby/"},"description":"I encountered an interesting problem this week that allowed me to dig into the Null Object pattern, Ruby duck typing, and Ruby’s method_missing.","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/assets/main-c85631645e7e4a699c63a8bec1fd55889e9c4dcb5dfb04320a0b2cb15bf71d79.css">
+
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
+
+  <!-- modernizer -->
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+
+  <!--[if lt IE 9]>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <![endif]-->
+
+  <!--[if (gte IE 6)&(lte IE 8)]>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.3.0/respond.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/selectivizr/1.0.2/selectivizr-min.js"></script>
+  <![endif]-->
+
+  <script type="text/javascript" src="//code.jquery.com/jquery-1.12.4.min.js"></script><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Stephen Aument" /></head>
+<body class="_posts/2014-03-05-the-null-object-pattern-and-method-missing-in-ruby"><input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox"><nav role="navigation" class="sidebar sidebar--right">
+  <a href="" class="textLogo textLogo--white textLogo--sidebar"></a>
+  <ul class="sidebar-recentPosts">
+    
+      
+      <li>
+        
+          <a href="/blog/backbone-collection-testing-gotcha/" class="sidebar-recentPosts-image-wrapper">
+            <img src="/assets/images/hero/anita-jankovic-730367-unsplash.jpg" style="" alt="">
+          </a>
+        
+        <a href="/blog/backbone-collection-testing-gotcha/">Backbone Collection Testing Gotcha</a>
+        <div class="postMeta">12 Mar 2014</div>
+      </li>
+      
+    
+      
+      <li>
+        
+          <a href="/blog/null-object-part-2/" class="sidebar-recentPosts-image-wrapper">
+            <img src="/assets/images/hero/bath-duck-close-up-cute-592677.jpg" style="" alt="">
+          </a>
+        
+        <a href="/blog/null-object-part-2/">Null Object Part 2</a>
+        <div class="postMeta">11 Mar 2014</div>
+      </li>
+      
+    
+      
+      <li>
+        
+          <a href="/blog/ruby-hash-dot-fetch-and-javascript/" class="sidebar-recentPosts-image-wrapper">
+            <img src="/assets/images/hero/mitchell-orr-389605-unsplash.jpg" style="" alt="">
+          </a>
+        
+        <a href="/blog/ruby-hash-dot-fetch-and-javascript/">Ruby Hash#fetch and Javascript</a>
+        <div class="postMeta">06 Mar 2014</div>
+      </li>
+      
+    
+      
+        <!-- exclude current post -->
+      
+    
+  </ul>
+</nav>
+
+<nav class="menuWrapper">
+  <ul class="popover popover--menu">
+    <li class="menu-avatar">
+      <a href="/" class="brand_logo brand_logo--small
+      
+      "></a>
+    </li>
+  </ul>
+</nav>
+
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post_header">
+    <div class="post_header_image">
+      
+          <img class="" src="/assets/images/hero/braydon-anderson-105552-unsplash.jpg" style="top:-420px;" alt="">
+      
+    </div>
+    <div class="section-gradient
+    section-gradient--darker"></div>
+
+    <div class="title_block">
+      <h1 class="post_title" itemprop="name headline">The Null Object Pattern and method_missing in Ruby</h1>
+      <ul class="post_meta">
+        <li class="date">
+          <time class="dt-published" datetime="2014-03-05T23:01:09-06:00" itemprop="datePublished">Mar 5, 2014
+          </time>
+        </li><li class="author">
+            By Step Aument
+          </li><li class="tags">
+          Design Patterns•Metaprogramming
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <div class="post_content_container">
+    <div class="post_content" itemprop="articleBody">
+      <p>I encountered an interesting problem this week that allowed me to dig into the
+Null Object pattern, Ruby duck typing, and Ruby’s method_missing.</p>
+
+<p>In our app we have a <code class="highlight language-ruby" data-lang="ruby"><span class="no">Duck</span></code> class (name changed to protect the innocent). Most
+of our users have a <code class="highlight language-ruby" data-lang="ruby"><span class="no">Duck</span></code> associated with their account, but some don’t. In
+our application, we have certain situations which expect a Duck, even if the
+user doesn’t have one. If we don’t have a Duck, but our app expects one and
+passes it a message like <code class="highlight language-ruby" data-lang="ruby"><span class="n">quack</span><span class="p">,</span></code> we will receive an ugly <code class="highlighter-rouge">NoMethodError:
+undefined method 'quack' for nil:NilClass</code> error.</p>
+
+<p>How can we solve this without spreading smelly nil checks around our system? It
+turns out there is an existing design pattern for just this situation, the Null
+Object pattern. In the Null Object pattern, we create a stand in object for our
+<code class="highlight language-ruby" data-lang="ruby"><span class="no">Duck</span></code> that can respond to the same interface, but without returning any
+values. We avoid ugly <code class="highlight language-ruby" data-lang="ruby"><span class="no">NoMethodError</span></code>s without having to check for the objects
+existence everywhere.</p>
+
+<p>Here is our Duck:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><div class="line-1"><span class="k">class</span> <span class="nc">Duck</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span></div><div class="line-2">  <span class="k">def</span> <span class="nf">awake?</span></div><div class="line-3">    <span class="n">status</span> <span class="o">==</span> <span class="s1">'awake'</span></div><div class="line-4">  <span class="k">end</span></div><div class="line-5"></div><div class="line-6">  <span class="k">def</span> <span class="nf">quack</span></div><div class="line-7">    <span class="nb">puts</span> <span class="n">quack_style</span></div><div class="line-8">  <span class="k">end</span></div><div class="line-9"><span class="k">end</span></div></code></pre></figure>
+
+<p>This is a Ruby on Rails ActiveRecord model, so there is more to it than we see
+here. Here is the database migration file:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><div class="line-1"><span class="k">class</span> <span class="nc">CreateDucks</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span></div><div class="line-2">  <span class="k">def</span> <span class="nf">change</span></div><div class="line-3">    <span class="n">t</span><span class="p">.</span><span class="nf">string</span> <span class="nb">name</span></div><div class="line-4">    <span class="n">t</span><span class="p">.</span><span class="nf">string</span> <span class="n">status</span></div><div class="line-5">    <span class="n">t</span><span class="p">.</span><span class="nf">integer</span> <span class="n">hunger</span></div><div class="line-6">    <span class="n">t</span><span class="p">.</span><span class="nf">string</span> <span class="n">quack_style</span></div><div class="line-7">    <span class="n">t</span><span class="p">.</span><span class="nf">string</span> <span class="n">color</span></div><div class="line-8">    <span class="n">t</span><span class="p">.</span><span class="nf">migratory</span> <span class="n">boolean</span></div><div class="line-9">  <span class="k">end</span></div><div class="line-10"><span class="k">end</span></div></code></pre></figure>
+
+<p>For each of these fields, ActiveRecord will create getter and setter methods in
+the background. But for the <code class="highlight language-ruby" data-lang="ruby"><span class="n">migratory</span></code> boolean field, we will get the bonus
+<code class="highlight language-ruby" data-lang="ruby"><span class="n">migratory?</span></code> predicate method.</p>
+
+<p>In our case, it turned out that we need our <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilDuck</span></code> to return <em>some</em> values,
+but most things should just return <code class="highlight language-ruby" data-lang="ruby"><span class="kp">nil</span></code>. The simplest way for us to implement
+our <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilDuck</span></code>, and the state in which I found my <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilDuck</span></code> code this week looks
+something like the following:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><div class="line-1"><span class="k">class</span> <span class="nc">NilDuck</span></div><div class="line-2">  <span class="nb">attr_writer</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:status</span><span class="p">,</span> <span class="ss">:hunger</span><span class="p">,</span> <span class="ss">:quack_style</span><span class="p">,</span> <span class="ss">:color</span><span class="p">,</span> <span class="ss">:migratory</span></div><div class="line-3"></div><div class="line-4">  <span class="k">def</span> <span class="nf">name</span></div><div class="line-5">    <span class="s1">'Demo Duck'</span></div><div class="line-6">  <span class="k">end</span></div><div class="line-7"></div><div class="line-8">  <span class="k">def</span> <span class="nf">status</span></div><div class="line-9">    <span class="s1">'sleeping'</span></div><div class="line-10">  <span class="k">end</span></div><div class="line-11"></div><div class="line-12">  <span class="k">def</span> <span class="nf">hunger</span></div><div class="line-13">    <span class="kp">nil</span></div><div class="line-14">  <span class="k">end</span></div><div class="line-15"></div><div class="line-16">  <span class="k">def</span> <span class="nf">quack</span></div><div class="line-17">  <span class="k">end</span></div><div class="line-18"></div><div class="line-19">  <span class="k">def</span> <span class="nf">quack_style</span></div><div class="line-20">    <span class="kp">nil</span></div><div class="line-21">  <span class="k">end</span></div><div class="line-22"></div><div class="line-23">  <span class="k">def</span> <span class="nf">color</span></div><div class="line-24">    <span class="s1">'gray'</span></div><div class="line-25">  <span class="k">end</span></div><div class="line-26"></div><div class="line-27">  <span class="k">def</span> <span class="nf">awake?</span></div><div class="line-28">    <span class="kp">false</span></div><div class="line-29">  <span class="k">end</span></div><div class="line-30"></div><div class="line-31">  <span class="k">def</span> <span class="nf">migratory</span></div><div class="line-32">    <span class="kp">nil</span></div><div class="line-33">  <span class="k">end</span></div><div class="line-34"></div><div class="line-35">  <span class="k">def</span> <span class="nf">migratory?</span></div><div class="line-36">    <span class="kp">true</span></div><div class="line-37">  <span class="k">end</span></div><div class="line-38"><span class="k">end</span></div></code></pre></figure>
+
+<p>Here we have provided the attribute setters our fake object needs with the
+<code class="highlight language-ruby" data-lang="ruby"><span class="nb">attr_writer</span></code> call. We then proceed to override each getter as needed. There
+are a few special cases in which a value other than nil is desired, but the
+default return value for our <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilDuck</span></code> is <code class="highlight language-ruby" data-lang="ruby"><span class="kp">nil</span></code>. In the cases in which we don’t
+have an actual <code class="highlight language-ruby" data-lang="ruby"><span class="no">Duck</span></code> and need to use a demo <code class="highlight language-ruby" data-lang="ruby"><span class="no">Duck</span></code>, we can pass in an instance
+of our <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilDuck</span></code> and everything will work as expected.</p>
+
+<blockquote>
+  <p>Note: since Ruby is not a strongly typed language, we don’t have to subclass
+our <code class="highlight language-ruby" data-lang="ruby"><span class="no">Duck</span></code> here or implement a formal common interface as we would in a
+strongly-typed language like Java. In Rubyland, types are determined by the
+public interface of the object in question. So if our <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilDuck</span></code>, or any other
+object for that matter, implements the methods our client object calls in
+<code class="highlight language-ruby" data-lang="ruby"><span class="no">Duck</span></code>, we can substitute it. This is often called “duck typing,” since if an
+object quacks like a duck, and acts like a duck, we can usually consider it a
+duck. We <em>do</em> implement a common interface, but the interface that we
+implement is conceptual, represented by the messages to which we expect our
+duck to respond. It’s not baked into the language as a formal construct.</p>
+</blockquote>
+
+<p>So what’s wrong with this code? Nothing at face value. Maybe it could be
+refactored into something less verbose, but it’s functional and fairly
+straightforward. In the beginning it served our app quite well. But I came to
+this code last week because of a bug uncovered by a change in another area of
+the app. It turned out that my <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilDuck</span></code> code had gotten stale and not kept up
+with changes to the <code class="highlight language-ruby" data-lang="ruby"><span class="no">Duck</span></code> class. Methods had been added to <code class="highlight language-ruby" data-lang="ruby"><span class="no">Duck</span></code>, but not to
+<code class="highlight language-ruby" data-lang="ruby"><span class="no">NilDuck</span></code>. Now <code class="highlight language-ruby" data-lang="ruby"><span class="no">Duck</span></code> looks like this:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><div class="line-1"><span class="k">class</span> <span class="nc">Duck</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span></div><div class="line-2">  <span class="k">def</span> <span class="nf">awake?</span></div><div class="line-3">    <span class="n">status</span> <span class="o">==</span> <span class="s1">'awake'</span></div><div class="line-4">  <span class="k">end</span></div><div class="line-5">  </div><div class="line-6">  <span class="k">def</span> <span class="nf">quack</span></div><div class="line-7">    <span class="nb">puts</span> <span class="n">quack_style</span></div><div class="line-8">  <span class="k">end</span></div><div class="line-9"></div><div class="line-10">  <span class="k">def</span> <span class="nf">multi_colored?</span></div><div class="line-11">    <span class="o">!</span><span class="n">secondary_color</span><span class="p">.</span><span class="nf">nil?</span></div><div class="line-12">  <span class="k">end</span></div><div class="line-13"><span class="k">end</span></div></code></pre></figure>
+
+<p>And the migration:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><div class="line-1"><span class="k">class</span> <span class="nc">CreateDucks</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span></div><div class="line-2">  <span class="k">def</span> <span class="nf">change</span></div><div class="line-3">    <span class="n">t</span><span class="p">.</span><span class="nf">string</span> <span class="nb">name</span></div><div class="line-4">    <span class="n">t</span><span class="p">.</span><span class="nf">string</span> <span class="n">status</span></div><div class="line-5">    <span class="n">t</span><span class="p">.</span><span class="nf">integer</span> <span class="n">hunger</span></div><div class="line-6">    <span class="n">t</span><span class="p">.</span><span class="nf">string</span> <span class="n">quack_style</span></div><div class="line-7">    <span class="n">t</span><span class="p">.</span><span class="nf">string</span> <span class="n">color</span></div><div class="line-8">    <span class="n">t</span><span class="p">.</span><span class="nf">string</span> <span class="n">secondary_color</span></div><div class="line-9">    <span class="n">t</span><span class="p">.</span><span class="nf">migratory</span> <span class="n">boolean</span></div><div class="line-10">  <span class="k">end</span></div><div class="line-11"><span class="k">end</span></div></code></pre></figure>
+
+<p>We don’t have equivalent <code class="highlight language-ruby" data-lang="ruby"><span class="n">secondary_color</span></code> and  <code class="highlight language-ruby" data-lang="ruby"><span class="n">multi_colored?</span></code> methods and
+our NilDuck started causing errors. Since none of these new methods requirs
+special values, I could have just added equivalent getters in NilDuck that
+returned <code class="highlight language-ruby" data-lang="ruby"><span class="kp">nil</span></code>. But since I’m a lazy programmer, I asked myself how I could
+avoid editing this class in the future. I turned to Ruby’s <code class="highlight language-ruby" data-lang="ruby"><span class="nb">method_missing</span></code>!</p>
+
+<p>In order to understand what my pair and I did here, you need to understand a
+little about the way Ruby looks up a method, or message, passed to an object.
+When you call a method on a Ruby object, Ruby first looks to see if the method
+has been defined on the object instance itself (or more precisely on it’s
+<a href="http://en.wikipedia.org/wiki/Metaclass">eigenclass</a>), if it doesn’t find it it
+will then look in any included modules in reverse include order, then in the
+instance methods of the class, and finally in the instance methods of the
+<code class="highlight language-ruby" data-lang="ruby"><span class="no">Object</span></code> class, the ultimate ancestor of every object in Ruby. If Ruby still
+can’t find the method, it starts the search over at our instance, this time
+trying to call <code class="highlight language-ruby" data-lang="ruby"><span class="nb">method_missing</span></code>. If it can’t find a definition for
+<code class="highlight language-ruby" data-lang="ruby"><span class="nb">method_missing</span></code> somewhere in our inheritance chain, only then will it throw a
+<code class="highlight language-ruby" data-lang="ruby"><span class="no">NoMethodError</span></code>.</p>
+
+<p>The <code class="highlight language-ruby" data-lang="ruby"><span class="nb">method_missing</span></code> callback gives us the hook we need to handle our, well,
+missing methods. Let’s refactor our <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilDuck</span></code> to use <code class="highlight language-ruby" data-lang="ruby"><span class="nb">method_missing</span></code>:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><div class="line-1"><span class="k">class</span> <span class="nc">NilDuck</span></div><div class="line-2">  <span class="k">def</span> <span class="nf">name</span></div><div class="line-3">    <span class="s1">'Demo Duck'</span></div><div class="line-4">  <span class="k">end</span></div><div class="line-5"></div><div class="line-6">  <span class="k">def</span> <span class="nf">status</span></div><div class="line-7">    <span class="s1">'sleeping'</span></div><div class="line-8">  <span class="k">end</span></div><div class="line-9"></div><div class="line-10">  <span class="k">def</span> <span class="nf">color</span></div><div class="line-11">    <span class="s1">'gray'</span></div><div class="line-12">  <span class="k">end</span></div><div class="line-13"></div><div class="line-14">  <span class="k">def</span> <span class="nf">migratory?</span></div><div class="line-15">    <span class="kp">true</span></div><div class="line-16">  <span class="k">end</span></div><div class="line-17"></div><div class="line-18">  <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div><div class="line-19">    <span class="no">Duck</span><span class="p">.</span><span class="nf">new</span><span class="p">.</span><span class="nf">respond_to?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span> <span class="p">?</span> <span class="kp">nil</span> <span class="p">:</span> <span class="k">super</span></div><div class="line-20">  <span class="k">end</span></div><div class="line-21"><span class="k">end</span></div></code></pre></figure>
+
+<p>See what we did there? We want <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilDuck</span></code> to have the same interface as <code class="highlight language-ruby" data-lang="ruby"><span class="no">Duck</span></code>,
+so in our <code class="highlight language-ruby" data-lang="ruby"><span class="nb">method_missing</span></code> implementation, we first checked to see whether
+<code class="highlight language-ruby" data-lang="ruby"><span class="no">Duck</span></code> responds to the method our client code attempted to call. If it does, we
+return <code class="highlight language-ruby" data-lang="ruby"><span class="kp">nil</span></code>, otherwise we pass the buck to super. Our <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilDuck</span></code> will now
+respond to everything that <code class="highlight language-ruby" data-lang="ruby"><span class="no">Duck</span></code> responds to and throw a <code class="highlight language-ruby" data-lang="ruby"><span class="no">NoMethodError</span></code> for
+anything that it doesn’t respond to. As a bonus, we got to eliminate a lot of
+code here.</p>
+
+<p>But what about predicate methods? Well, in Ruby, <code class="highlight language-ruby" data-lang="ruby"><span class="kp">nil</span></code> is falsey, so this code
+will work correctly in an <code class="highlight language-ruby" data-lang="ruby"><span class="k">if</span><span class="sr">/unless/</span><span class="o">!</span></code> situation, but what about a situation
+in which you might need <code class="highlight language-ruby" data-lang="ruby"><span class="n">migratory?</span></code> to explicitly give you <code class="highlight language-ruby" data-lang="ruby"><span class="kp">false</span></code> instead of
+<code class="highlight language-ruby" data-lang="ruby"><span class="kp">nil</span></code>? What if you are going to pass that <code class="highlight language-ruby" data-lang="ruby"><span class="kp">true</span></code> or <code class="highlight language-ruby" data-lang="ruby"><span class="kp">false</span></code> along to someone
+else as a string? What if you need to feed it into javascript from an erb or
+haml template?</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><div class="line-1"><span class="p">{</span> <span class="nl">multiColored</span><span class="p">:</span> <span class="p">}</span> <span class="c1">// !!! Not a valid JSON object, buddy!</span></div></code></pre></figure>
+
+<p>If this <code class="highlight language-ruby" data-lang="ruby"><span class="n">duck</span></code> is our <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilDuck</span></code>, <code class="highlight language-ruby" data-lang="ruby"><span class="n">duck</span><span class="p">.</span><span class="nf">multi_colored?</span></code> will return <code class="highlight language-ruby" data-lang="ruby"><span class="kp">nil</span></code>. When
+the template is rendered and the string is interpolated, <code class="highlight language-ruby" data-lang="ruby"><span class="kp">nil</span></code>’s <code class="highlight language-ruby" data-lang="ruby"><span class="nb">to_s</span></code> method
+will be invoked, which will return an empty string instead of <code class="highlight language-ruby" data-lang="ruby"><span class="s1">'false'</span></code>. This
+will result in a javascript error in the browser:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><div class="line-1"><span class="k">class</span> <span class="nc">NilDuck</span></div><div class="line-2">  <span class="k">def</span> <span class="nf">name</span></div><div class="line-3">    <span class="s1">'Demo Duck'</span></div><div class="line-4">  <span class="k">end</span></div><div class="line-5"></div><div class="line-6">  <span class="k">def</span> <span class="nf">status</span></div><div class="line-7">    <span class="s1">'sleeping'</span></div><div class="line-8">  <span class="k">end</span></div><div class="line-9"></div><div class="line-10">  <span class="k">def</span> <span class="nf">color</span></div><div class="line-11">    <span class="s1">'gray'</span></div><div class="line-12">  <span class="k">end</span></div><div class="line-13"></div><div class="line-14">  <span class="k">def</span> <span class="nf">migratory?</span></div><div class="line-15">    <span class="kp">true</span></div><div class="line-16">  <span class="k">end</span></div><div class="line-17"></div><div class="line-18">  <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div><div class="line-19">    <span class="k">super</span> <span class="k">unless</span> <span class="no">Duck</span><span class="p">.</span><span class="nf">new</span><span class="p">.</span><span class="nf">respond_to?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span></div><div class="line-20">    <span class="nb">name</span><span class="p">.</span><span class="nf">ends_with?</span><span class="p">(</span><span class="s1">'?'</span><span class="p">)</span> <span class="p">?</span> <span class="kp">false</span> <span class="p">:</span> <span class="kp">nil</span></div><div class="line-21">  <span class="k">end</span></div><div class="line-22"><span class="k">end</span></div></code></pre></figure>
+
+<p>Whoops! That’s not what we wanted at all! We want <code class="highlight language-ruby" data-lang="ruby"><span class="s1">'true'</span></code> or <code class="highlight language-ruby" data-lang="ruby"><span class="s1">'false'</span></code> to be
+rendered. How can we handle that? Well, we can fall back and explicitly create
+a <code class="highlight language-ruby" data-lang="ruby"><span class="n">multi_colored?</span></code> method in our <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilDuck</span></code> that returns <code class="highlight language-ruby" data-lang="ruby"><span class="kp">false</span></code>, but we can do
+better than that. Let’s stay lazy so we don’t have to fix this again! Since it
+turns out that we don’t really want our predicate methods to return just a
+falsey value, but <code class="highlight language-ruby" data-lang="ruby"><span class="kp">false</span></code> itself. Let’s account for that:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><div class="line-1"><span class="k">class</span> <span class="nc">NilDuck</span></div><div class="line-2">  <span class="k">def</span> <span class="nf">name</span></div><div class="line-3">    <span class="s1">'Demo Duck'</span></div><div class="line-4">  <span class="k">end</span></div><div class="line-5"></div><div class="line-6">  <span class="k">def</span> <span class="nf">status</span></div><div class="line-7">    <span class="s1">'sleeping'</span></div><div class="line-8">  <span class="k">end</span></div><div class="line-9"></div><div class="line-10">  <span class="k">def</span> <span class="nf">color</span></div><div class="line-11">    <span class="s1">'gray'</span></div><div class="line-12">  <span class="k">end</span></div><div class="line-13"></div><div class="line-14">  <span class="k">def</span> <span class="nf">migratory?</span></div><div class="line-15">    <span class="kp">true</span></div><div class="line-16">  <span class="k">end</span></div><div class="line-17"></div><div class="line-18">  <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div><div class="line-19">    <span class="k">super</span> <span class="k">unless</span> <span class="no">Duck</span><span class="p">.</span><span class="nf">new</span><span class="p">.</span><span class="nf">respond_to?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span></div><div class="line-20">    <span class="nb">name</span><span class="p">.</span><span class="nf">ends_with?</span><span class="p">(</span><span class="s1">'?'</span><span class="p">)</span> <span class="p">?</span> <span class="kp">false</span> <span class="p">:</span> <span class="kp">nil</span></div><div class="line-21">  <span class="k">end</span></div><div class="line-22"><span class="k">end</span></div></code></pre></figure>
+
+<p>Now if <code class="highlight language-ruby" data-lang="ruby"><span class="no">Duck</span></code> responds to our method and our method ends with ‘?’, <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilDuck</span></code>
+will return <code class="highlight language-ruby" data-lang="ruby"><span class="kp">false</span></code>, if it doesn’t end with ‘?’ it will return <code class="highlight language-ruby" data-lang="ruby"><span class="kp">nil</span></code>. Our
+template will now render the javascript we expected:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><div class="line-1"><span class="p">{</span> <span class="nl">multiColored</span><span class="p">:</span> <span class="kc">false</span> <span class="p">}</span></div></code></pre></figure>
+
+<p>You could certainly take this further and abstract out a generic <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilObject</span></code>
+for your app, but this serves our needs quite well. For further reading on the
+Null Object pattern:
+<a href="http://devblog.avdi.org/2011/05/30/null-objects-and-falsiness/">http://devblog.avdi.org/2011/05/30/null-objects-and-falsiness/</a></p>
+
+    </div>
+  </div>
+
+  <div class="post_footer">
+    <section class="subscribe">
+  <div class="container"><script src="https://f.convertkit.com/ckjs/ck.5.js"></script>
+<form action="https://app.convertkit.com/forms/741867/subscriptions" class="seva-form formkit-form" method="post" data-sv-form="741867" data-uid="697093712f" data-format="inline" data-version="5" data-options="{&quot;settings&quot;:{&quot;after_subscribe&quot;:{&quot;action&quot;:&quot;message&quot;,&quot;success_message&quot;:&quot;Success! Now check your email to confirm your subscription.&quot;,&quot;redirect_url&quot;:&quot;&quot;},&quot;modal&quot;:{&quot;trigger&quot;:null,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:null,&quot;devices&quot;:null,&quot;show_once_every&quot;:null},&quot;recaptcha&quot;:{&quot;enabled&quot;:false},&quot;return_visitor&quot;:{&quot;action&quot;:&quot;show&quot;,&quot;custom_content&quot;:&quot;&quot;},&quot;slide_in&quot;:{&quot;display_in&quot;:null,&quot;trigger&quot;:null,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:null,&quot;devices&quot;:null,&quot;show_once_every&quot;:null}}}" min-width="800" style="background-color: rgb(255, 255, 255); border-radius: 4px;">
+  <div data-style="minimal">
+    <h1 class="formkit-header" data-element="header">Stay in touch</h1>
+    <div data-element="subheader" class="formkit-subheader" style="color: rgb(104, 104, 104); font-size: 18px;">
+      <p>Hi, I'm Step. I write about code, teams, workflow, and entrepreneurship. I also make things you might want to know about.</p>
+    </div>
+    <ul data-element="errors" data-group="alert"></ul>
+    <div data-element="fields" data-stacked="true" class="seva-fields formkit-fields">
+      <div class="formkit-field">
+        <input class="formkit-input" aria-label="First Name" name="fields[first_name]" placeholder="First Name" type="text" style="border-color: rgb(227, 227, 227); border-radius: 4px; color: rgb(0, 0, 0); font-weight: 400;">
+      </div>
+      <div class="formkit-field">
+        <input class="formkit-input" name="email_address" placeholder="Your email address" required="" type="email" style="border-color: rgb(227, 227, 227); border-radius: 4px; color: rgb(0, 0, 0); font-weight: 400;">
+      </div>
+      <button data-element="submit" class="formkit-submit" style="background-color: rgb(22, 119, 190); border-radius: 4px; color: rgb(255, 255, 255); font-weight: 400;">
+        <span>Get New Blog Posts By Email</span>
+      </button>
+    </div>
+    <div data-element="guarantee" class="formkit-guarantee" style="color: rgb(77, 77, 77); font-size: 13px; font-weight: 400;">
+      <p class="no_spam">I won't send you spam. Unsubscribe at any time.</p>
+    </div>
+    <a href="https://convertkit.com/?utm_source=dynamic&amp;utm_medium=referral&amp;utm_campaign=poweredby&amp;utm_content=form" class="formkit-powered-by" data-element="powered-by" target="_blank">Powered By ConvertKit</a>
+  </div>
+  <style>
+    .formkit-form[data-uid="697093712f"] *{font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;box-sizing:border-box;}.formkit-form[data-uid="697093712f"] legend{border:none;font-size:inherit;margin-bottom:10px;padding:0;position:relative;display:table;}.formkit-form[data-uid="697093712f"] fieldset{border:0;padding:0.01em 0 0 0;margin:0;min-width:0;}.formkit-form[data-uid="697093712f"] body:not(:-moz-handler-blocked) fieldset{display:table-cell;}.formkit-form[data-uid="697093712f"] p{color:inherit;font-size:inherit;font-weight:inherit;}.formkit-form[data-uid="697093712f"][data-format="modal"]{display:none;}.formkit-form[data-uid="697093712f"][data-format="slide in"]{display:none;}.formkit-form[data-uid="697093712f"] .formkit-input,.formkit-form[data-uid="697093712f"] .formkit-select,.formkit-form[data-uid="697093712f"] .formkit-checkboxes{width:100%;}.formkit-form[data-uid="697093712f"] .formkit-submit{border:0;border-radius:5px;color:#ffffff;cursor:pointer;display:inline-block;text-align:center;font-size:15px;font-weight:500;cursor:pointer;margin-bottom:15px;overflow:hidden;padding:0;vertical-align:middle;}.formkit-form[data-uid="697093712f"] .formkit-submit:hover,.formkit-form[data-uid="697093712f"] .formkit-submit:focus{outline:none;}.formkit-form[data-uid="697093712f"] .formkit-submit:hover > span,.formkit-form[data-uid="697093712f"] .formkit-submit:focus > span{background-color:rgba(0,0,0,0.1);}.formkit-form[data-uid="697093712f"] .formkit-submit > span{display:block;-webkit-transition:background-color 300ms ease-in-out;transition:background-color 300ms ease-in-out;padding:12px 24px;}.formkit-form[data-uid="697093712f"] input{font-size:15px;padding:12px;border:1px solid #e3e3e3;-webkit-flex:1 0 auto;-ms-flex:1 0 auto;flex:1 0 auto;line-height:1.4;margin-right:15px;-webkit-transition:border-color ease-out 300ms;transition:border-color ease-out 300ms;}.formkit-form[data-uid="697093712f"] input:focus{outline:none;border-color:#1677be;-webkit-transition:border-color ease 300ms;transition:border-color ease 300ms;}.formkit-form[data-uid="697093712f"] input::-webkit-input-placeholder{color:#848585;}.formkit-form[data-uid="697093712f"] input::-moz-placeholder{color:#848585;}.formkit-form[data-uid="697093712f"] input:-ms-input-placeholder{color:#848585;}.formkit-form[data-uid="697093712f"] input::placeholder{color:#848585;}.formkit-form[data-uid="697093712f"] [data-group="dropdown"]{position:relative;display:inline-block;width:100%;}.formkit-form[data-uid="697093712f"] [data-group="dropdown"]::before{content:"";top:calc(50% - 2.5px);right:10px;position:absolute;pointer-events:none;border-color:#333333 transparent transparent transparent;border-style:solid;border-width:6px 5px 0 5px;height:0;width:0;}.formkit-form[data-uid="697093712f"] [data-group="dropdown"] select{height:auto;width:100%;cursor:pointer;color:#333333;line-height:1.4;margin-bottom:0;padding:0 6px;-webkit-appearance:none;-moz-appearance:none;appearance:none;font-size:15px;padding:12px;padding-right:25px;border:1px solid #e3e3e3;background:#ffffff;}.formkit-form[data-uid="697093712f"] [data-group="dropdown"] select:focus{outline:none;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"]{text-align:left;margin-bottom:20px;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"]{margin-bottom:10px;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] *{cursor:pointer;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"]:last-of-type{margin-bottom:0;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] input[type="checkbox"]{display:none;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] input[type="checkbox"] + label::after{content:none;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] input[type="checkbox"]:checked + label::after{border-color:#ffffff;content:"";}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] input[type="checkbox"]:checked + label::before{background:#10bf7a;border-color:#10bf7a;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] label{position:relative;display:inline-block;padding-left:28px;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] label::before,.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] label::after{position:absolute;content:"";display:inline-block;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] label::before{height:16px;width:16px;border:1px solid #e3e3e3;background:#ffffff;left:0px;top:3px;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] label::after{height:4px;width:8px;border-left:2px solid #4d4d4d;border-bottom:2px solid #4d4d4d;-webkit-transform:rotate(-45deg);-ms-transform:rotate(-45deg);-webkit-transform:rotate(-45deg);-ms-transform:rotate(-45deg);transform:rotate(-45deg);left:4px;top:8px;}.formkit-form[data-uid="697093712f"] [data-group="alert"]{padding:12px;border:1px solid #e3e3e3;background:#f9fafb;-webkit-flex:1 0 auto;-ms-flex:1 0 auto;flex:1 0 auto;border-radius:5px;margin:25px auto;text-align:center;width:80%;}.formkit-form[data-uid="697093712f"] [data-group="alert"]:empty{display:none;}.formkit-form[data-uid="697093712f"] [data-group="alert"][data-element="success"]{background:#d3fbeb;border-color:#10bf7a;color:#0c905c;}.formkit-form[data-uid="697093712f"] [data-group="alert"][data-element="errors"]{background:#fde8e2;border-color:#f2643b;color:#ea4110;} .formkit-form[data-uid="697093712f"]{text-align:center;color:#686868;border:1px solid #e3e3e3;border-radius:8px;box-sizing:border-box;background-size:cover;background-repeat:no-repeat;background-position:center;max-width:800px;}.formkit-form[data-uid="697093712f"] [data-style="minimal"]{padding:25px;width:100%;}.formkit-form[data-uid="697093712f"] [data-element="header"]{margin-top:0;margin-bottom:27px;}.formkit-form[data-uid="697093712f"] [data-element="subheader"]{margin:18px 0;}.formkit-form[data-uid="697093712f"] [data-element="guarantee"]{font-size:13px;}.formkit-form[data-uid="697093712f"] [data-element="fields"]{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;margin:25px auto 0 auto;}.formkit-form[data-uid="697093712f"] [data-element="fields"] > *{margin:0 0 15px 0;-webkit-box-flex:1;-webkit-flex-grow:1;-ms-flex-positive:1;flex-grow:1;-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;-webkit-flex-basis:100%;-ms-flex-preferred-size:100%;flex-basis:100%;}.formkit-form[data-uid="697093712f"] [data-element="fields"][data-stacked="true"] > *{margin:0 0 15px 0;-webkit-flex-basis:100%;-ms-flex-preferred-size:100%;flex-basis:100%;}.formkit-form[data-uid="697093712f"] [data-element="fields"][data-stacked="true"] > *:last-child{margin:0;}.formkit-form[data-uid="697093712f"] [data-element="powered-by"]{color:#7d7d7d;display:block;font-size:12px;margin-bottom:0;margin-top:25px;}.formkit-form[data-uid="697093712f"] [data-element="powered-by"][data-active="false"]{opacity:0.5;}.formkit-form[data-uid="697093712f"][min-width~="500"] [data-style="minimal"],.formkit-form[data-uid="697093712f"][min-width~="600"] [data-style="minimal"],.formkit-form[data-uid="697093712f"][min-width~="700"] [data-style="minimal"],.formkit-form[data-uid="697093712f"][min-width~="800"] [data-style="minimal"]{padding:40px;}.formkit-form[data-uid="697093712f"][min-width~="500"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] > *,.formkit-form[data-uid="697093712f"][min-width~="600"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] > *,.formkit-form[data-uid="697093712f"][min-width~="700"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] > *,.formkit-form[data-uid="697093712f"][min-width~="800"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] > *{margin:0 15px 15px 0;-webkit-box-flex:none;-webkit-flex-grow:none;-ms-flex-positive:none;flex-grow:none;-webkit-flex-shrink:none;-ms-flex-negative:none;flex-shrink:none;-webkit-flex-basis:auto;-ms-flex-preferred-size:auto;flex-basis:auto;}.formkit-form[data-uid="697093712f"][min-width~="500"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] [data-element="submit"],.formkit-form[data-uid="697093712f"][min-width~="600"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] [data-element="submit"],.formkit-form[data-uid="697093712f"][min-width~="700"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] [data-element="submit"],.formkit-form[data-uid="697093712f"][min-width~="800"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] [data-element="submit"]{-webkit-box-flex:0;-webkit-flex-grow:0;-ms-flex-positive:0;flex-grow:0;margin-right:0;}
+</style>
+</form>
+</div>
+</section>
+<p class="photo_credit">Photo by Braydon Anderson on Unsplash</p>
+  </div>
+
+  <footer>
+    
+  </footer>
+  <a class="u-url" href="/blog/the-null-object-pattern-and-method-missing-in-ruby/" hidden></a>
+</article>
+
+<div class="modal-toggle-group animate scaleIn">
+  <div class="modal-toggle-bubbleShadow"></div>
+  <div class="modal-toggle-bubble"></div>
+  <div class="modal-toggle-wrapper"></div>
+  <div class="modal-toggle-close-wrapper">
+    <div class="modal-toggle-close"></div>
+  </div>
+</div>
+
+<div class="fullscreenModal">
+  <div class="share_container">
+    <h2 class="h2--shareTitle">Share this story</h2>
+    <ul class="shareWrapper">
+      <li><a class="shareButton shareButton--twitter" href="https://twitter.com/intent/tweet?text=The Null Object Pattern and method_missing in Ruby by @saument&url=%2Fblog%2Fthe-null-object-pattern-and-method-missing-in-ruby%2F" target="_blank"></a></li>
+      <li><a class="shareButton shareButton--facebook" href="https://www.facebook.com/sharer/sharer.php?u=%2Fblog%2Fthe-null-object-pattern-and-method-missing-in-ruby%2F" target="_blank"></a></li>
+      <li><a class="shareButton shareButton--linkedin" href="https://www.linkedin.com/shareArticle
+?mini=true&url=%2Fblog%2Fthe-null-object-pattern-and-method-missing-in-ruby%2F&title=The Null Object Pattern and method_missing in Ruby"  target="_blank"></a></li>
+      <li><a class="shareButton shareButton--buffer" href="https://buffer.com/add?text=The Null Object Pattern and method_missing in Ruby by @saument&url=%2Fblog%2Fthe-null-object-pattern-and-method-missing-in-ruby%2F" target="_blank"></a></li>
+      <li><a class="shareButton shareButton--hackernews" href="http://news.ycombinator.com/submitlink?u=%2Fblog%2Fthe-null-object-pattern-and-method-missing-in-ruby%2F&t=The Null Object Pattern and method_missing in Ruby" target="_blank"></a></li>
+      <li><a class="shareButton shareButton--pocket" href="https://getpocket.com/save?url=%2Fblog%2Fthe-null-object-pattern-and-method-missing-in-ruby%2F&title=The Null Object Pattern and method_missing in Ruby" target="_blank"></a></li>
+    </ul>
+  </div>
+</div>
+
+
+      </div>
+    </main><label for="sidebar-checkbox" class="sidebar-toggle-wrapper">
+  <div class="sidebar-toggle"></div>
+</label>
+
+<!-- Javascript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/assets/javascript/imagesloaded.pkgd.min.js"></script><script src="/assets/main-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.js" type="text/javascript"></script><script>
+  $(document).ready(function(){
+
+    // Featured image loaded behavior
+    $('.post_header_image img').imagesLoaded()
+      .done( function( instance ) {
+        $('.post_header_image').addClass('is-loaded');
+      });
+
+    // Modal toggle behavior
+    $('.modal-toggle-wrapper').click(function() {
+    	$(this).toggleClass('active');
+      $('.modal-toggle-bubble').toggleClass('active');
+    	$('.modal-toggle-bubbleShadow').toggleClass('active');
+      $('.modal-toggle-close-wrapper').toggleClass('active');
+      $('.fullscreenModal').toggleClass('active');
+    });
+
+    // Prevent default anchor event and make a share popup
+    $.fn.sharePopup = function (e, intWidth, intHeight, blnResize) {
+
+      e.preventDefault();
+      intWidth = intWidth || '750';
+      intHeight = intHeight || '500';
+      strResize = (blnResize ? 'yes' : 'no');
+
+      //// Set title and open popup with focus on it
+      var strTitle = ((typeof this.attr('title') !== 'undefined') ? this.attr('title') : 'Social Share'),
+          strParam = 'width=' + intWidth + ',height=' + intHeight + ',resizable=' + strResize,
+          objWindow = window.open(this.attr('href'), strTitle, strParam).focus();
+    }
+
+    $('.shareButton').on("click", function(e) {
+      $(this).sharePopup(e);
+    });
+  });
+
+  // Show modal toggle after scrolling 300px
+  $(document).scroll(function() {
+    $('.modal-toggle-group').toggleClass('active', $(document).scrollTop() >= 300);
+  });
+</script>
+</body>
+
+</html>

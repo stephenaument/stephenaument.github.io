@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en"><!DOCTYPE html>
+<html lang="en">
+  <meta charset="utf-8">
+  <link type="text/plain" rel="author" href="/humans.txt" />
+  <meta name="ROBOTS" content="NOODP" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <meta name="description" content="In a previous post Idescribed using method_missing in a Null Object to stand in for anotherobject and respond smartly to the original object’s interface. At ..."><link rel="canonical" href="/blog/null-object-part-2/"><link rel="next" href="/blog/backbone-collection-testing-gotcha/" title="Backbone Collection Testing Gotcha"><link rel="prev" href="/blog/ruby-hash-dot-fetch-and-javascript/" title="Ruby Hash#fetch and Javascript"><!-- Twitter card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@saument">
+  <meta name="twitter:creator" content="@saument">
+  <meta name="twitter:title" content="Null Object Part 2">
+  <meta name="twitter:description" content="In a previous post Idescribed using method_missing in a Null Object to stand in for anotherobject and respond smartly to the original object’s interface. At ...">
+  <meta name="twitter:image" content="/assets/images/hero/bath-duck-close-up-cute-592677.jpg">
+  <meta name="twitter:url" content="/blog/null-object-part-2/">
+
+  <!-- Open graph -->
+  <meta property="og:title" content="Null Object Part 2">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="/blog/null-object-part-2/">
+  <meta property="og:image" content="/assets/images/hero/bath-duck-close-up-cute-592677.jpg">
+  <meta property="og:description" content="In a previous post Idescribed using method_missing in a Null Object to stand in for anotherobject and respond smartly to the original object’s interface. At ...">
+  <meta property="og:site_name" content="">
+  <meta property="og:locale" content=""><meta property="article:modified_time" content="2014-03-11T01:00:00-05:00">
+    <meta property="article:published_time" content="2014-03-11T01:00:00-05:00">
+    <meta property="article:author" content="https://www.facebook.com/"><meta property="og:see_also" content="/blog/backbone-collection-testing-gotcha/"><meta property="og:see_also" content="/blog/ruby-hash-dot-fetch-and-javascript/"><meta property="og:see_also" content="/blog/the-null-object-pattern-and-method-missing-in-ruby/"><meta property="article:section" content="Design"><meta property="article:tag" content="code"><meta property="fb:admins" content="">
+  <meta property="fb:app_id" content="">
+
+  <title>Null Object Part 2 &middot; Stephen Aument</title><!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Null Object Part 2 | Stephen Aument</title>
+<meta name="generator" content="Jekyll v3.8.3" />
+<meta property="og:title" content="Null Object Part 2" />
+<meta name="author" content="Step Aument" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="In a previous post I described using method_missing in a Null Object to stand in for another object and respond smartly to the original object’s interface. At the end of that post I suggested that you could go farther than we did in creating a more abstract object. Well, we got that chance." />
+<meta property="og:description" content="In a previous post I described using method_missing in a Null Object to stand in for another object and respond smartly to the original object’s interface. At the end of that post I suggested that you could go farther than we did in creating a more abstract object. Well, we got that chance." />
+<link rel="canonical" href="/blog/null-object-part-2/" />
+<meta property="og:url" content="/blog/null-object-part-2/" />
+<meta property="og:site_name" content="Stephen Aument" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2014-03-11T01:00:00-05:00" />
+<script type="application/ld+json">
+{"url":"/blog/null-object-part-2/","headline":"Null Object Part 2","dateModified":"2014-03-11T01:00:00-05:00","datePublished":"2014-03-11T01:00:00-05:00","author":{"@type":"Person","name":"Step Aument"},"mainEntityOfPage":{"@type":"WebPage","@id":"/blog/null-object-part-2/"},"description":"In a previous post I described using method_missing in a Null Object to stand in for another object and respond smartly to the original object’s interface. At the end of that post I suggested that you could go farther than we did in creating a more abstract object. Well, we got that chance.","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/assets/main-c85631645e7e4a699c63a8bec1fd55889e9c4dcb5dfb04320a0b2cb15bf71d79.css">
+
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
+
+  <!-- modernizer -->
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+
+  <!--[if lt IE 9]>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <![endif]-->
+
+  <!--[if (gte IE 6)&(lte IE 8)]>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.3.0/respond.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/selectivizr/1.0.2/selectivizr-min.js"></script>
+  <![endif]-->
+
+  <script type="text/javascript" src="//code.jquery.com/jquery-1.12.4.min.js"></script><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Stephen Aument" /></head>
+<body class="_posts/2014-03-11-null-object-part-2"><input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox"><nav role="navigation" class="sidebar sidebar--right">
+  <a href="" class="textLogo textLogo--white textLogo--sidebar"></a>
+  <ul class="sidebar-recentPosts">
+    
+      
+      <li>
+        
+          <a href="/blog/backbone-collection-testing-gotcha/" class="sidebar-recentPosts-image-wrapper">
+            <img src="/assets/images/hero/anita-jankovic-730367-unsplash.jpg" style="" alt="">
+          </a>
+        
+        <a href="/blog/backbone-collection-testing-gotcha/">Backbone Collection Testing Gotcha</a>
+        <div class="postMeta">12 Mar 2014</div>
+      </li>
+      
+    
+      
+        <!-- exclude current post -->
+      
+    
+      
+      <li>
+        
+          <a href="/blog/ruby-hash-dot-fetch-and-javascript/" class="sidebar-recentPosts-image-wrapper">
+            <img src="/assets/images/hero/mitchell-orr-389605-unsplash.jpg" style="" alt="">
+          </a>
+        
+        <a href="/blog/ruby-hash-dot-fetch-and-javascript/">Ruby Hash#fetch and Javascript</a>
+        <div class="postMeta">06 Mar 2014</div>
+      </li>
+      
+    
+      
+      <li>
+        
+          <a href="/blog/the-null-object-pattern-and-method-missing-in-ruby/" class="sidebar-recentPosts-image-wrapper">
+            <img src="/assets/images/hero/braydon-anderson-105552-unsplash.jpg" style="" alt="">
+          </a>
+        
+        <a href="/blog/the-null-object-pattern-and-method-missing-in-ruby/">The Null Object Pattern and method_missing in Ruby</a>
+        <div class="postMeta">05 Mar 2014</div>
+      </li>
+      
+    
+  </ul>
+</nav>
+
+<nav class="menuWrapper">
+  <ul class="popover popover--menu">
+    <li class="menu-avatar">
+      <a href="/" class="brand_logo brand_logo--small
+      
+      "></a>
+    </li>
+  </ul>
+</nav>
+
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post_header">
+    <div class="post_header_image">
+      
+          <img class="" src="/assets/images/hero/bath-duck-close-up-cute-592677.jpg" style="top:-420px;" alt="">
+      
+    </div>
+    <div class="section-gradient
+    section-gradient--lighter"></div>
+
+    <div class="title_block">
+      <h1 class="post_title" itemprop="name headline">Null Object Part 2</h1>
+      <ul class="post_meta">
+        <li class="date">
+          <time class="dt-published" datetime="2014-03-11T01:00:00-05:00" itemprop="datePublished">Mar 11, 2014
+          </time>
+        </li><li class="author">
+            By Step Aument
+          </li><li class="tags">
+          Design•Patterns
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <div class="post_content_container">
+    <div class="post_content" itemprop="articleBody">
+      <p>In a <a href="/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby/">previous post</a> I
+described using <code class="highlight language-ruby" data-lang="ruby"><span class="nb">method_missing</span></code> in a Null Object to stand in for another
+object and respond smartly to the original object’s interface. At the end of
+that post I suggested that you could go farther than we did in creating a more
+abstract object. Well, we got that chance.</p>
+
+<p>In this post I will show you how we created a <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilObject</span></code> that can both stand
+on its own and be extended with added functionality in a subclass. Our
+<code class="highlight language-ruby" data-lang="ruby"><span class="no">NilObject</span></code> needs to be smart about the interface of the class that it’s
+faking, so we’ll have to take that into account. Finally, we decided to
+implement a smart <code class="highlight language-ruby" data-lang="ruby"><span class="nb">respond_to?</span></code> method to round out the functionality of our
+<code class="highlight language-ruby" data-lang="ruby"><span class="no">NilObject</span></code>.</p>
+
+<p>Here’s the form that our <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilDuck</span></code> took at the end of the previous post:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><div class="line-1"><span class="k">class</span> <span class="nc">NilDuck</span></div><div class="line-2">  <span class="k">def</span> <span class="nf">name</span></div><div class="line-3">    <span class="s1">'Demo Duck'</span></div><div class="line-4">  <span class="k">end</span></div><div class="line-5"></div><div class="line-6">  <span class="k">def</span> <span class="nf">status</span></div><div class="line-7">    <span class="s1">'sleeping'</span></div><div class="line-8">  <span class="k">end</span></div><div class="line-9"></div><div class="line-10">  <span class="k">def</span> <span class="nf">color</span></div><div class="line-11">    <span class="s1">'gray'</span></div><div class="line-12">  <span class="k">end</span></div><div class="line-13"></div><div class="line-14">  <span class="k">def</span> <span class="nf">migratory?</span></div><div class="line-15">    <span class="kp">true</span></div><div class="line-16">  <span class="k">end</span></div><div class="line-17"></div><div class="line-18">  <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div><div class="line-19">    <span class="k">super</span> <span class="k">unless</span> <span class="no">Duck</span><span class="p">.</span><span class="nf">new</span><span class="p">.</span><span class="nf">respond_to?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span></div><div class="line-20">    <span class="nb">name</span><span class="p">.</span><span class="nf">ends_with?</span><span class="p">(</span><span class="s1">'?'</span><span class="p">)</span> <span class="p">?</span> <span class="kp">false</span> <span class="p">:</span> <span class="kp">nil</span></div><div class="line-21">  <span class="k">end</span></div><div class="line-22"><span class="k">end</span></div></code></pre></figure>
+
+<p>A few days after making those changes, we ran into another custom Null Object
+in our app, the <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilGoose</span></code>. Our <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilGoose</span></code> ran into the
+same problem that <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilDuck</span></code> originally did. A new method was added to the
+<code class="highlight language-ruby" data-lang="ruby"><span class="no">Goose</span></code> class that wasn’t reflected in <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilGoose</span></code> and a bug appeared.</p>
+
+<p>What to do? Well, we try not to run ahead of ourselves or our tests, so the
+first thing we did was create a test that expected the missing method, watched
+it fail, and copied the <code class="highlight language-ruby" data-lang="ruby"><span class="nb">method_missing</span></code> definition from <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilDuck</span></code>, renaming as
+we needed to.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><div class="line-1"><span class="k">class</span> <span class="nc">NilGoose</span></div><div class="line-2">  <span class="k">def</span> <span class="nf">name</span></div><div class="line-3">    <span class="s1">'Demo Goose'</span></div><div class="line-4">  <span class="k">end</span></div><div class="line-5"> </div><div class="line-6">  <span class="k">def</span> <span class="nf">status</span></div><div class="line-7">    <span class="s1">'awake'</span></div><div class="line-8">  <span class="k">end</span></div><div class="line-9"> </div><div class="line-10">  <span class="k">def</span> <span class="nf">color</span></div><div class="line-11">    <span class="s1">'black'</span></div><div class="line-12">  <span class="k">end</span></div><div class="line-13"> </div><div class="line-14">  <span class="k">def</span> <span class="nf">migratory?</span></div><div class="line-15">    <span class="kp">true</span></div><div class="line-16">  <span class="k">end</span></div><div class="line-17"> </div><div class="line-18">  <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div><div class="line-19">    <span class="k">super</span> <span class="k">unless</span> <span class="no">Goose</span><span class="p">.</span><span class="nf">new</span><span class="p">.</span><span class="nf">respond_to?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span></div><div class="line-20">    <span class="nb">name</span><span class="p">.</span><span class="nf">ends_with?</span><span class="p">(</span><span class="s1">'?'</span><span class="p">)</span> <span class="p">?</span> <span class="kp">false</span> <span class="p">:</span> <span class="kp">nil</span>  <span class="k">end</span></div><div class="line-21"><span class="k">end</span></div></code></pre></figure>
+
+<p>This made our test happy. But the duplicated code made us sad. We like
+<a href="http://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY</a> code around here. We
+knew it was time to factor out our common code into a single spot.</p>
+
+<p>We thought about putting it in a Module that could be included into other
+special null objects, but decided instead to make it a full-fledged <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilObject</span></code>
+class that we could use standalone as well as a superclass for our <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilDuck</span></code>
+and <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilGoose</span></code>.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><div class="line-1"><span class="k">class</span> <span class="nc">NilObject</span></div><div class="line-2">  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">klass</span><span class="p">)</span></div><div class="line-3">    <span class="vi">@klass</span> <span class="o">=</span> <span class="n">klass</span></div><div class="line-4">  <span class="k">end</span></div><div class="line-5"></div><div class="line-6">  <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div><div class="line-7">    <span class="k">return</span> <span class="k">super</span> <span class="k">unless</span> <span class="vi">@klass</span><span class="p">.</span><span class="nf">new</span><span class="p">.</span><span class="nf">respond_to?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span></div><div class="line-8">    <span class="nb">name</span><span class="p">.</span><span class="nf">to_s</span><span class="p">.</span><span class="nf">ends_with?</span><span class="p">(</span><span class="s1">'?'</span><span class="p">)</span> <span class="p">?</span> <span class="kp">false</span> <span class="p">:</span> <span class="kp">nil</span></div><div class="line-9">  <span class="k">end</span></div><div class="line-10"><span class="k">end</span></div></code></pre></figure>
+
+<p>If you recall in our <code class="highlight language-ruby" data-lang="ruby"><span class="nb">method_missing</span></code> implementation, we had to new up an
+instance of our <code class="highlight language-ruby" data-lang="ruby"><span class="no">Duck</span></code> class to determine whether it responds to the method we
+are testing. Since we want to reuse this method in the generic <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilObject</span></code>, we
+won’t know which class to check. Our first pass at a solution requires the
+class to be passed into the <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilObject</span></code> constructor, which would look like
+<code class="highlight language-ruby" data-lang="ruby"><span class="n">faker</span> <span class="o">=</span> <span class="no">NilObject</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">Duck</span><span class="p">)</span></code>.</p>
+
+<p>In our <code class="highlight language-ruby" data-lang="ruby"><span class="n">initialize</span></code> method we save the class passed in into an instance
+variable, <code class="highlight language-ruby" data-lang="ruby"><span class="vi">@klass</span></code>, which <code class="highlight language-ruby" data-lang="ruby"><span class="nb">method_missing</span></code> then uses to new up an instance to
+check. Now we can fake any class we want with our <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilObject</span></code>, and it will
+handle exactly those methods the subject responds to and no others. (Note: If
+you’re weirded out by passing a class around like that, remember that
+everything in Ruby is an object, including classes)</p>
+
+<p>Now we can make <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilDuck</span></code> inherit from <code class="highlight language-ruby" data-lang="ruby"><span class="no">NilObject</span></code>:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><div class="line-1"><span class="k">class</span> <span class="nc">NilDuck</span> <span class="o">&lt;</span> <span class="no">NilObject</span></div><div class="line-2">  <span class="k">def</span> <span class="nf">name</span></div><div class="line-3">    <span class="s1">'Demo Duck'</span></div><div class="line-4">  <span class="k">end</span></div><div class="line-5"></div><div class="line-6">  <span class="k">def</span> <span class="nf">status</span></div><div class="line-7">    <span class="s1">'sleeping'</span></div><div class="line-8">  <span class="k">end</span></div><div class="line-9"></div><div class="line-10">  <span class="k">def</span> <span class="nf">color</span></div><div class="line-11">    <span class="s1">'gray'</span></div><div class="line-12">  <span class="k">end</span></div><div class="line-13"></div><div class="line-14">  <span class="k">def</span> <span class="nf">migratory?</span></div><div class="line-15">    <span class="kp">true</span></div><div class="line-16">  <span class="k">end</span></div><div class="line-17"><span class="k">end</span></div></code></pre></figure>
+
+<p>and the same for <code class="highlighter-rouge">NilGoose</code>:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><div class="line-1"><span class="k">class</span> <span class="nc">NilGoose</span> <span class="o">&lt;</span> <span class="no">NilObject</span></div><div class="line-2">  <span class="k">def</span> <span class="nf">name</span></div><div class="line-3">    <span class="s1">'Demo Goose'</span></div><div class="line-4">  <span class="k">end</span></div><div class="line-5"> </div><div class="line-6">  <span class="k">def</span> <span class="nf">status</span></div><div class="line-7">    <span class="s1">'awake'</span></div><div class="line-8">  <span class="k">end</span></div><div class="line-9"> </div><div class="line-10">  <span class="k">def</span> <span class="nf">color</span></div><div class="line-11">    <span class="s1">'black'</span></div><div class="line-12">  <span class="k">end</span></div><div class="line-13"> </div><div class="line-14">  <span class="k">def</span> <span class="nf">migratory?</span></div><div class="line-15">    <span class="kp">true</span></div><div class="line-16">  <span class="k">end</span></div><div class="line-17"><span class="k">end</span></div></code></pre></figure>
+
+<p>This is all very cool, but if I leave the code like this I’m going to have to
+run around and find every place in the app in which I create an instance of
+<code class="highlighter-rouge">NilDuck</code> or <code class="highlighter-rouge">NilGoose</code> and add the new argument. Hopefully it’s not very many
+places, but this is not something I want to do. Let’s go ahead and add
+initialize methods to our <code class="highlighter-rouge">NilDuck</code> and <code class="highlighter-rouge">NilGoose</code> classes to take care of
+that:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><div class="line-1"><span class="k">class</span> <span class="nc">NilDuck</span> <span class="o">&lt;</span> <span class="no">NilObject</span></div><div class="line-2">  <span class="k">def</span> <span class="nf">initialize</span></div><div class="line-3">    <span class="k">super</span><span class="p">(</span><span class="no">Duck</span><span class="p">)</span></div><div class="line-4">  <span class="k">end</span></div><div class="line-5"></div><div class="line-6">  <span class="k">def</span> <span class="nf">name</span></div><div class="line-7">    <span class="s1">'Demo Duck'</span></div><div class="line-8">  <span class="k">end</span></div><div class="line-9"> </div><div class="line-10">  <span class="k">def</span> <span class="nf">status</span></div><div class="line-11">    <span class="s1">'sleeping'</span></div><div class="line-12">  <span class="k">end</span></div><div class="line-13"> </div><div class="line-14">  <span class="k">def</span> <span class="nf">color</span></div><div class="line-15">    <span class="s1">'gray'</span></div><div class="line-16">  <span class="k">end</span></div><div class="line-17"> </div><div class="line-18">  <span class="k">def</span> <span class="nf">migratory?</span></div><div class="line-19">    <span class="kp">true</span></div><div class="line-20">  <span class="k">end</span></div><div class="line-21"><span class="k">end</span></div></code></pre></figure>
+
+<p>and</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><div class="line-1"><span class="k">class</span> <span class="nc">NilGoose</span> <span class="o">&lt;</span> <span class="no">NilObject</span></div><div class="line-2">  <span class="k">def</span> <span class="nf">initialize</span></div><div class="line-3">    <span class="k">super</span><span class="p">(</span><span class="no">Goose</span><span class="p">)</span></div><div class="line-4">  <span class="k">end</span></div><div class="line-5"></div><div class="line-6">  <span class="k">def</span> <span class="nf">name</span></div><div class="line-7">    <span class="s1">'Demo Goose'</span></div><div class="line-8">  <span class="k">end</span></div><div class="line-9"> </div><div class="line-10">  <span class="k">def</span> <span class="nf">status</span></div><div class="line-11">    <span class="s1">'awake'</span></div><div class="line-12">  <span class="k">end</span></div><div class="line-13"> </div><div class="line-14">  <span class="k">def</span> <span class="nf">color</span></div><div class="line-15">    <span class="s1">'black'</span></div><div class="line-16">  <span class="k">end</span></div><div class="line-17"> </div><div class="line-18">  <span class="k">def</span> <span class="nf">migratory?</span></div><div class="line-19">    <span class="kp">true</span></div><div class="line-20">  <span class="k">end</span></div><div class="line-21"><span class="k">end</span></div></code></pre></figure>
+
+<p>That works, and it keeps us from having to spread changes around the codebase,
+but it does add to the duplication a bit. That initialize method needs to be
+added to every new subclass in order to get the shorter <code class="highlighter-rouge">NilSomething.new</code>
+syntax. We could live with this, or we could find a way to bake that smarts
+into <code class="highlighter-rouge">NilObject</code> itself. But how?</p>
+
+<p>My pair for the week, <a href="https://twitter.com/timtyrrell">@timtyrell</a> came up with
+the idea of keying off of the classname of the <code class="highlighter-rouge">NilObject</code> subclass. And that’s
+exactly what we did, we made the class parameter optional and keyed off of the
+classname.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><div class="line-1"><span class="k">class</span> <span class="nc">NilObject</span></div><div class="line-2">  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">klass</span><span class="o">=</span><span class="kp">nil</span><span class="p">)</span></div><div class="line-3">    <span class="vi">@klass</span> <span class="o">=</span> <span class="n">klass</span> <span class="o">||</span> <span class="n">real_class_name</span></div><div class="line-4">  <span class="k">end</span></div><div class="line-5"></div><div class="line-6">  <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div><div class="line-7">    <span class="k">return</span> <span class="k">super</span> <span class="k">unless</span> <span class="vi">@klass</span><span class="p">.</span><span class="nf">new</span><span class="p">.</span><span class="nf">respond_to?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span></div><div class="line-8">    <span class="nb">name</span><span class="p">.</span><span class="nf">to_s</span><span class="p">.</span><span class="nf">ends_with?</span><span class="p">(</span><span class="s1">'?'</span><span class="p">)</span> <span class="p">?</span> <span class="kp">false</span> <span class="p">:</span> <span class="kp">nil</span></div><div class="line-9">  <span class="k">end</span></div><div class="line-10"></div><div class="line-11">  <span class="k">def</span> <span class="nf">real_class_name</span></div><div class="line-12">    <span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="p">.</span><span class="nf">name</span><span class="p">[</span><span class="mi">3</span><span class="o">..-</span><span class="mi">1</span><span class="p">].</span><span class="nf">constantize</span></div><div class="line-13">  <span class="k">end</span></div><div class="line-14"><span class="k">end</span></div></code></pre></figure>
+
+<p>The <code class="highlighter-rouge">real_class_name</code> method (naming is hard; this should probably be
+<code class="highlighter-rouge">subject_class_name</code> or something) takes the name of the class, <code class="highlighter-rouge">NilDuck</code> or
+<code class="highlighter-rouge">NilGoose</code> and takes the substring that skips the first 3 letters (the length
+of ‘Nil’) to the end. It then turns it into a constant so it can be
+instantiated.</p>
+
+<p>As an added bonus we decided to implement <code class="highlighter-rouge">respond_to?</code> so it behaves exactly
+like the subject class would behave.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><div class="line-1"><span class="k">class</span> <span class="nc">NilObject</span></div><div class="line-2">  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">klass</span><span class="o">=</span><span class="kp">nil</span><span class="p">)</span></div><div class="line-3">    <span class="vi">@klass</span> <span class="o">=</span> <span class="n">klass</span> <span class="o">||</span> <span class="n">real_class_name</span></div><div class="line-4">  <span class="k">end</span></div><div class="line-5"></div><div class="line-6">  <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div><div class="line-7">    <span class="k">return</span> <span class="k">super</span> <span class="k">unless</span> <span class="nb">respond_to?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span></div><div class="line-8">    <span class="nb">name</span><span class="p">.</span><span class="nf">to_s</span><span class="p">.</span><span class="nf">ends_with?</span><span class="p">(</span><span class="s1">'?'</span><span class="p">)</span> <span class="p">?</span> <span class="kp">false</span> <span class="p">:</span> <span class="kp">nil</span></div><div class="line-9">  <span class="k">end</span></div><div class="line-10"></div><div class="line-11">  <span class="k">def</span> <span class="nf">respond_to?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span></div><div class="line-12">    <span class="vi">@klass</span><span class="p">.</span><span class="nf">new</span><span class="p">.</span><span class="nf">respond_to?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span></div><div class="line-13">  <span class="k">end</span></div><div class="line-14"></div><div class="line-15">  <span class="k">def</span> <span class="nf">real_class_name</span></div><div class="line-16">    <span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="p">.</span><span class="nf">name</span><span class="p">[</span><span class="mi">3</span><span class="o">..-</span><span class="mi">1</span><span class="p">].</span><span class="nf">constantize</span></div><div class="line-17">  <span class="k">end</span></div><div class="line-18"><span class="k">end</span></div></code></pre></figure>
+
+<p>So there you have it. We now have a <code class="highlighter-rouge">NilObject</code> that can stand in for any other
+object like so: <code class="highlighter-rouge">NilObject.new(MyOtherClass)</code> and it will respond to exactly
+the same interface as <code class="highlighter-rouge">MyOtherClass</code> and answer <code class="highlighter-rouge">respond_to?</code> just like an
+instance of <code class="highlighter-rouge">MyOtherClass</code> would. If we need to override some of the methods of
+<code class="highlighter-rouge">MyOtherClass</code> to return other than <code class="highlighter-rouge">nil</code> or <code class="highlighter-rouge">false</code> we can create a new
+<code class="highlighter-rouge">NilMyOtherClass</code> as a subclass of <code class="highlighter-rouge">NilObject</code> and override what we need to.</p>
+
+<p>I’ll leave you with a thought exercise. What would happen if you instantiated a
+<code class="highlighter-rouge">NilObject</code> without passing a class to the constructor: <code class="highlighter-rouge">nil_object =
+NilObject.new</code>? What would you get? As a bonus, how would you make the code
+inside the <code class="highlighter-rouge">real_class_name</code> method more intention revealing than what we wrote?
+Leave a comment if you know the answers.</p>
+
+    </div>
+  </div>
+
+  <div class="post_footer">
+    <section class="subscribe">
+  <div class="container"><script src="https://f.convertkit.com/ckjs/ck.5.js"></script>
+<form action="https://app.convertkit.com/forms/741867/subscriptions" class="seva-form formkit-form" method="post" data-sv-form="741867" data-uid="697093712f" data-format="inline" data-version="5" data-options="{&quot;settings&quot;:{&quot;after_subscribe&quot;:{&quot;action&quot;:&quot;message&quot;,&quot;success_message&quot;:&quot;Success! Now check your email to confirm your subscription.&quot;,&quot;redirect_url&quot;:&quot;&quot;},&quot;modal&quot;:{&quot;trigger&quot;:null,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:null,&quot;devices&quot;:null,&quot;show_once_every&quot;:null},&quot;recaptcha&quot;:{&quot;enabled&quot;:false},&quot;return_visitor&quot;:{&quot;action&quot;:&quot;show&quot;,&quot;custom_content&quot;:&quot;&quot;},&quot;slide_in&quot;:{&quot;display_in&quot;:null,&quot;trigger&quot;:null,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:null,&quot;devices&quot;:null,&quot;show_once_every&quot;:null}}}" min-width="800" style="background-color: rgb(255, 255, 255); border-radius: 4px;">
+  <div data-style="minimal">
+    <h1 class="formkit-header" data-element="header">Stay in touch</h1>
+    <div data-element="subheader" class="formkit-subheader" style="color: rgb(104, 104, 104); font-size: 18px;">
+      <p>Hi, I'm Step. I write about code, teams, workflow, and entrepreneurship. I also make things you might want to know about.</p>
+    </div>
+    <ul data-element="errors" data-group="alert"></ul>
+    <div data-element="fields" data-stacked="true" class="seva-fields formkit-fields">
+      <div class="formkit-field">
+        <input class="formkit-input" aria-label="First Name" name="fields[first_name]" placeholder="First Name" type="text" style="border-color: rgb(227, 227, 227); border-radius: 4px; color: rgb(0, 0, 0); font-weight: 400;">
+      </div>
+      <div class="formkit-field">
+        <input class="formkit-input" name="email_address" placeholder="Your email address" required="" type="email" style="border-color: rgb(227, 227, 227); border-radius: 4px; color: rgb(0, 0, 0); font-weight: 400;">
+      </div>
+      <button data-element="submit" class="formkit-submit" style="background-color: rgb(22, 119, 190); border-radius: 4px; color: rgb(255, 255, 255); font-weight: 400;">
+        <span>Get New Blog Posts By Email</span>
+      </button>
+    </div>
+    <div data-element="guarantee" class="formkit-guarantee" style="color: rgb(77, 77, 77); font-size: 13px; font-weight: 400;">
+      <p class="no_spam">I won't send you spam. Unsubscribe at any time.</p>
+    </div>
+    <a href="https://convertkit.com/?utm_source=dynamic&amp;utm_medium=referral&amp;utm_campaign=poweredby&amp;utm_content=form" class="formkit-powered-by" data-element="powered-by" target="_blank">Powered By ConvertKit</a>
+  </div>
+  <style>
+    .formkit-form[data-uid="697093712f"] *{font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;box-sizing:border-box;}.formkit-form[data-uid="697093712f"] legend{border:none;font-size:inherit;margin-bottom:10px;padding:0;position:relative;display:table;}.formkit-form[data-uid="697093712f"] fieldset{border:0;padding:0.01em 0 0 0;margin:0;min-width:0;}.formkit-form[data-uid="697093712f"] body:not(:-moz-handler-blocked) fieldset{display:table-cell;}.formkit-form[data-uid="697093712f"] p{color:inherit;font-size:inherit;font-weight:inherit;}.formkit-form[data-uid="697093712f"][data-format="modal"]{display:none;}.formkit-form[data-uid="697093712f"][data-format="slide in"]{display:none;}.formkit-form[data-uid="697093712f"] .formkit-input,.formkit-form[data-uid="697093712f"] .formkit-select,.formkit-form[data-uid="697093712f"] .formkit-checkboxes{width:100%;}.formkit-form[data-uid="697093712f"] .formkit-submit{border:0;border-radius:5px;color:#ffffff;cursor:pointer;display:inline-block;text-align:center;font-size:15px;font-weight:500;cursor:pointer;margin-bottom:15px;overflow:hidden;padding:0;vertical-align:middle;}.formkit-form[data-uid="697093712f"] .formkit-submit:hover,.formkit-form[data-uid="697093712f"] .formkit-submit:focus{outline:none;}.formkit-form[data-uid="697093712f"] .formkit-submit:hover > span,.formkit-form[data-uid="697093712f"] .formkit-submit:focus > span{background-color:rgba(0,0,0,0.1);}.formkit-form[data-uid="697093712f"] .formkit-submit > span{display:block;-webkit-transition:background-color 300ms ease-in-out;transition:background-color 300ms ease-in-out;padding:12px 24px;}.formkit-form[data-uid="697093712f"] input{font-size:15px;padding:12px;border:1px solid #e3e3e3;-webkit-flex:1 0 auto;-ms-flex:1 0 auto;flex:1 0 auto;line-height:1.4;margin-right:15px;-webkit-transition:border-color ease-out 300ms;transition:border-color ease-out 300ms;}.formkit-form[data-uid="697093712f"] input:focus{outline:none;border-color:#1677be;-webkit-transition:border-color ease 300ms;transition:border-color ease 300ms;}.formkit-form[data-uid="697093712f"] input::-webkit-input-placeholder{color:#848585;}.formkit-form[data-uid="697093712f"] input::-moz-placeholder{color:#848585;}.formkit-form[data-uid="697093712f"] input:-ms-input-placeholder{color:#848585;}.formkit-form[data-uid="697093712f"] input::placeholder{color:#848585;}.formkit-form[data-uid="697093712f"] [data-group="dropdown"]{position:relative;display:inline-block;width:100%;}.formkit-form[data-uid="697093712f"] [data-group="dropdown"]::before{content:"";top:calc(50% - 2.5px);right:10px;position:absolute;pointer-events:none;border-color:#333333 transparent transparent transparent;border-style:solid;border-width:6px 5px 0 5px;height:0;width:0;}.formkit-form[data-uid="697093712f"] [data-group="dropdown"] select{height:auto;width:100%;cursor:pointer;color:#333333;line-height:1.4;margin-bottom:0;padding:0 6px;-webkit-appearance:none;-moz-appearance:none;appearance:none;font-size:15px;padding:12px;padding-right:25px;border:1px solid #e3e3e3;background:#ffffff;}.formkit-form[data-uid="697093712f"] [data-group="dropdown"] select:focus{outline:none;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"]{text-align:left;margin-bottom:20px;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"]{margin-bottom:10px;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] *{cursor:pointer;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"]:last-of-type{margin-bottom:0;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] input[type="checkbox"]{display:none;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] input[type="checkbox"] + label::after{content:none;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] input[type="checkbox"]:checked + label::after{border-color:#ffffff;content:"";}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] input[type="checkbox"]:checked + label::before{background:#10bf7a;border-color:#10bf7a;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] label{position:relative;display:inline-block;padding-left:28px;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] label::before,.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] label::after{position:absolute;content:"";display:inline-block;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] label::before{height:16px;width:16px;border:1px solid #e3e3e3;background:#ffffff;left:0px;top:3px;}.formkit-form[data-uid="697093712f"] [data-group="checkboxes"] [data-group="checkbox"] label::after{height:4px;width:8px;border-left:2px solid #4d4d4d;border-bottom:2px solid #4d4d4d;-webkit-transform:rotate(-45deg);-ms-transform:rotate(-45deg);-webkit-transform:rotate(-45deg);-ms-transform:rotate(-45deg);transform:rotate(-45deg);left:4px;top:8px;}.formkit-form[data-uid="697093712f"] [data-group="alert"]{padding:12px;border:1px solid #e3e3e3;background:#f9fafb;-webkit-flex:1 0 auto;-ms-flex:1 0 auto;flex:1 0 auto;border-radius:5px;margin:25px auto;text-align:center;width:80%;}.formkit-form[data-uid="697093712f"] [data-group="alert"]:empty{display:none;}.formkit-form[data-uid="697093712f"] [data-group="alert"][data-element="success"]{background:#d3fbeb;border-color:#10bf7a;color:#0c905c;}.formkit-form[data-uid="697093712f"] [data-group="alert"][data-element="errors"]{background:#fde8e2;border-color:#f2643b;color:#ea4110;} .formkit-form[data-uid="697093712f"]{text-align:center;color:#686868;border:1px solid #e3e3e3;border-radius:8px;box-sizing:border-box;background-size:cover;background-repeat:no-repeat;background-position:center;max-width:800px;}.formkit-form[data-uid="697093712f"] [data-style="minimal"]{padding:25px;width:100%;}.formkit-form[data-uid="697093712f"] [data-element="header"]{margin-top:0;margin-bottom:27px;}.formkit-form[data-uid="697093712f"] [data-element="subheader"]{margin:18px 0;}.formkit-form[data-uid="697093712f"] [data-element="guarantee"]{font-size:13px;}.formkit-form[data-uid="697093712f"] [data-element="fields"]{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;margin:25px auto 0 auto;}.formkit-form[data-uid="697093712f"] [data-element="fields"] > *{margin:0 0 15px 0;-webkit-box-flex:1;-webkit-flex-grow:1;-ms-flex-positive:1;flex-grow:1;-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;-webkit-flex-basis:100%;-ms-flex-preferred-size:100%;flex-basis:100%;}.formkit-form[data-uid="697093712f"] [data-element="fields"][data-stacked="true"] > *{margin:0 0 15px 0;-webkit-flex-basis:100%;-ms-flex-preferred-size:100%;flex-basis:100%;}.formkit-form[data-uid="697093712f"] [data-element="fields"][data-stacked="true"] > *:last-child{margin:0;}.formkit-form[data-uid="697093712f"] [data-element="powered-by"]{color:#7d7d7d;display:block;font-size:12px;margin-bottom:0;margin-top:25px;}.formkit-form[data-uid="697093712f"] [data-element="powered-by"][data-active="false"]{opacity:0.5;}.formkit-form[data-uid="697093712f"][min-width~="500"] [data-style="minimal"],.formkit-form[data-uid="697093712f"][min-width~="600"] [data-style="minimal"],.formkit-form[data-uid="697093712f"][min-width~="700"] [data-style="minimal"],.formkit-form[data-uid="697093712f"][min-width~="800"] [data-style="minimal"]{padding:40px;}.formkit-form[data-uid="697093712f"][min-width~="500"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] > *,.formkit-form[data-uid="697093712f"][min-width~="600"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] > *,.formkit-form[data-uid="697093712f"][min-width~="700"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] > *,.formkit-form[data-uid="697093712f"][min-width~="800"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] > *{margin:0 15px 15px 0;-webkit-box-flex:none;-webkit-flex-grow:none;-ms-flex-positive:none;flex-grow:none;-webkit-flex-shrink:none;-ms-flex-negative:none;flex-shrink:none;-webkit-flex-basis:auto;-ms-flex-preferred-size:auto;flex-basis:auto;}.formkit-form[data-uid="697093712f"][min-width~="500"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] [data-element="submit"],.formkit-form[data-uid="697093712f"][min-width~="600"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] [data-element="submit"],.formkit-form[data-uid="697093712f"][min-width~="700"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] [data-element="submit"],.formkit-form[data-uid="697093712f"][min-width~="800"] [data-style="minimal"] [data-element="fields"][data-stacked="false"] [data-element="submit"]{-webkit-box-flex:0;-webkit-flex-grow:0;-ms-flex-positive:0;flex-grow:0;margin-right:0;}
+</style>
+</form>
+</div>
+</section>
+<p class="photo_credit">Photo by Ann H on Pexels</p>
+  </div>
+
+  <footer>
+    
+      <div class='post_featured_image'>
+        <img class="post-featuredImage"
+          
+            src="/assets/images/hero/mitchell-orr-389605-unsplash.jpg"
+          style="top:-200px;"alt="">
+      </div>
+      <div class="section-gradient
+      
+        section-gradient--darker
+      
+      "></div>
+      <div class="container">
+        <h4>Next story:</h4>
+        <a class="prev" href="/blog/ruby-hash-dot-fetch-and-javascript/">
+          <h2>Ruby Hash#fetch and Javascript</h2>
+        </a>
+      </div>
+    
+  </footer>
+  <a class="u-url" href="/blog/null-object-part-2/" hidden></a>
+</article>
+
+<div class="modal-toggle-group animate scaleIn">
+  <div class="modal-toggle-bubbleShadow"></div>
+  <div class="modal-toggle-bubble"></div>
+  <div class="modal-toggle-wrapper"></div>
+  <div class="modal-toggle-close-wrapper">
+    <div class="modal-toggle-close"></div>
+  </div>
+</div>
+
+<div class="fullscreenModal">
+  <div class="share_container">
+    <h2 class="h2--shareTitle">Share this story</h2>
+    <ul class="shareWrapper">
+      <li><a class="shareButton shareButton--twitter" href="https://twitter.com/intent/tweet?text=Null Object Part 2 by @saument&url=%2Fblog%2Fnull-object-part-2%2F" target="_blank"></a></li>
+      <li><a class="shareButton shareButton--facebook" href="https://www.facebook.com/sharer/sharer.php?u=%2Fblog%2Fnull-object-part-2%2F" target="_blank"></a></li>
+      <li><a class="shareButton shareButton--linkedin" href="https://www.linkedin.com/shareArticle
+?mini=true&url=%2Fblog%2Fnull-object-part-2%2F&title=Null Object Part 2"  target="_blank"></a></li>
+      <li><a class="shareButton shareButton--buffer" href="https://buffer.com/add?text=Null Object Part 2 by @saument&url=%2Fblog%2Fnull-object-part-2%2F" target="_blank"></a></li>
+      <li><a class="shareButton shareButton--hackernews" href="http://news.ycombinator.com/submitlink?u=%2Fblog%2Fnull-object-part-2%2F&t=Null Object Part 2" target="_blank"></a></li>
+      <li><a class="shareButton shareButton--pocket" href="https://getpocket.com/save?url=%2Fblog%2Fnull-object-part-2%2F&title=Null Object Part 2" target="_blank"></a></li>
+    </ul>
+  </div>
+</div>
+
+
+      </div>
+    </main><label for="sidebar-checkbox" class="sidebar-toggle-wrapper">
+  <div class="sidebar-toggle"></div>
+</label>
+
+<!-- Javascript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/assets/javascript/imagesloaded.pkgd.min.js"></script><script src="/assets/main-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.js" type="text/javascript"></script><script>
+  $(document).ready(function(){
+
+    // Featured image loaded behavior
+    $('.post_header_image img').imagesLoaded()
+      .done( function( instance ) {
+        $('.post_header_image').addClass('is-loaded');
+      });
+
+    // Modal toggle behavior
+    $('.modal-toggle-wrapper').click(function() {
+    	$(this).toggleClass('active');
+      $('.modal-toggle-bubble').toggleClass('active');
+    	$('.modal-toggle-bubbleShadow').toggleClass('active');
+      $('.modal-toggle-close-wrapper').toggleClass('active');
+      $('.fullscreenModal').toggleClass('active');
+    });
+
+    // Prevent default anchor event and make a share popup
+    $.fn.sharePopup = function (e, intWidth, intHeight, blnResize) {
+
+      e.preventDefault();
+      intWidth = intWidth || '750';
+      intHeight = intHeight || '500';
+      strResize = (blnResize ? 'yes' : 'no');
+
+      //// Set title and open popup with focus on it
+      var strTitle = ((typeof this.attr('title') !== 'undefined') ? this.attr('title') : 'Social Share'),
+          strParam = 'width=' + intWidth + ',height=' + intHeight + ',resizable=' + strResize,
+          objWindow = window.open(this.attr('href'), strTitle, strParam).focus();
+    }
+
+    $('.shareButton').on("click", function(e) {
+      $(this).sharePopup(e);
+    });
+  });
+
+  // Show modal toggle after scrolling 300px
+  $(document).scroll(function() {
+    $('.modal-toggle-group').toggleClass('active', $(document).scrollTop() >= 300);
+  });
+</script>
+</body>
+
+</html>
