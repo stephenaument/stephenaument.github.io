@@ -311,4 +311,4 @@ template will now render the javascript we expected:
 You could certainly take this further and abstract out a generic {% ihighlight ruby %}NilObject{% endihighlight %}
 for your app, but this serves our needs quite well. For further reading on the
 Null Object pattern:
-[http://devblog.avdi.org/2011/05/30/null-objects-and-falsiness/]
+<http://devblog.avdi.org/2011/05/30/null-objects-and-falsiness/>
