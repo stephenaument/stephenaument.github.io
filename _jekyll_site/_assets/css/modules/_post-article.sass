@@ -10,6 +10,9 @@ article.post
     height: 28.5rem
     opacity: 1
 
+    @include grid-media($narrow-screen)
+      height: 22.35rem
+
     .post_header_image
       background: #333
       display: block
@@ -47,6 +50,9 @@ article.post
       text-align: center
       width: 100%
 
+      @include grid-media($narrow-screen)
+        padding-top: 7.5rem
+
       h1
         color: $white
         font-size: $font-XL
@@ -55,11 +61,16 @@ article.post
         font-weight: 300
         margin: 0
 
+        @include grid-media($narrow-screen)
+          font-size: $font-L
+          letter-spacing: 1.5px
+          line-height: 2rem
+
   ul.post_meta
     list-style: none
     display: inline-block
     margin: 1.5rem 0 0
-    padding: 0
+    padding: 0 15px
 
     li
       color: $white
@@ -96,6 +107,9 @@ article.post
       padding-top: 0.15rem
       vertical-align: middle
 
+      @include grid-media($narrow-screen)
+        padding-top: 0
+
   .post_content_container
     background: $white
     padding-top: 4rem
@@ -107,6 +121,9 @@ article.post
     font-weight: 400
     margin: auto
     max-width: $content-extra-narrow
+
+    @include grid-media($extra-narrow-screen)
+      padding: 0 15px
 
     a
       color: $darkish-gray
@@ -133,6 +150,10 @@ article.post
       margin-left: -29px
       border-left: solid 4px $dark-gray
 
+      @include grid-media($extra-narrow-screen)
+        margin-left: -8px
+        padding-left: 15px
+
     blockquote.largeQuote
       line-height: 1.4
       text-align: center
@@ -140,6 +161,11 @@ article.post
       margin: 1.5rem -160px 0
       padding-left: 0
       border-left: 0
+
+      @include grid-media($narrow-screen)
+        margin: 1.5rem 0 0
+        font-size: $font-M
+        padding-left: 0
 
   .post_footer
     background: $white
@@ -154,6 +180,7 @@ article.post
       margin-top: 1.5rem
 
   footer
+    height: 16.5rem
     margin-top: 0
     opacity: 0.9999999
     padding: 0
@@ -190,7 +217,10 @@ article.post
 
     .container
       color: $white
-      padding-top: 4rem
+      padding-top: 5rem
+
+      @include grid-media($narrow-screen)
+        padding-top: 5.5rem
 
     h2,h4
       font-weight: 300
@@ -199,6 +229,11 @@ article.post
     h2
       font-size: $font-XL
       line-height: 3rem
+
+      @include grid-media($narrow-screen)
+        font-size: $font-L
+        letter-spacing: 1.5px
+        line-height: 2rem
 
     h4
       font-size: $font-M

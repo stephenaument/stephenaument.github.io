@@ -39,10 +39,9 @@ We created an array of dummy models and passed them into our Collection. This
 is one way you can create and populate a Collection. You pass in your array of
 models and they become the models in the Collection.
 
-> If that {% ihighlight javascript %}providerArray = (provider for [1..18]){% endihighlight %} syntax freaks you out, don't
-> worry. It's just a bit of fancy CoffeeScript and all you need to understand
-> for now is that it creates an 18 item array with each element being
-> {% ihighlight javascript %}provider{% endihighlight %}.
+<blockquote class="largeQuote">
+If that {% ihighlight javascript %}providerArray = (provider for [1..18]){% endihighlight %} syntax freaks you out, don't worry. It's just a bit of fancy CoffeeScript and all you need to understand for now is that it creates an 18 item array with each element being {% ihighlight javascript %}provider{% endihighlight %}.
+</blockquote>
 
 Makes sense, right? Well, our test failed and when we started debugging in the
 browser, here's what we saw:

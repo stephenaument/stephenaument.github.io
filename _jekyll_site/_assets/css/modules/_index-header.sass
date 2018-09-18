@@ -1,8 +1,11 @@
 .index
   header
-    height: 18rem
+    height: 13.5rem
     text-align: center
     width: 100%
+
+    @include grid-media($narrow-screen)
+      height: 10.5rem
 
     h1
       font-size: $font-XXL
@@ -11,8 +14,14 @@
       margin: 0
       position: absolute
       text-transform: uppercase
-      top: 132px
+      top: 118px
       transform: translateX(-50%)
+      white-space: nowrap
+
+      @include grid-media($narrow-screen)
+        font-size: $font-L
+        letter-spacing: 1.5px
+        top: 98px
 
     h2
       color: darken($medium-gray, 12%)
@@ -21,5 +30,11 @@
       left: 50%
       letter-spacing: 0.04rem
       position: absolute
-      top: 220px
+      top: 206px
       transform: translateX(-50%)
+      white-space: nowrap
+
+      @include grid-media($narrow-screen)
+        font-size: $font-XXS
+        letter-spacing: 0.02rem
+        top: 146px
