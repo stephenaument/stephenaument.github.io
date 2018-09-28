@@ -18,11 +18,14 @@ email: saument@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   Compassionate Coder. Leader of Teams. CTO @ ReadyRosie.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://www.stephenaument.com" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: saument
 github_username:  stephenaument
 rss: feed.xml
 permalink: /blog/:title/
+
+disqus:
+  shortname: www-stephenaument-com
 
 author:
   name: Stephen Aument

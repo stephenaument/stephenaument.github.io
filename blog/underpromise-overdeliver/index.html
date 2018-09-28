@@ -8,42 +8,42 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <meta name="description" content="In a previouspost Imentioned a case in which I had a Haml template in a Rails app with Javascriptin it. The template was rendering Ruby values into what woul..."><link rel="canonical" href="https://www.stephenaument.com/blog/ruby-hash-dot-fetch-and-javascript/"><link rel="next" href="https://www.stephenaument.com/blog/null-object-part-2/" title="Null Object Part 2"><link rel="prev" href="https://www.stephenaument.com/blog/the-null-object-pattern-and-method-missing-in-ruby/" title="The Null Object Pattern and method_missing in Ruby"><!-- Twitter card -->
+  <meta name="description" content="Always Provide Fanatical Customer Service"><link rel="canonical" href="https://www.stephenaument.com/blog/underpromise-overdeliver/"><link rel="prev" href="https://www.stephenaument.com/blog/backbone-collection-testing-gotcha/" title="Backbone Collection Testing Gotcha"><!-- Twitter card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@saument">
   <meta name="twitter:creator" content="@saument">
-  <meta name="twitter:title" content="Ruby Hash#fetch and Javascript">
-  <meta name="twitter:description" content="In a previouspost Imentioned a case in which I had a Haml template in a Rails app with Javascriptin it. The template was rendering Ruby values into what woul...">
-  <meta name="twitter:image" content="https://www.stephenaument.com/assets/images/hero/mitchell-orr-389605-unsplash.jpg">
-  <meta name="twitter:url" content="https://www.stephenaument.com/blog/ruby-hash-dot-fetch-and-javascript/">
+  <meta name="twitter:title" content="Underpromise. Overdeliver.">
+  <meta name="twitter:description" content="Always Provide Fanatical Customer Service">
+  <meta name="twitter:image" content="https://www.stephenaument.com/assets/images/hero/ambition-pearwood.jpg">
+  <meta name="twitter:url" content="https://www.stephenaument.com/blog/underpromise-overdeliver/">
 
   <!-- Open graph -->
-  <meta property="og:title" content="Ruby Hash#fetch and Javascript">
+  <meta property="og:title" content="Underpromise. Overdeliver.">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://www.stephenaument.com/blog/ruby-hash-dot-fetch-and-javascript/">
-  <meta property="og:image" content="https://www.stephenaument.com/assets/images/hero/mitchell-orr-389605-unsplash.jpg">
-  <meta property="og:description" content="In a previouspost Imentioned a case in which I had a Haml template in a Rails app with Javascriptin it. The template was rendering Ruby values into what woul...">
+  <meta property="og:url" content="https://www.stephenaument.com/blog/underpromise-overdeliver/">
+  <meta property="og:image" content="https://www.stephenaument.com/assets/images/hero/ambition-pearwood.jpg">
+  <meta property="og:description" content="Always Provide Fanatical Customer Service">
   <meta property="og:site_name" content="">
-  <meta property="og:locale" content=""><meta property="article:modified_time" content="2014-03-06T19:21:15-06:00">
-    <meta property="article:published_time" content="2014-03-06T19:21:15-06:00">
-    <meta property="article:author" content="https://www.facebook.com/"><meta property="og:see_also" content="https://www.stephenaument.com/blog/underpromise-overdeliver/"><meta property="og:see_also" content="https://www.stephenaument.com/blog/backbone-collection-testing-gotcha/"><meta property="og:see_also" content="https://www.stephenaument.com/blog/null-object-part-2/"><meta property="article:section" content="Intermediate Ruby"><meta property="article:tag" content="code"><meta property="fb:admins" content="">
+  <meta property="og:locale" content=""><meta property="article:modified_time" content="2018-09-28T00:00:00-05:00">
+    <meta property="article:published_time" content="2018-09-28T00:00:00-05:00">
+    <meta property="article:author" content="https://www.facebook.com/"><meta property="og:see_also" content="https://www.stephenaument.com/blog/backbone-collection-testing-gotcha/"><meta property="og:see_also" content="https://www.stephenaument.com/blog/null-object-part-2/"><meta property="og:see_also" content="https://www.stephenaument.com/blog/ruby-hash-dot-fetch-and-javascript/"><meta property="article:section" content="Business"><meta property="fb:admins" content="">
   <meta property="fb:app_id" content="">
 
-  <title>Ruby Hash#fetch and Javascript &middot; Stephen Aument</title><!-- Begin Jekyll SEO tag v2.5.0 -->
-<title>Ruby Hash#fetch and Javascript | Stephen Aument</title>
+  <title>Underpromise. Overdeliver. &middot; Stephen Aument</title><!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Underpromise. Overdeliver. | Stephen Aument</title>
 <meta name="generator" content="Jekyll v3.8.3" />
-<meta property="og:title" content="Ruby Hash#fetch and Javascript" />
+<meta property="og:title" content="Underpromise. Overdeliver." />
 <meta name="author" content="Step Aument" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="In a previous post I mentioned a case in which I had a Haml template in a Rails app with Javascript in it. The template was rendering Ruby values into what would become a JSON object (Javascript Hash) in the browser. In that particular case, a method call on a Null Object was returning nil and breaking the Javascript." />
-<meta property="og:description" content="In a previous post I mentioned a case in which I had a Haml template in a Rails app with Javascript in it. The template was rendering Ruby values into what would become a JSON object (Javascript Hash) in the browser. In that particular case, a method call on a Null Object was returning nil and breaking the Javascript." />
-<link rel="canonical" href="https://www.stephenaument.com/blog/ruby-hash-dot-fetch-and-javascript/" />
-<meta property="og:url" content="https://www.stephenaument.com/blog/ruby-hash-dot-fetch-and-javascript/" />
+<meta name="description" content="Always Provide Fanatical Customer Service" />
+<meta property="og:description" content="Always Provide Fanatical Customer Service" />
+<link rel="canonical" href="https://www.stephenaument.com/blog/underpromise-overdeliver/" />
+<meta property="og:url" content="https://www.stephenaument.com/blog/underpromise-overdeliver/" />
 <meta property="og:site_name" content="Stephen Aument" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2014-03-06T19:21:15-06:00" />
+<meta property="article:published_time" content="2018-09-28T00:00:00-05:00" />
 <script type="application/ld+json">
-{"url":"https://www.stephenaument.com/blog/ruby-hash-dot-fetch-and-javascript/","headline":"Ruby Hash#fetch and Javascript","dateModified":"2014-03-06T19:21:15-06:00","datePublished":"2014-03-06T19:21:15-06:00","author":{"@type":"Person","name":"Step Aument"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.stephenaument.com/blog/ruby-hash-dot-fetch-and-javascript/"},"description":"In a previous post I mentioned a case in which I had a Haml template in a Rails app with Javascript in it. The template was rendering Ruby values into what would become a JSON object (Javascript Hash) in the browser. In that particular case, a method call on a Null Object was returning nil and breaking the Javascript.","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://www.stephenaument.com/blog/underpromise-overdeliver/","headline":"Underpromise. Overdeliver.","dateModified":"2018-09-28T00:00:00-05:00","datePublished":"2018-09-28T00:00:00-05:00","author":{"@type":"Person","name":"Step Aument"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.stephenaument.com/blog/underpromise-overdeliver/"},"description":"Always Provide Fanatical Customer Service","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="/assets/main-b374c4fa8c5918eec1cd292ed1e420db0341efa1ab9f9bac4d4f5d6fe81ab8e9.css">
@@ -63,20 +63,12 @@
   <![endif]-->
 
   <script type="text/javascript" src="//code.jquery.com/jquery-1.12.4.min.js"></script><link type="application/atom+xml" rel="alternate" href="https://www.stephenaument.com/feed.xml" title="Stephen Aument" /></head>
-<body class="_posts/2014-03-06-ruby-hash-dot-fetch-and-javascript"><input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox"><nav role="navigation" class="sidebar sidebar--right">
+<body class="_posts/2019-09-28-underpromise-overdeliver"><input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox"><nav role="navigation" class="sidebar sidebar--right">
   <a href="" class="textLogo textLogo--white textLogo--sidebar"></a>
   <ul class="sidebar-recentPosts">
     
       
-      <li>
-        
-          <a href="/blog/underpromise-overdeliver/" class="sidebar-recentPosts-image-wrapper">
-            <img src="/assets/images/hero/ambition-pearwood.jpg" style="" alt="">
-          </a>
-        
-        <a href="/blog/underpromise-overdeliver/">Underpromise. Overdeliver.</a>
-        <div class="postMeta">28 Sep 2018</div>
-      </li>
+        <!-- exclude current post -->
       
     
       
@@ -104,7 +96,15 @@
       
     
       
-        <!-- exclude current post -->
+      <li>
+        
+          <a href="/blog/ruby-hash-dot-fetch-and-javascript/" class="sidebar-recentPosts-image-wrapper">
+            <img src="/assets/images/hero/mitchell-orr-389605-unsplash.jpg" style="" alt="">
+          </a>
+        
+        <a href="/blog/ruby-hash-dot-fetch-and-javascript/">Ruby Hash#fetch and Javascript</a>
+        <div class="postMeta">06 Mar 2014</div>
+      </li>
       
     
       
@@ -138,22 +138,22 @@
   <header class="post_header">
     <div class="post_header_image">
       
-          <img class="" src="/assets/images/hero/mitchell-orr-389605-unsplash.jpg" style="top:-200px;" alt="">
+          <img class="" src="/assets/images/hero/ambition-pearwood.jpg" style="top:-180px;" alt="">
       
     </div>
     <div class="section-gradient
     section-gradient--darker"></div>
 
     <div class="title_block">
-      <h1 class="post_title" itemprop="name headline">Ruby Hash#fetch and Javascript</h1>
+      <h1 class="post_title" itemprop="name headline">Underpromise. Overdeliver.</h1>
       <ul class="post_meta">
         <li class="date">
-          <time class="dt-published" datetime="2014-03-06T19:21:15-06:00" itemprop="datePublished">Mar 6, 2014
+          <time class="dt-published" datetime="2018-09-28T00:00:00-05:00" itemprop="datePublished">Sep 28, 2018
           </time>
         </li><li class="author">
             By Step Aument
           </li><li class="tags">
-          Intermediate Ruby | Javascript
+          Business | Customer Service
         </li>
       </ul>
     </div>
@@ -161,52 +161,90 @@
 
   <div class="post_content_container">
     <div class="post_content" itemprop="articleBody">
-      <p>In a <a href="/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby/">previous
-post</a> I
-mentioned a case in which I had a Haml template in a Rails app with Javascript
-in it. The template was rendering Ruby values into what would become a JSON
-object (Javascript Hash) in the browser. In that particular case, a method call
-on a Null Object was returning nil and breaking the Javascript.</p>
+      <h2 id="always-provide-fanatical-customer-service">Always Provide Fanatical Customer Service</h2>
 
-<p>Well, today I encountered another variation of this problem. In this case, I
-had a Ruby Hash feeding values into the JSON object. It looked like this:</p>
+<p>Faber-Castell has blown my mind.</p>
 
-<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><div class="line-1"><span class="n">var</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{</span></div><div class="line-2">  <span class="s2">"gender"</span><span class="p">:</span> <span class="s2">"</span><span class="si">#{</span><span class="n">search_params</span><span class="p">[</span><span class="s1">'gender'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span></div><div class="line-3">  <span class="s2">"age"</span><span class="p">:</span> <span class="s2">"</span><span class="si">#{</span><span class="n">current_user</span><span class="p">.</span><span class="nf">age</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span></div><div class="line-4">  <span class="s2">"language"</span><span class="p">:</span> <span class="s2">"</span><span class="si">#{</span><span class="n">search_params</span><span class="p">[</span><span class="s1">'language'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span></div><div class="line-5">  <span class="s2">"query"</span><span class="p">:</span> <span class="s2">"</span><span class="si">#{</span><span class="n">search_params</span><span class="p">[</span><span class="s1">'query'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span></div><div class="line-6">  <span class="s2">"properties"</span><span class="p">:</span> <span class="s2">"</span><span class="si">#{</span><span class="n">search_params</span><span class="p">[</span><span class="s1">'properties'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span></div><div class="line-7"><span class="p">};</span></div></code></pre></figure>
+<p>I’ve had fountain pens off and on since high school. Mostly disposable pens that didn’t write particularly well. My first real pen was a Pelikan classic. I don’t exactly remember the model. That was the pen with which I really learned to use and care for a fountain pen. Unfortunately, as learning goes, I wasn’t really ready for that pen. I cracked the lid through some carelessness and from that point on the ink would dry out too quickly to be useful anymore. I held on to it as a souvenir, but it got lost in a move at some point.</p>
 
-<p>Two of these fields on the ruby hash are empty: <code class="highlight language-ruby" data-lang="ruby"><span class="n">language</span></code> and <code class="highlight language-ruby" data-lang="ruby"><span class="n">properties</span></code>.
-Notice that this isn’t a problem for most of these fields, but for one it is:</p>
+<p>My wife gave me a Faber-Castell Ambition fountain pen in pearwood for my birthday 8 years ago. It’s a beautiful pen. I had been admiring it at <a href="http://paper-ya.com/">Paper Ya</a> on Granville Island in Vancouver for months. It was sleek and architectural. Modern. I loved the straight lines. The narrowness of the barrel. The color of the wood. The weight. That pen immediately became my daily carry pen.</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><div class="line-1"><span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span></div><div class="line-2">  <span class="s2">"gender"</span><span class="p">:</span> <span class="s2">"M"</span><span class="p">,</span></div><div class="line-3">  <span class="s2">"age"</span><span class="p">:</span> <span class="s2">"27"</span><span class="p">,</span></div><div class="line-4">  <span class="s2">"language"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span></div><div class="line-5">  <span class="s2">"query"</span><span class="p">:</span> <span class="s2">"specials"</span><span class="p">,</span>                                                                                                                  </div><div class="line-6">  <span class="s2">"properties"</span><span class="p">:</span> </div><div class="line-7"><span class="p">};</span></div></code></pre></figure>
+<p>What we didn’t realize at the time was that it would be our last year in Vancouver. We came home to Texas the following summer to be closer to our aging parents. That pen became a token of our time there. It took on the added weight of tying me to a city that I loved and missed.</p>
 
-<p>See that? The first four fields feed into double quotes as strings. If they are
-empty, they are empty. It may cause an issue somewhere down the line, but the
-Javascript itself is valid.</p>
+<p>In the last three or so years, the cap became loose. Eventually it would fall off under its own weight. At the same time, the inner core of the pen became detached from the barrel and would slide back and forth. For fear of losing the cap, I stopped carrying it.</p>
 
-<p>The <code class="highlight language-ruby" data-lang="ruby"><span class="n">properties</span></code> field, on the other hand is expecting a JSON object. That
-missing bit will cause Javascript to blow up once this loads in the browser.</p>
+<p>Finally, after googling around for options to fix the cap, I decided to email Faber-Castell customer support. I asked them about repairs or parts. I received the following email in reply:</p>
 
-<p>What’s the solution here? In this case, I turned to <code class="highlight language-ruby" data-lang="ruby"><span class="no">Hash</span><span class="c1">#fetch</span></code> rather than
-the <code class="highlight language-ruby" data-lang="ruby"><span class="p">[]</span></code> accessor. What’s the difference? There are two main differences
-between the bracket accessor and the <code class="highlight language-ruby" data-lang="ruby"><span class="n">fetch</span></code> method. First,
-<code class="highlight language-ruby" data-lang="ruby"><span class="n">my_hash</span><span class="p">[</span><span class="ss">:some_missing_key</span><span class="p">]</span></code> will return <code class="highlight language-ruby" data-lang="ruby"><span class="kp">nil</span></code> if the key is not found in the
-hash. If <code class="highlight language-ruby" data-lang="ruby"><span class="n">my_hash</span><span class="p">.</span><span class="nf">fetch</span><span class="p">(</span><span class="ss">:some_missing_key</span><span class="p">)</span></code> can’t find a key, it will raise a
-<code class="highlight language-ruby" data-lang="ruby"><span class="no">KeyError</span></code> exception.</p>
+<blockquote>
+Dear Mr. Aument:
 
-<p>That’s not really what we are looking for, which brings me to the second
-difference. <code class="highlight language-ruby" data-lang="ruby"><span class="no">Hash</span><span class="c1">#fetch</span></code> takes an optional second argument which specifies a
-default value. So if we call <code class="highlight language-ruby" data-lang="ruby"><span class="n">my_hash</span><span class="p">.</span><span class="nf">fetch</span><span class="p">(</span><span class="ss">:some_missing_key</span><span class="p">,</span> <span class="s1">'tacos'</span><span class="p">)</span></code> and
-the key is not found in the hash, it will return <code class="highlight language-ruby" data-lang="ruby"><span class="s1">'tacos'</span></code> instead of <code class="highlight language-ruby" data-lang="ruby"><span class="kp">nil</span></code>.
-That’s exactly what I needed. I returned an empty JSON object <code class="highlight language-ruby" data-lang="ruby"><span class="p">{}</span></code> as the
-default.</p>
+Thank you for your interest in Faber-Castell and the Design Brand.
 
-<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><div class="line-1"><span class="n">var</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{</span></div><div class="line-2">  <span class="s2">"gender"</span><span class="p">:</span> <span class="s2">"</span><span class="si">#{</span><span class="n">search_params</span><span class="p">[</span><span class="s1">'gender'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span></div><div class="line-3">  <span class="s2">"age"</span><span class="p">:</span> <span class="s2">"</span><span class="si">#{</span><span class="n">current_user</span><span class="p">.</span><span class="nf">age</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span></div><div class="line-4">  <span class="s2">"language"</span><span class="p">:</span> <span class="s2">"</span><span class="si">#{</span><span class="n">search_params</span><span class="p">[</span><span class="s1">'language'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span></div><div class="line-5">  <span class="s2">"query"</span><span class="p">:</span> <span class="s2">"</span><span class="si">#{</span><span class="n">search_params</span><span class="p">[</span><span class="s1">'query'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span></div><div class="line-6">  <span class="s2">"properties"</span><span class="p">:</span> <span class="c1">#{search_params.fetch('properties', {})}</span></div><div class="line-7"><span class="p">};</span></div></code></pre></figure>
+Thank you for your interest in Faber-Castell. I am sorry to hear that you are experiencing a problem with your instrument. If you are located in the U.S. (only), and to ensure proper fit and function, please send the entire instrument along to the address listed below for assessment/repairs. 
+ 
+Address:
+Faber-Castell USA
+Attn: Repairs
+9450 Allen Drive, Ste. B
+Cleveland, OH  44125
+ 
+Repairs should be sent in a protected, traceable fashion as Faber-Castell is not responsible for items lost or damaged prior to receipt.
 
-<p>This degraded nicely in the cases in which I had no <code class="highlight language-ruby" data-lang="ruby"><span class="n">properties</span></code> hash in my
-<code class="highlight language-ruby" data-lang="ruby"><span class="n">search_params</span></code> hash.</p>
+- Please include a note indicating what the problem is exactly and, within the note, include your return shipping address and daytime phone number/email address.  
+- Empty all fountain pens of ink.  
+- Do not send original gift packaging.  
+- Do not tape or glue parts together.  
+ 
+Once your instrument has been received and assessed we will contact you with the charges will apply, prior to the start of the actual repair work. All estimates are provided by phone, but I can tell you that it would be no more than $30. 
+ 
+Please let me know if I can assist any further as I will surely do my best to help.
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><div class="line-1"><span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span></div><div class="line-2">  <span class="s2">"gender"</span><span class="p">:</span> <span class="s2">"M"</span><span class="p">,</span></div><div class="line-3">  <span class="s2">"age"</span><span class="p">:</span> <span class="s2">"27"</span><span class="p">,</span></div><div class="line-4">  <span class="s2">"language"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span></div><div class="line-5">  <span class="s2">"query"</span><span class="p">:</span> <span class="s2">"specials"</span><span class="p">,</span>                                                                                                            </div><div class="line-6">  <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{}</span></div><div class="line-7"><span class="p">};</span></div></code></pre></figure>
+Sincerely,
+ 
+Michelle ******
+Consumer Relations Specialist
+</blockquote>
 
-<p>No more broken Javascript.</p>
+<p>That seemed fair to me! I shipped off the pen and awaited my estimate.</p>
+
+<p>After a couple of weeks, I received a shipping notification(!) and the following voicemail.</p>
+
+<blockquote>
+Hi Mr. Aument, this is Michelle with Faber-Castell. Just calling to let you know we received your Ambition Pearwood. I wanted to let you know that actually the nib is the issue. Obviously your barrel, there's bonding on the barrel and we are going to be replacing the barrel. The issue with the cap, the cap is actually fine. It's the nib that is not seated properly. Given that we're already going to be replacing the barrel, I'm just going to go ahead and replace the pen since there's also issues with the nib. That's going to be shipping out to you most likely on Monday to your PO Box XXX. So it'll just be an entirely new pen. I did want to let you know that in general the warranty for the design brand is two years for manufacturer's defect. I know you had said this was eight years. So just keep that in mind for the replacement. And then like I said, if you ever have any follow-up questions, feel free to give us a call 1-800-311-8064. Thank you.
+</blockquote>
+
+<p>Wow! Now <em>that’s</em> customer service! I had zero expectation of this. I was perfectly willing to pay <em>something</em> to have my beloved pen back in working order, but this was above and beyond.</p>
+
+<p>Anyway, I went to the post office to pick up the pen today and and when I opened the package - double wow!</p>
+
+<p><img src="/assets/images/posts/faber-castell-package.jpg" alt="package-contents" /></p>
+
+<p>Look at that!</p>
+
+<p>Nice handwritten postcard. Bonus pencil.</p>
+
+<p>“But,” you say, “this wasn’t altruistic. They do this for everybody. It’s marketing. Plus they sent you a sample pencil so you’ll want to buy those.”</p>
+
+<p>Well, duh. Of course. But they also didn’t <em>have</em> to do this. I <em>know</em> there’s self interest in this, but do you know how it made me feel? It made me feel important. It made me feel lavishly taken care of.</p>
+
+<blockquote class="largeQuote">
+"There is a spiritual aspect to our lives — when we give, we receive — when a business does something good for somebody, that somebody feels good about them!" - Ben Cohen, Co-Founder Ben &amp; Jerry's</blockquote>
+
+<p>This fanatical customer service was a case of “underpromise and overdeliver.” They promised me a repair estimate that would likely be under $30. They delivered a brand new replacement pen at their cost, a hand-written note, and a free bonus gift.</p>
+
+<p>Faber-Castell has been in business since 1761. <em>1761!</em> That’s 257 years! I would have to assume that they have learned some things during that time about staying in business.</p>
+
+<p>Often in business it’s not the hard things that make the most difference. It’s the little things that show our customers that we care about them and that we are here to serve them. When we lead with service and make it our intent to only make money by having served others <em>first</em> we earn loyal customers. Even if they might not make better pens than every competitor (which they might, I’m just saying), they <em>can</em> strive to provide better customer service than anyone else.</p>
+
+<p>And so can <em>you</em>. Can you out serve your competitors in this way? Even if you’re just getting your startup off the ground? Can you provide fanatical service to your customers, whether your customers be outside or internal to your organization?</p>
+
+<p>Thank you, Michelle at Faber-Castell Consumer Relations!</p>
+
+<p>I already loved this Faber-Castell pen. After today, I love Faber-Castell, the company too. And I haven’t stopped telling people about their fanatical customer support.</p>
+
+<p>I feel like we provide fanatical customer support at ReadyRosie (hi Hilari!), but what a stunning reminder.</p>
+
+<p>So, I’m sad that this isn’t <em>that</em> pen. It’s a replacement. But it’s lovely and new and it can stand in for <em>that</em> pen. But now, not only does it serve to remind me of my wife, a special gift, and a city I miss, it also reminds me to always underpromise and overdeliver and to always provide fanatical customer service.</p>
 
     </div>
   </div>
@@ -256,8 +294,8 @@ default.</p>
    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
    };
    */
-this.page.url = "https://www.stephenaument.com/blog/ruby-hash-dot-fetch-and-javascript/";
-this.page.identifier = "/blog/ruby-hash-dot-fetch-and-javascript/";
+this.page.url = "https://www.stephenaument.com/blog/underpromise-overdeliver/";
+this.page.identifier = "/blog/underpromise-overdeliver/";
 // var disqus_developer = 1;
 
 (function() { // DON'T EDIT BELOW THIS LINE
@@ -268,7 +306,7 @@ this.page.identifier = "/blog/ruby-hash-dot-fetch-and-javascript/";
 })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<p class="photo_credit">Photo by Mitchell Orr on Unsplash</p>
+<p class="photo_credit"></p>
   </div>
 
   <footer>
@@ -276,23 +314,23 @@ this.page.identifier = "/blog/ruby-hash-dot-fetch-and-javascript/";
       <div class='post_featured_image'>
         <img class="post-featuredImage"
           
-            src="/assets/images/hero/braydon-anderson-105552-unsplash.jpg"
-          style="top:-420px;"alt="">
+            src="/assets/images/hero/anita-jankovic-730367-unsplash.jpg"
+          style="top:-200px;"alt="">
       </div>
       <div class="section-gradient
       
-        section-gradient--darker
+        section-gradient--lighter
       
       "></div>
       <div class="container">
         <h4>Next story:</h4>
-        <a class="prev" href="/blog/the-null-object-pattern-and-method-missing-in-ruby/">
-          <h2>The Null Object Pattern and method_missing in Ruby</h2>
+        <a class="prev" href="/blog/backbone-collection-testing-gotcha/">
+          <h2>Backbone Collection Testing Gotcha</h2>
         </a>
       </div>
     
   </footer>
-  <a class="u-url" href="/blog/ruby-hash-dot-fetch-and-javascript/" hidden></a>
+  <a class="u-url" href="/blog/underpromise-overdeliver/" hidden></a>
 </article>
 
 <div class="modal-toggle-group animate scaleIn">
@@ -308,13 +346,13 @@ this.page.identifier = "/blog/ruby-hash-dot-fetch-and-javascript/";
   <div class="share_container">
     <h2 class="h2--shareTitle">Share this story</h2>
     <ul class="shareWrapper">
-      <li><a class="shareButton shareButton--twitter" href="https://twitter.com/intent/tweet?text=Ruby Hash#fetch and Javascript by @saument&url=https%3A%2F%2Fwww.stephenaument.com%2Fblog%2Fruby-hash-dot-fetch-and-javascript%2F" target="_blank"></a></li>
-      <li><a class="shareButton shareButton--facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.stephenaument.com%2Fblog%2Fruby-hash-dot-fetch-and-javascript%2F" target="_blank"></a></li>
+      <li><a class="shareButton shareButton--twitter" href="https://twitter.com/intent/tweet?text=Underpromise. Overdeliver. by @saument&url=https%3A%2F%2Fwww.stephenaument.com%2Fblog%2Funderpromise-overdeliver%2F" target="_blank"></a></li>
+      <li><a class="shareButton shareButton--facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.stephenaument.com%2Fblog%2Funderpromise-overdeliver%2F" target="_blank"></a></li>
       <li><a class="shareButton shareButton--linkedin" href="https://www.linkedin.com/shareArticle
-?mini=true&url=https%3A%2F%2Fwww.stephenaument.com%2Fblog%2Fruby-hash-dot-fetch-and-javascript%2F&title=Ruby Hash#fetch and Javascript"  target="_blank"></a></li>
-      <li><a class="shareButton shareButton--buffer" href="https://buffer.com/add?text=Ruby Hash#fetch and Javascript by @saument&url=https%3A%2F%2Fwww.stephenaument.com%2Fblog%2Fruby-hash-dot-fetch-and-javascript%2F" target="_blank"></a></li>
-      <li><a class="shareButton shareButton--hackernews" href="http://news.ycombinator.com/submitlink?u=https%3A%2F%2Fwww.stephenaument.com%2Fblog%2Fruby-hash-dot-fetch-and-javascript%2F&t=Ruby Hash#fetch and Javascript" target="_blank"></a></li>
-      <li><a class="shareButton shareButton--pocket" href="https://getpocket.com/save?url=https%3A%2F%2Fwww.stephenaument.com%2Fblog%2Fruby-hash-dot-fetch-and-javascript%2F&title=Ruby Hash#fetch and Javascript" target="_blank"></a></li>
+?mini=true&url=https%3A%2F%2Fwww.stephenaument.com%2Fblog%2Funderpromise-overdeliver%2F&title=Underpromise. Overdeliver."  target="_blank"></a></li>
+      <li><a class="shareButton shareButton--buffer" href="https://buffer.com/add?text=Underpromise. Overdeliver. by @saument&url=https%3A%2F%2Fwww.stephenaument.com%2Fblog%2Funderpromise-overdeliver%2F" target="_blank"></a></li>
+      <li><a class="shareButton shareButton--hackernews" href="http://news.ycombinator.com/submitlink?u=https%3A%2F%2Fwww.stephenaument.com%2Fblog%2Funderpromise-overdeliver%2F&t=Underpromise. Overdeliver." target="_blank"></a></li>
+      <li><a class="shareButton shareButton--pocket" href="https://getpocket.com/save?url=https%3A%2F%2Fwww.stephenaument.com%2Fblog%2Funderpromise-overdeliver%2F&title=Underpromise. Overdeliver." target="_blank"></a></li>
     </ul>
   </div>
 </div>
