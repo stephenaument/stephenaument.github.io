@@ -24,6 +24,9 @@ github_username:  stephenaument
 rss: feed.xml
 permalink: /blog/:title/
 
+google_analytics: true
+google_analytics_tracking_id: UA-126696590-1
+
 disqus:
   shortname: www-stephenaument-com
 
