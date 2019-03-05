@@ -24,7 +24,7 @@ Before I got to do a lot of pairing with other experienced devs I always wished 
 
 I'm certainly not the first person to post exercism.io walkthroughs, but my assumption is that one more example of a working developer's workflow and thought process is a good thing.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/12bZH_30M9E" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?list=PLJQ6Wm449IcFAoewLSqKYyVn3ODsrcrMj" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 I'm also trying to think of creative ways to coach my team more effectively. My schedule doesn't always allow large blocks of pairing, but I can find time to record and post a screencast. These videos will hopefully be useful for them.
 
