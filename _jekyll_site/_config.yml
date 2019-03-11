@@ -43,6 +43,7 @@ plugins:
   - jekyll-feed
   - jekyll-gist
   - jekyll-seo-tag
+  - jekyll-sitemap
 
 sass:
   load_paths:
