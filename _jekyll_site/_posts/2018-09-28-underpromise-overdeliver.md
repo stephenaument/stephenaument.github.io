@@ -18,7 +18,7 @@ author:
 
 ## Always Provide Fanatical Customer Service
 
-Faber-Castell has blown my mind.
+Faber-Castell has blown my mind with fanatical customer service that embodies the principle, "underpromise and overdeliver".
 
 I’ve had fountain pens off and on since high school. Mostly disposable pens that didn’t write particularly well. My first real pen was a Pelikan classic. I don’t exactly remember the model. That was the pen with which I really learned to use and care for a fountain pen. Unfortunately, as learning goes, I wasn’t really ready for that pen. I cracked the lid through some carelessness and from that point on the ink would dry out too quickly to be useful anymore. I held on to it as a souvenir, but it got lost in a move at some point.
 
