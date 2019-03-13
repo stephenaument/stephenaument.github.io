@@ -1,4 +1,64 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="https://www.stephenaument.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.stephenaument.com/" rel="alternate" type="text/html" /><updated>2019-03-11T15:40:08-05:00</updated><id>https://www.stephenaument.com/feed.xml</id><title type="html">Stephen Aument</title><subtitle>Compassionate Coder. Leader of Teams. CTO @ ReadyRosie.</subtitle><author><name>Stephen Aument</name></author><entry><title type="html">Exercism.io Walkthrough Screencasts</title><link href="https://www.stephenaument.com/blog/exercism-io-walkthrough/" rel="alternate" type="text/html" title="Exercism.io Walkthrough Screencasts" /><published>2019-02-26T00:00:00-06:00</published><updated>2019-02-26T00:00:00-06:00</updated><id>https://www.stephenaument.com/blog/exercism-io-walkthrough</id><content type="html" xml:base="https://www.stephenaument.com/blog/exercism-io-walkthrough/">&lt;h2 id=&quot;exercismio-walkthrough-screencast-series&quot;&gt;Exercism.io Walkthrough Screencast Series&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="https://www.stephenaument.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.stephenaument.com/" rel="alternate" type="text/html" /><updated>2019-03-13T17:55:47-05:00</updated><id>https://www.stephenaument.com/feed.xml</id><title type="html">Stephen Aument</title><subtitle>Compassionate Coder. Leader of Teams. CTO @ ReadyRosie.</subtitle><author><name>Stephen Aument</name></author><entry><title type="html">Lead with Value. Be Generous.</title><link href="https://www.stephenaument.com/blog/lead-with-value-be-generous/" rel="alternate" type="text/html" title="Lead with Value. Be Generous." /><published>2019-03-13T00:00:00-05:00</published><updated>2019-03-13T00:00:00-05:00</updated><id>https://www.stephenaument.com/blog/lead-with-value-be-generous</id><content type="html" xml:base="https://www.stephenaument.com/blog/lead-with-value-be-generous/">&lt;style&gt;
+  ul {
+    list-style-type: unset;
+    margin: 2em;
+    padding: unset;
+  }
+&lt;/style&gt;
+
+&lt;h2 id=&quot;lead-with-value-be-generous&quot;&gt;Lead with Value. Be Generous.&lt;/h2&gt;
+
+&lt;p&gt;Redditor &lt;a href=&quot;https://www.reddit.com/user/programmingerror&quot;&gt;programmingerror&lt;/a&gt;, aka Sam Zhao recently wrote a helpful post about value as it relates to the job hunt as a programmer, which he also posted on his &lt;a href=&quot;https://ilovecomputering.com/the-most-important-thing-to-understand-in-job-searching-value/&quot;&gt;blog&lt;/a&gt;. There is also a principle in entrepreneurship that you find success in proportion to the value that you create.&lt;/p&gt;
+
+&lt;blockquote class=&quot;largeQuote&quot;&gt;“You can get everything in life you want if you will just help enough other people get what they want.” - Zig Ziglar&lt;/blockquote&gt;
+
+&lt;p&gt;And really, that’s the fundamental reality of all financial transactions (aside from pure charity). Even if you are a salaried employee. Even if you are flipping burgers for an hourly wage. You are not being paid for your time. You are being paid for the value that you create. It is worth $X an hour for the manager to hire you to flip that burger so she doesn’t have to do it herself. I buy your product because it saves me $X worth of time or money, or makes me $X and you are charging me less than that.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;blockquote&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;”Strive not to be a success, but rather to be of value.” - Albert Einstein&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/blockquote&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;If you want to level up your earning potential and/or advance in your career, what can you do? &lt;strong&gt;Increase your value-creating abilities.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;But this doesn’t just equal leveling up your skills. You have to know how skills actually translate to (or scaffold towards) value-creating abilities. Which skills do you learn?&lt;/p&gt;
+
+&lt;p&gt;There are lots of lists out there of top skills for software developers to learn. Some of them focus on new trends that will keep you on the cusp of high-paying technical work. I won’t poo-poo these lists. It’s important to keep your tools sharp and, by all means, get a better paying job this year if you can. But I want to take a different approach here.
+ I’m going to focus on more enduring skills that will serve you no matter what language or framework you work with and will actually help you into the middle and late stages of your career, help you move from individual contributor to leader, or even help you transition from employee to entrepreneur if that’s something you’d like to do.&lt;/p&gt;
+
+&lt;p&gt;Most of these are what we call “soft skills.”&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;listening&lt;/li&gt;
+  &lt;li&gt;idea/pain discovery&lt;/li&gt;
+  &lt;li&gt;problem solving&lt;/li&gt;
+  &lt;li&gt;empathy&lt;/li&gt;
+  &lt;li&gt;writing maintainable code&lt;/li&gt;
+  &lt;li&gt;prioritization&lt;/li&gt;
+  &lt;li&gt;showing up&lt;/li&gt;
+  &lt;li&gt;following through&lt;/li&gt;
+  &lt;li&gt;shipping&lt;/li&gt;
+  &lt;li&gt;doing small things&lt;/li&gt;
+  &lt;li&gt;optimizing for learning at every level&lt;/li&gt;
+  &lt;li&gt;go deep on one thing&lt;/li&gt;
+  &lt;li&gt;when in doubt, ship and measure&lt;/li&gt;
+  &lt;li&gt;developing a growth mindset if you don’t have one&lt;/li&gt;
+  &lt;li&gt;maintaining an optimistic outlook&lt;/li&gt;
+  &lt;li&gt;assuming the best intentions in others&lt;/li&gt;
+  &lt;li&gt;writing&lt;/li&gt;
+  &lt;li&gt;selling/marketing&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote class=&quot;largeQuote&quot;&gt;One person gives freely, yet gains even more;  another withholds unduly, but comes to poverty. A generous person will prosper;  whoever refreshes others will be refreshed.  - Proverbs 11:24–25&lt;/blockquote&gt;
+
+&lt;p&gt;Don’t focus on getting what you think you deserve to earn. Develop the ability to deliver the value commensurate to what you hope to earn.&lt;/p&gt;
+
+&lt;p&gt;Figure out how to deliver value, and as Sam points out, communicate that you bring that value. Lead with providing value and then figure out how to make money as a result of that. If you can make somebody $10 do you think they will be willing to give you $1 or $2? How many times would they be willing to sign up for that? Or as I heard somebody put it once, if you give me a pizza that I wouldn’t have had otherwise, I will happily give you a slice of it.&lt;/p&gt;
+
+&lt;p&gt;Go forth and add value to your world.&lt;/p&gt;</content><author><name>Step Aument</name></author><summary type="html"></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://www.stephenaument.com/%7B%22credit%22=%3E%22Photo%20by%20Elaine%20Casap%20on%20Unsplash%22,%20%22feature%22=%3E%22/assets/images/hero/elaine-casap-86020-unsplash.jpg%22,%20%22topPosition%22=%3E%22-180px%22%7D" /></entry><entry><title type="html">Exercism.io Walkthrough Screencasts</title><link href="https://www.stephenaument.com/blog/exercism-io-walkthrough/" rel="alternate" type="text/html" title="Exercism.io Walkthrough Screencasts" /><published>2019-02-26T00:00:00-06:00</published><updated>2019-02-26T00:00:00-06:00</updated><id>https://www.stephenaument.com/blog/exercism-io-walkthrough</id><content type="html" xml:base="https://www.stephenaument.com/blog/exercism-io-walkthrough/">&lt;h2 id=&quot;exercismio-walkthrough-screencast-series&quot;&gt;Exercism.io Walkthrough Screencast Series&lt;/h2&gt;
 
 &lt;p&gt;I’m experimenting with a screencast series on YouTube walking through the &lt;a href=&quot;https://exercism.io&quot;&gt;exercism.io&lt;/a&gt; Ruby track.&lt;/p&gt;
 
