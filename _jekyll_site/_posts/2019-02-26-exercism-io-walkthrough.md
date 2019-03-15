@@ -14,6 +14,9 @@ bgGradientOpacity: darker
 syntaxHighlighter: no
 author:
   name: Step Aument
+convertkit:
+  form_uid: 6b8c45ab17
+  form_url: https://f.convertkit.com/6b8c45ab17/f3f29ad11b.js
 ---
 
 ## Exercism.io Walkthrough Screencast Series

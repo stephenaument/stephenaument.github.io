@@ -15,6 +15,9 @@ bgGradientOpacity: lighter
 syntaxHighlighter: no
 author:
   name: Step Aument
+convertkit:
+  form_uid: 697093712f
+  form_url: https://f.convertkit.com/697093712f/34b641aedd.js
 ---
 
 In a [previous post](/blog/2014/03/05/the-null-object-pattern-and-method-missing-in-ruby/) I

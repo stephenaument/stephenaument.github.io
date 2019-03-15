@@ -15,6 +15,9 @@ bgGradientOpacity: darker
 syntaxHighlighter: no
 author:
   name: Step Aument
+convertkit:
+  form_uid: 697093712f
+  form_url: https://f.convertkit.com/697093712f/34b641aedd.js
 ---
 
 I encountered an interesting problem this week that allowed me to dig into the
