@@ -36,7 +36,7 @@ Redditor [programmingerror](https://www.reddit.com/user/programmingerror), aka S
 
 And really, that’s the fundamental reality of all financial transactions (aside from pure charity). Even if you are a salaried employee. Even if you are flipping burgers for an hourly wage. You are not being paid for your time. You are being paid for the value that you create. It is worth $X an hour for the manager to hire you to flip that burger so she doesn’t have to do it herself. I buy your product because it saves me $X worth of time or money, or makes me $X and you are charging me less than that.
 
->>>”Strive not to be a success, but rather to be of value." - Albert Einstein
+> ”Strive not to be a success, but rather to be of value." - Albert Einstein
 
 If you want to level up your earning potential and/or advance in your career, what can you do? **Increase your value-creating abilities.**
 
