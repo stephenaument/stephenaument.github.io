@@ -23,6 +23,8 @@ convertkit:
 
 I'm experimenting with a screencast series on YouTube walking through the [exercism.io](https://exercism.io) Ruby track.
 
+> If you want to be notified when new episodes get posted to YouTube. Subscribe down below and grab a helpful cheatsheet while you are at it.
+
 Before I got to do a lot of pairing with other experienced devs I always wished I could watch more people just code. I didn't have a great sense of how other people went about their work or if my methods were weird or normal. This was especially true early on. It's one thing to follow a tutorial, but I just wanted to see somebody code.
 
 I'm certainly not the first person to post exercism.io walkthroughs, but my assumption is that one more example of a working developer's workflow and thought process is a good thing.
