@@ -1,4 +1,117 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="https://www.stephenaument.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.stephenaument.com/" rel="alternate" type="text/html" /><updated>2019-03-18T15:03:59-05:00</updated><id>https://www.stephenaument.com/feed.xml</id><title type="html">Stephen Aument</title><subtitle>Compassionate Coder. Leader of Teams. CTO @ ReadyRosie.</subtitle><author><name>Stephen Aument</name></author><entry><title type="html">Lead with Value. Be Generous.</title><link href="https://www.stephenaument.com/blog/lead-with-value-be-generous/" rel="alternate" type="text/html" title="Lead with Value. Be Generous." /><published>2019-03-13T00:00:00-05:00</published><updated>2019-03-13T00:00:00-05:00</updated><id>https://www.stephenaument.com/blog/lead-with-value-be-generous</id><content type="html" xml:base="https://www.stephenaument.com/blog/lead-with-value-be-generous/">&lt;style&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="https://www.stephenaument.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.stephenaument.com/" rel="alternate" type="text/html" /><updated>2019-03-21T14:38:06-05:00</updated><id>https://www.stephenaument.com/feed.xml</id><title type="html">Stephen Aument</title><subtitle>Compassionate Coder. Leader of Teams. CTO @ ReadyRosie.</subtitle><author><name>Stephen Aument</name></author><entry><title type="html">Are You Still Feeling Overwheled With Your Backlog?</title><link href="https://www.stephenaument.com/blog/ruthless-stack-ranking/" rel="alternate" type="text/html" title="Are You Still Feeling Overwheled With Your Backlog?" /><published>2019-03-21T00:00:00-05:00</published><updated>2019-03-21T00:00:00-05:00</updated><id>https://www.stephenaument.com/blog/ruthless-stack-ranking</id><content type="html" xml:base="https://www.stephenaument.com/blog/ruthless-stack-ranking/">&lt;h1 id=&quot;ruthlessly-stack-rank-your-people-priorities&quot;&gt;Ruthlessly Stack Rank Your &lt;del&gt;People&lt;/del&gt; Priorities&lt;/h1&gt;
+
+&lt;blockquote class=&quot;largeQuote&quot;&gt; “The mark of a great man is one who knows when to set aside the important things in order to accomplish the vital ones.” 
+― Brandon Sanderson, &lt;em&gt;The Alloy of Law&lt;/em&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;em&gt;The Long Dark&lt;/em&gt; is a challenging survival game from Hinterland Games that places you in remote northern Canada during winter with few resources.  One thing &lt;em&gt;The Long Dark&lt;/em&gt; does that other games don’t tend to bother with is a realistic-ish (realistish?) inventory system. Every item has weight, and based on a variety of factors you can only carry a certain weight before it starts to affect your speed and stamina.&lt;/p&gt;
+
+&lt;p&gt;It’s not a wooden literalism, but it has the “feel” of reality. I remember running around in the &lt;em&gt;Half Life&lt;/em&gt; series with what would have been thousands of pounds of gear that would have filled a large truck, not to mention what you can fit in your &lt;em&gt;Minecraft&lt;/em&gt; inventory. But you won’t get away with that claptrap here.&lt;/p&gt;
+
+&lt;p&gt;This inventory system forces you to make hard choices about what to pick up and what to drop. Can I afford to pick up this log now? How much meat should I harvest from this deer carcass?&lt;/p&gt;
+
+&lt;p&gt;You are not always choosing between valuable items and junk. Sometimes you have to leave good items behind, and it hurts.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-concept&quot;&gt;The Concept&lt;/h2&gt;
+
+&lt;p&gt;I’ve become associated around &lt;a href=&quot;https://www.readyrosie.com&quot;&gt;ReadyRosie&lt;/a&gt; with the concept of ruthlessly stack-ranking priorities.&lt;/p&gt;
+
+&lt;p&gt;What is stack ranking? Stack ranking is simply sorting a list of items 1-N.&lt;/p&gt;
+
+&lt;p&gt;Some other prioritization systems have you group tasks into buckets, A, B, C, etc. Stack ranking forces you to choose which of any 2 items is more important.&lt;/p&gt;
+
+&lt;p&gt;Note: This is a &lt;em&gt;terrible&lt;/em&gt; idea when it comes to people (please don’t stack rank your people!), but it works &lt;em&gt;brilliantly&lt;/em&gt;  when it comes to prioritizing work.&lt;/p&gt;
+
+&lt;h2 id=&quot;lol-why-do-you-do-this&quot;&gt;LOL, Why Do You Do This?&lt;/h2&gt;
+
+&lt;p&gt;We are a small team at &lt;a href=&quot;https://www.readyrosie.com&quot;&gt;ReadyRosie&lt;/a&gt;. There will always be more than we can do. We will never get to the bottom of our backlog. Sound familiar?&lt;/p&gt;
+
+&lt;p&gt;And, we are never choosing between adding deep value and adding fluff. Just like in &lt;em&gt;The Long Dark&lt;/em&gt;, every day we have to choose between valuable options. Which good things are we not going to do this sprint so we can focus on these other things that have edged them out?&lt;/p&gt;
+
+&lt;p&gt;Does this sound familiar? Too much to do, not enough time.&lt;/p&gt;
+
+&lt;p&gt;So, we stack rank.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-method&quot;&gt;The Method&lt;/h2&gt;
+
+&lt;p&gt;We get all stakeholders together in a (virtual) room, often in real time, and hash it out. We’ve done it by sorting the list, one item at a time. We’ve done it by assigning numbers 0-100 and then sorting based on those numbers. We’ve done it as one group. We’ve done it in several cross-functional teams.&lt;/p&gt;
+
+&lt;p&gt;Whichever way, the most important thing is that the top 5-10 items are what we have identified as the &lt;em&gt;most important&lt;/em&gt; things we could be doing, &lt;em&gt;in that order.&lt;/em&gt; Then if we work from the top down, we can know that what we are doing is what we &lt;em&gt;should&lt;/em&gt; be doing, because it meets our definition of doing the most important thing we &lt;em&gt;could&lt;/em&gt; be doing.&lt;/p&gt;
+
+&lt;p&gt;It’s the same for individual projects or features. We’re learning to be iterative in our product development and optimize for learning in tight feedback loops by putting working software in our customers hands as quickly as we can. But sometimes somebody has been chewing on a project idea for a while.&lt;/p&gt;
+
+&lt;p&gt;We have gifted subject matter experts who have been in the classroom and know our customers and their pains well. They are thoughtful. They listen. They are creative. Often, they have a pretty well developed idea of a complete solution to a problem. One that would take months to implement and be a huge gamble. Is that complete solution the right solution? Maybe. Can we afford months of development time before actually getting valuable feedback that tells us if it’s the right solution? Absolutely not.&lt;/p&gt;
+
+&lt;p&gt;The reality is that we will never know less about our customers or our product than we know today. The reality is that we will learn so much over the next few sprints that those items further down the list will change a lot, or go away altogether.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-about-dates&quot;&gt;What About Dates?&lt;/h2&gt;
+
+&lt;p&gt;Sometimes there is an actual important date somewhere on our calendar. It’s rarer than you would think, but it happens. When it does happen that something actually needs to happen by a certain date, that makes it more important than something that doesn’t need to happen by a date (or by a later date). Do the date-bound thing first. Do it &lt;em&gt;now&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;crushing-hopes-and-dreams---a-dramatic-recreation&quot;&gt;Crushing Hopes and Dreams - A Dramatic Recreation&lt;/h2&gt;
+
+&lt;p&gt;I’ve led groups through the exercise of stack ranking the precious, well thought-out features of their solution and the conversation goes something like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;INT. CONFERENCE ROOM. DAY
+
+STEP and a PRODUCT OWNER/SUBJECT MATTER EXPERT stand at the whiteboard. A group of PostIt
+notes representing product features covers one side of the whiteboard.
+
+                        STEP
+
+          If we could do one thing this sprint. What’s the most important
+          piece of this that would add value to our customers while also
+          giving us the best feedback so we can learn the most? What
+          would it be?
+
+                        PRODUCT OWNER/SUBJECT MATTER EXPERT
+
+          One??? Can I have five things?
+
+                        STEP
+
+          We only have time for one.
+
+                        PRODUCT OWNER/SUBJECT MATTER EXPERT
+
+          I guess it would be this one.
+
+                        STEP
+
+          Perfect. Oh, hey. I just found out we have room for one more.
+
+                        PRODUCT OWNER/SUBJECT MATTER EXPERT
+
+          Then we should add this one.
+
+                        STEP
+
+          You know what? We have time for one more feature.
+
+                        PRODUCT OWNER/SUBJECT MATTER EXPERT
+
+          Well, the next three really go together.
+
+                        STEP
+
+          There is room for three total, and I’m not sure we will ever
+          do any more work on this project again after this sprint.
+
+                        PRODUCT OWNER/SUBJECT MATTER EXPERT
+
+          I hate you, Step. But if I have to choose, it’s this one.
+
+FADE TO BLACK
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;so-what&quot;&gt;So What?&lt;/h2&gt;
+
+&lt;p&gt;In the end, you wind up with the most important things at the top of the list.
+ And actually, it’s been a long time since we’ve had to argue through a long, pre-planned project like that. We are learning to do lean, iterative product development together as a whole team. We are figuring out what “agile” and “lean” mean here at &lt;a href=&quot;https://www.readyrosie.com&quot;&gt;ReadyRosie&lt;/a&gt;, and it’s not exactly what it means anywhere else. Just as it should be.&lt;/p&gt;
+
+&lt;p&gt;What “important” means in your context is an entirely different question, and learning to make those decisions is another skill to develop. But if you prioritize this way and actually work from the top of your list downward, then a lot of things just fall into place.&lt;/p&gt;
+
+&lt;p&gt;Did your day get away from you in the afternoon? Only get to work on one thing? That’s okay, because that one thing that you worked on was the most important thing. What else can you ask for?&lt;/p&gt;</content><author><name>Step Aument</name></author><summary type="html">Ruthlessly Stack Rank Your People Priorities</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://www.stephenaument.com/%7B%22feature%22=%3E%22/assets/images/hero/the-long-dark.jpg%22,%20%22topPosition%22=%3E%22-220px%22%7D" /></entry><entry><title type="html">Lead with Value. Be Generous.</title><link href="https://www.stephenaument.com/blog/lead-with-value-be-generous/" rel="alternate" type="text/html" title="Lead with Value. Be Generous." /><published>2019-03-13T00:00:00-05:00</published><updated>2019-03-13T00:00:00-05:00</updated><id>https://www.stephenaument.com/blog/lead-with-value-be-generous</id><content type="html" xml:base="https://www.stephenaument.com/blog/lead-with-value-be-generous/">&lt;style&gt;
   ul {
     list-style-type: unset;
     margin: 2em;
