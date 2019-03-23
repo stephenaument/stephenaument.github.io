@@ -1,6 +1,10 @@
 ---
 layout: default
 ---
+{%- assign read_time = page.content | number_of_words | divided_by: site.wpm -%}
+{%- if read_time == 0 -%}
+{%- assign read_time = 1 -%}
+{%- endif -%}
 <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
   <header class="post_header">
     <div class="post_header_image">
@@ -36,6 +40,9 @@ layout: default
         {%- endif -%}
         <li class="tags">
           {{ page.categories | join: ' | ' }}
+        </li>
+        <li class="read_time">
+          {{ read_time }}-minute read
         </li>
       </ul>
     </div>

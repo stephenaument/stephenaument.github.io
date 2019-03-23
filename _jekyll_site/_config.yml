@@ -24,6 +24,8 @@ github_username:  stephenaument
 rss: feed.xml
 permalink: /blog/:title/
 
+wpm: 225
+
 google_analytics: true
 google_analytics_tracking_id: UA-126696590-1
 
