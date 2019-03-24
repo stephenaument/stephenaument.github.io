@@ -38,12 +38,16 @@ layout: default
             By {{ page.author.name }}
           </li>
         {%- endif -%}
+        {%- if page.categories -%}
         <li class="tags">
           {{ page.categories | join: ' | ' }}
         </li>
+        {%- endif %}
+        {%- if page.show_read_time -%}
         <li class="read_time">
           {{ read_time }}-minute read
         </li>
+        {%- endif -%}
       </ul>
     </div>
   </header>
