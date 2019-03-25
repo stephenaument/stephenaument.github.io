@@ -35,4 +35,4 @@ I'm also trying to think of creative ways to coach my team more effectively. My 
 
 My plan is to do handful of these and then promote them a bit to see if they are as helpful as I hope they will be. If you watch them and find them helpful, drop me a note or leave a comment.
 
-UPDATE: I've packaged the first group of these into a FREE video email course that I'm calling, [_10 Days of Tactical Ruby With Exercism.io_](/10dotr/). [Go here to enroll.](/10dotr/)
+UPDATE: I've packaged the first group of these into a FREE video email course that I'm calling, [_10 Days of Tactical Ruby With Exercism.io_](/10dotr/index.html). [Go here to enroll.](/10dotr/index.html)
