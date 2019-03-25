@@ -17,13 +17,7 @@ $leading: $base-line-height * 1rem;
 $spacing-unit:     30px !default;
 
 // Colors
-$black: #000;
-$blue: #1565c0;
-$dark-gray: #333;
-$darkish-gray: rgba(0, 0, 0, 0.8);
-$medium-gray: #999;
-$light-gray: #ddd;
-$white: #fff;
+@import 'colors';
 
 // Font Colors
 $base-font-color: $dark-gray;

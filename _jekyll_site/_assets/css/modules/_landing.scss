@@ -1,0 +1,82 @@
+.section--footer {
+  .copyright {
+    font-family: $font-stack-helvetica;
+  }
+}
+
+.hero-background {
+  $base-border-radius: 3px !default;
+  $action-color: $orange;
+  $large-screen: (
+    media: "screen and (min-width: 53.75em)"
+  );
+  $hero-padding-vertical: 5em;
+  $hero-padding-horizontal: 0.4em;
+  $hero-screen-width: 14em;
+  $hero-screen-height: 25em;
+  $hero-background: darken(gray, 40%);
+  $hero-backside-background: darken($hero-background, 10%);
+  $hero-text-color: white;
+  $hero-background-top: #162C4C;
+  $hero-background-bottom: #0A120D;
+  $gradient-angle: 10deg;
+  $hero-image: "images/purple-metal.jpeg";
+  // $hero-image: "images/markus-spiske-1402880-unsplash.jpg";
+  $hero-screen-image: "https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/cosmin_capitanu_screen.jpg";
+
+  @include grid-container;
+
+  background: url($hero-image),
+              linear-gradient($gradient-angle, $hero-background-bottom, $hero-background-top),
+              no-repeat $hero-background-top scroll;
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: $font-stack-helvetica;
+  min-height: 30em;
+  text-align: center;
+  width: 100%;
+
+  .hero-form {
+    @include grid-media($large-screen) {
+      @include grid-column(6);
+      padding-top: 2em;
+    }
+  }
+
+
+  .hero-text {
+    color: $hero-text-color;
+    margin: auto;
+    padding: 2em;
+
+    @include grid-media($large-screen) {
+      @include grid-column(6);
+      padding: 7em;
+    }
+
+    h1 {
+      border-bottom: 1px solid transparentize($hero-text-color, 0.7);
+      font-size: 1.5em;
+      margin: 0 0 1.5em 0;
+      padding-bottom: 0.5em;
+    }
+
+    p {
+      font-size: 0.8em;
+      line-height: 1.5em;
+      margin-top: 1em;
+      margin-bottom: 2em;
+      text-align: left;
+
+      a {
+        color: $hero-text-color;
+        text-decoration: underline;
+      }
+
+      strong {
+        font-size: 1.1em;
+        font-weight: 800;
+      }
+    }
+  }
+}

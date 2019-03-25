@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+
+  {%- include head.html -%}
+
+  <body class="{% body_class %}">
+
+    <div class="device-background">
+      {{ content }}
+    </div>
+
+    <footer class="section--footer">
+      <div class="copyright">
+        © 2019 All Rights Reserved.
+      </div>
+    </footer>
+
+    {%- include footer-scripts.html -%}
+  </body>
+
+</html>
