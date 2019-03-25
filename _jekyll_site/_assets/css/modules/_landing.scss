@@ -54,6 +54,15 @@
       padding: 7em;
     }
 
+    .arrow {
+      @include grid-media($extra-narrow-screen) {
+        writing-mode: vertical-rl;
+        -webkit-writing-mode: vertical-rl;
+        -ms-writing-mode: vertical-rl;
+        text-orientation: mixed;
+      }
+    }
+
     h1 {
       border-bottom: 1px solid transparentize($hero-text-color, 0.7);
       font-size: 1.5em;
