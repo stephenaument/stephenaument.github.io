@@ -22,4 +22,4 @@ I believe that you get in proportion to what you give.
 
 I write about programming (mostly ruby), teams, career, remote work, and entrepreneurship.
 
-If you'd like to follow my [exercism.io walkthrough screencast series go here and subscribe](/blog/exercism-io-walkthrough/), otherwise subscribe below to find out about new posts and keep in touch.
+If you'd like to follow my exercism.io walkthrough screencast series go [here](/10dotr/) and sign up for [_10 Days of Tactical Ruby With Exercism.io_](/10dotr/), otherwise subscribe below to find out about new posts and keep in touch.
