@@ -8,3 +8,6 @@ image:
 # Yay!
 
 Check your email. Your welcome message is on its way!
+
+See you inside the course,<br/>
+Step
