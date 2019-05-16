@@ -90,6 +90,9 @@
 <loc>https://www.stephenaument.com/10dotr/matrix-2/</loc>
 </url>
 <url>
+<loc>https://www.stephenaument.com/mrtr/</loc>
+</url>
+<url>
 <loc>https://www.stephenaument.com/10dotr/pretzel-colon/</loc>
 </url>
 <url>
@@ -108,10 +111,10 @@
 <loc>https://www.stephenaument.com/10dotr/series/</loc>
 </url>
 <url>
-<loc>https://www.stephenaument.com/10dotr/subscribe-success/</loc>
+<loc>https://www.stephenaument.com/subscribe-success/</loc>
 </url>
 <url>
-<loc>https://www.stephenaument.com/subscribe-success/</loc>
+<loc>https://www.stephenaument.com/10dotr/subscribe-success/</loc>
 </url>
 <url>
 <loc>https://www.stephenaument.com/10dotr/tmux-vim-setup/</loc>
@@ -128,9 +131,5 @@
 <url>
 <loc>https://www.stephenaument.com/assets/pretzel-colon-cheat-sheet.pdf</loc>
 <lastmod>2019-03-14T15:47:43-05:00</lastmod>
-</url>
-<url>
-<loc>https://www.stephenaument.com/mrtr.html</loc>
-<lastmod>2019-05-16T10:45:38-05:00</lastmod>
 </url>
 </urlset>
