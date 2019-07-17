@@ -17,20 +17,20 @@
   $hero-background: darken(gray, 40%);
   $hero-backside-background: darken($hero-background, 10%);
   $hero-text-color: white;
-  $hero-background-top: #162C4C;
-  $hero-background-bottom: #0A120D;
+  $hero-background-top: rgba(22, 44, 76, 0.2);
+  $hero-background-bottom: rgba(10, 18, 13, 0.8);
   $gradient-angle: 10deg;
-  $hero-image: "images/purple-metal.jpeg";
-  // $hero-image: "images/markus-spiske-1402880-unsplash.jpg";
+  // $hero-image: "images/purple-metal.jpeg";
+  $hero-image: "images/jeshoots-com-fzOITuS1DIQ-unsplash.jpg";
   $hero-screen-image: "https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/cosmin_capitanu_screen.jpg";
 
   @include grid-container;
 
-  background: url($hero-image),
-              linear-gradient($gradient-angle, $hero-background-bottom, $hero-background-top),
-              no-repeat $hero-background-top scroll;
+  background: linear-gradient($gradient-angle, $hero-background-bottom, $hero-background-top), url($hero-image), no-repeat scroll;
   background-repeat: no-repeat;
   background-size: cover;
+  border-width: 2px;
+  border-color: green;
   font-family: $font-stack-helvetica;
   min-height: 30em;
   text-align: center;
