@@ -3,3 +3,5 @@ task :build do
   system "JEKYLL_ENV=production bundle exec jekyll build -V"
   system "cp -r _site/* ../"
 end
+
+task default: :build
