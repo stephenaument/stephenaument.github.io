@@ -10,9 +10,9 @@ convertkit:
   form_url: https://f.convertkit.com/697093712f/34b641aedd.js
 ---
 
-I’m Stephen Aument. I’m a husband, a dad, a software developer, and a technical leader. I’m currently CTO at [ReadyRosie](https://www.readyrosie.com/) where we equip and inspire schools and families to work easily together to better the lives and trajectories of children. It’s a great mission and aligns with my conviction that technology (fun as it is on its own) exists to serve people.
+I’m Stephen Aument. I’m a husband, a dad, a software developer, and a technical leader. I’ve recently joined the engineering team at Bloomreach, where I'm diving back into code, hands-on after a few years of management roles. Most recently, I was CTO at [ReadyRosie](https://www.readyrosie.com/) where, where I was instrumental in transforming the technology team, platform, engineering, and product development practices, resulting in a successful acquisition.
 
-I’ve been a software developer (web and mobile) at companies ranging from 3 to 30,000+ employees. I’ve also done a lot of freelance work over the years. I’ve been working remotely off and on for most of my career and exclusively so for the past decade and counting. Remote doesn’t mean disengaged. The most collaborative teams I’ve worked with have been 100% remote, including near-100% pairing environments.
+I’ve been a software developer and manager (web and mobile) at companies ranging from 3 to 30,000+ employees. I’ve also done a lot of freelance work over the years. I’ve been working remotely off and on for most of my career and exclusively so for the past decade and counting. Remote doesn’t mean disengaged. The most collaborative teams I’ve worked with have been 100% remote, including near-100% pairing environments.
 
 I have a pretty broad background including an early stint as a musician and recording studio owner, and a theological masters degree.
 
