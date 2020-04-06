@@ -1,5 +1,5 @@
 ---
 layout: video
-title: Meetup Exercise
+title: Crypto Square Exercise
 video_id: rJ-uGppwdVk
 ---
