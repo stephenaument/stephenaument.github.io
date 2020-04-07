@@ -33,9 +33,7 @@ layout: default
 
   <div class="post_footer">
     {% include subscribe.html %}
-    {%- if site.disqus.shortname -%}
-      {%- include disqus_comments.html -%}
-    {%- endif -%}
+    {%- include commento_comments.html -%}
     <p class="photo_credit">{{ page.image.credit }}</p>
   </div>
 
