@@ -13,7 +13,7 @@ PEOPLE
 
 This Jekyll theme was hand-crafted by:
 
-Stephen Aument
+Step Aument
 Compassionate coder. Leader of Teams. CTO @ ReadyRosie.
 http://www.twitter.com/saument
 

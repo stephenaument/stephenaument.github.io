@@ -23,6 +23,9 @@
       li
         margin-bottom: $leading
 
+        .post_title
+          min-height: 3em
+
         @include grid-column(3)
 
         @include grid-media($extra-narrow-screen)
@@ -42,6 +45,7 @@
 
           .post_title
             font-size: $font-S
+            min-height: 1em
 
         &:nth-child(2), &:nth-child(3)
           @include grid-column(6)
