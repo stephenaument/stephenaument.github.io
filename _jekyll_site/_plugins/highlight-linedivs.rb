@@ -96,14 +96,14 @@ MSG
 
       private
 
-      OPTIONS_REGEX = %r!(?:\w="[^"]*"|\w=\w|\w)+!
+      HIGHLIGHT_LINEDIVS_OPTIONS_REGEX = %r!(?:\w="[^"]*"|\w=\w|\w)+!
 
       def parse_options(input)
         options = {}
         return options if input.empty?
 
         # Split along 3 possible forms -- key="<quoted list>", key=value, or key
-        input.scan(OPTIONS_REGEX) do |opt|
+        input.scan(HIGHLIGHT_LINEDIVS_OPTIONS_REGEX) do |opt|
           key, value = opt.split("=")
           # If a quoted list, convert to array
           if value && value.include?('"')

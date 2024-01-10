@@ -63,16 +63,22 @@ assets:
   compress:
     css: sass
     js: uglifier
+  sources:
+    - _assets/css
+    - _assets/images
+    - _assets/javascript
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
 # to override the default setting.
 exclude:
-#   - vendor/bundle/
-#   - vendor/cache/
-#   - vendor/gems/
-#   - vendor/ruby/
+  - .sass-cache/
+  - .jekyll-cache/
   - Rakefile
   - Gemfile
   - Gemfile.lock
   - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
